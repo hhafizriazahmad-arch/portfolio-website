@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hafiz Riaz | Automation & Backend Developer Portfolio</title>
+    <meta name="description" content="Portfolio of Hafiz Riaz, Automation & Backend Developer. Designing robust backend systems, APIs, and custom automation workflows.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            obsidian: '#030712',
+                            coal: '#0b0f19',
+                            slate: '#1e293b',
+                            violet: '#8b5cf6',
+                            indigo: '#6366f1',
+                            emerald: '#10b981',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-brand-obsidian text-slate-100 font-sans antialiased overflow-x-hidden">
+    <!-- Canvas for interactive network grid background -->
+    <canvas id="bg-canvas" class="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none opacity-40"></canvas>
+
+    <!-- Decorative Glow Blobs -->
+    <div class="fixed top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-brand-indigo/10 blur-[120px] pointer-events-none -z-10"></div>
+    <div class="fixed bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-brand-violet/10 blur-[120px] pointer-events-none -z-10"></div>
+
+    <!-- Navigation Header -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-brand-coal/70 backdrop-blur-md border-b border-white/5 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="#" class="font-display font-bold text-2xl tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-brand-indigo via-brand-violet to-brand-emerald">
+                HR<span class="text-slate-400 font-light">.dev</span>
+            </a>
+            
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="#about" class="text-sm font-medium text-slate-300 hover:text-white hover:glow-sm transition">About</a>
+                <a href="#skills" class="text-sm font-medium text-slate-300 hover:text-white hover:glow-sm transition">Skills</a>
+                <a href="#projects" class="text-sm font-medium text-slate-300 hover:text-white hover:glow-sm transition">Projects</a>
+                <a href="#contact" class="text-sm font-medium text-slate-300 hover:text-white hover:glow-sm transition">Contact</a>
+            </nav>
+
+            <div class="hidden md:block">
+                <a href="#contact" class="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider text-white bg-gradient-to-r from-brand-indigo to-brand-violet hover:shadow-[0_0_20px_rgba(99,102,241,0.5)] transition duration-300">
+                    Get in Touch
+                </a>
+            </div>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button id="menu-btn" class="md:hidden flex flex-col justify-between w-6 h-4 text-slate-300 focus:outline-none" aria-label="Toggle Menu">
+                <span class="w-full h-0.5 bg-current transition-all duration-300"></span>
+                <span class="w-full h-0.5 bg-current transition-all duration-300"></span>
+                <span class="w-full h-0.5 bg-current transition-all duration-300"></span>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden absolute top-20 left-0 w-full bg-brand-coal/95 backdrop-blur-lg border-b border-white/5 py-6 px-6 flex flex-col space-y-4">
+            <a href="#about" class="text-base font-medium text-slate-300 hover:text-white transition">About</a>
+            <a href="#skills" class="text-base font-medium text-slate-300 hover:text-white transition">Skills</a>
+            <a href="#projects" class="text-base font-medium text-slate-300 hover:text-white transition">Projects</a>
+            <a href="#contact" class="text-base font-medium text-slate-300 hover:text-white transition">Contact</a>
+            <a href="#contact" class="text-center px-5 py-3 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-brand-indigo to-brand-violet transition">
+                Get in Touch
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="min-h-screen flex items-center pt-24 pb-16 px-6 relative">
+        <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            <!-- Hero Text Content -->
+            <div class="lg:col-span-7 flex flex-col justify-center space-y-6 text-left">
+                <div class="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-brand-indigo/10 border border-brand-indigo/20 w-fit">
+                    <span class="flex h-2 w-2 relative">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-emerald opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-emerald"></span>
+                    </span>
+                    <span class="text-xs font-semibold uppercase tracking-wider text-brand-indigo">Available for projects</span>
+                </div>
+                
+                <h1 class="font-display text-4xl sm:text-6xl font-extrabold tracking-tight leading-tight">
+                    Hi, I'm <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-indigo via-brand-violet to-brand-emerald">Hafiz Riaz</span>
+                </h1>
+                <p class="font-display text-2xl sm:text-3xl font-medium text-slate-300">
+                    Automation & Backend Developer
+                </p>
+                <p class="text-base sm:text-lg text-slate-400 max-w-xl leading-relaxed">
+                    I design robust backend systems and custom automation workflows. Specializing in Python, FastAPI, relational databases, and integrating systems to streamline operations.
+                </p>
+
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center space-y-4 sm:space-y-0 sm:space-x-4 pt-4">
+                    <a href="#projects" class="px-8 py-4 rounded-xl font-medium text-center text-white bg-gradient-to-r from-brand-indigo to-brand-violet hover:shadow-[0_0_30px_rgba(99,102,241,0.4)] transition duration-300">
+                        View Projects
+                    </a>
+                    <a href="#contact" class="px-8 py-4 rounded-xl font-medium text-center text-slate-300 bg-white/5 border border-white/10 hover:bg-white/10 hover:text-white transition duration-300">
+                        Contact Me
+                    </a>
+                </div>
+            </div>
+
+            <!-- Hero Interactive Visual (Abstract Engine Mockup) -->
+            <div class="lg:col-span-5 flex justify-center">
+                <div class="relative w-full max-w-md aspect-square rounded-3xl bg-gradient-to-br from-brand-indigo/10 to-brand-violet/5 border border-white/5 p-6 flex flex-col justify-between overflow-hidden shadow-2xl backdrop-blur-3xl group hover:border-brand-violet/20 transition-all duration-500">
+                    <!-- Glow effect inside -->
+                    <div class="absolute -top-10 -right-10 w-40 h-40 bg-brand-violet/20 rounded-full blur-2xl group-hover:bg-brand-violet/30 transition-all"></div>
+                    
+                    <!-- Top Bar Info -->
+                    <div class="flex items-center justify-between border-b border-white/10 pb-4">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-3 h-3 rounded-full bg-red-500"></span>
+                            <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
+                            <span class="w-3 h-3 rounded-full bg-green-500"></span>
+                        </div>
+                        <span class="text-xs font-mono text-slate-500">engine_status.py</span>
+                    </div>
+
+                    <!-- Code block simulation -->
+                    <div class="flex-grow py-6 font-mono text-xs text-slate-400 space-y-2.5">
+                        <p class="text-brand-violet"><span class="text-slate-500">1</span> import fastapi</p>
+                        <p class="text-brand-violet"><span class="text-slate-500">2</span> import apscheduler</p>
+                        <p class="text-slate-300"><span class="text-slate-500">3</span> </p>
+                        <p class="text-brand-emerald"><span class="text-slate-500">4</span> app = fastapi.FastAPI()</p>
+                        <p class="text-slate-300"><span class="text-slate-500">5</span> </p>
+                        <p class="text-slate-400"><span class="text-slate-500">6</span> @app.post("/api/v1/trigger")</p>
+                        <p class="text-slate-300"><span class="text-slate-500">7</span> <span class="text-brand-indigo">async def</span> <span class="text-blue-400">run_pipeline</span>():</p>
+                        <p class="text-slate-400"><span class="text-slate-500">8</span> &nbsp;&nbsp;&nbsp;&nbsp;task = await scheduler.schedule()</p>
+                        <p class="text-slate-400"><span class="text-slate-500">9</span> &nbsp;&nbsp;&nbsp;&nbsp;await db.log_event(task.id)</p>
+                        <p class="text-brand-emerald"><span class="text-slate-500">10</span> &nbsp;&nbsp;&nbsp;return {"status": "success"}</p>
+                    </div>
+
+                    <!-- Output console simulation -->
+                    <div class="bg-brand-obsidian/80 border border-white/5 rounded-xl p-4 font-mono text-xxs flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-2 h-2 rounded-full bg-brand-emerald animate-pulse"></span>
+                            <span class="text-slate-400 text-xs">Uvicorn running: localhost:8000</span>
+                        </div>
+                        <span class="text-brand-emerald font-semibold text-xs">ONLINE</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- About Me Section -->
+    <section id="about" class="py-24 px-6 relative border-t border-white/5">
+        <div class="max-w-5xl mx-auto">
+            <div class="text-center space-y-4 mb-16">
+                <h2 class="font-display text-3xl sm:text-4xl font-bold">About Me</h2>
+                <div class="w-12 h-1 bg-gradient-to-r from-brand-indigo to-brand-violet mx-auto rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <!-- Text Details -->
+                <div class="space-y-6">
+                    <h3 class="font-display text-2xl font-semibold text-slate-200">
+                        Designing reliable APIs and seamless task workflows
+                    </h3>
+                    <p class="text-slate-400 leading-relaxed">
+                        I am a dedicated Backend and Automation Specialist focused on bringing speed and dependability to backend architectures. I write scalable, asynchronous microservices with FastAPI and build custom workflow pipelines.
+                    </p>
+                    <p class="text-slate-400 leading-relaxed">
+                        Whether it is managing databases with complex relation mappings, implementing scheduler jobs, or triggering webhooks between disparate platforms, my priority is ensuring code is resilient, testable, and optimized for performance.
+                    </p>
+                </div>
+
+                <!-- Stats / Cards Grid -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="p-6 rounded-2xl bg-white/5 border border-white/5 flex flex-col justify-center space-y-2">
+                        <span class="text-3xl font-display font-bold text-brand-indigo">API</span>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">First design</span>
+                    </div>
+                    <div class="p-6 rounded-2xl bg-white/5 border border-white/5 flex flex-col justify-center space-y-2">
+                        <span class="text-3xl font-display font-bold text-brand-violet">100%</span>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Asynchronous</span>
+                    </div>
+                    <div class="p-6 rounded-2xl bg-white/5 border border-white/5 flex flex-col justify-center space-y-2">
+                        <span class="text-3xl font-display font-bold text-brand-emerald">CI/CD</span>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Automated</span>
+                    </div>
+                    <div class="p-6 rounded-2xl bg-white/5 border border-white/5 flex flex-col justify-center space-y-2">
+                        <span class="text-3xl font-display font-bold text-white">Scale</span>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Optimized</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-24 px-6 relative border-t border-white/5 bg-brand-coal/30">
+        <div class="max-w-5xl mx-auto">
+            <div class="text-center space-y-4 mb-16">
+                <h2 class="font-display text-3xl sm:text-4xl font-bold">Technical Skills</h2>
+                <div class="w-12 h-1 bg-gradient-to-r from-brand-indigo to-brand-violet mx-auto rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Backend Development Card -->
+                <div class="p-8 rounded-2xl bg-brand-coal/50 border border-white/5 hover:border-brand-indigo/30 transition-all duration-300 group flex flex-col space-y-5">
+                    <div class="w-12 h-12 rounded-xl bg-brand-indigo/10 flex items-center justify-center border border-brand-indigo/20 group-hover:bg-brand-indigo/20 transition-all">
+                        <svg class="w-6 h-6 text-brand-indigo" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                        </svg>
+                    </div>
+                    <h3 class="font-display text-xl font-bold text-slate-200">Backend Development</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed flex-grow">
+                        Building solid business logic APIs, handling heavy payload routing, and structuring clean data layers.
+                    </p>
+                    <div class="flex flex-wrap gap-2 pt-2">
+                        <span class="text-xs px-2.5 py-1.5 rounded-md bg-white/5 border border-white/10 text-slate-300 font-mono">Python</span>
+                        <span class="text-xs px-2.5 py-1.5 rounded-md bg-white/5 border border-white/10 text-slate-300 font-mono">FastAPI</span>
+                        <span class="text-xs px-2.5 py-1.5 rounded-md bg-white/5 border border-white/10 text-slate-300 font-mono">Flask</span>
+                    </div>
+                </div>
+
+                <!-- Database Design Card -->
+                <div class="p-8 rounded-2xl bg-brand-coal/50 border border-white/5 hover:border-brand-violet/30 transition-all duration-300 group flex flex-col space-y-5">
+                    <div class="w-12 h-12 rounded-xl bg-brand-violet/10 flex items-center justify-center border border-brand-violet/20 group-hover:bg-brand-violet/20 transition-all">
+                        <svg class="w-6 h-6 text-brand-violet" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2.21 3.58 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.58 4 8 4s8-1.79 8-4M4 7c0-2.21 3.58-4 8-4s8 1.79 8 4m0 5c0 2.21-3.58 4-8 4s-8-1.79-8-4" />
+                        </svg>
+                    </div>
+                    <h3 class="font-display text-xl font-bold text-slate-200">Databases</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed flex-grow">
+                        Modeling data schema relations, optimizing indices, and writing efficient SQL operations.
+                    </p>
+                    <div class="flex flex-wrap gap-2 pt-2">
+                        <span class="text-xs px-2.5 py-1.5 rounded-md bg-white/5 border border-white/10 text-slate-300 font-mono">SQLite</span>
+                        <span class="text-xs px-2.5 py-1.5 rounded-md bg-white/5 border border-white/10 text-slate-300 font-mono">PostgreSQL</span>
+                        <span class="text-xs px-2.5 py-1.5 rounded-md bg-white/5 border border-white/10 text-slate-300 font-mono">SQLAlchemy</span>
+                    </div>
+                </div>
+
+                <!-- Workflow Automation Card -->
+                <div class="p-8 rounded-2xl bg-brand-coal/50 border border-white/5 hover:border-brand-emerald/30 transition-all duration-300 group flex flex-col space-y-5">
+                    <div class="w-12 h-12 rounded-xl bg-brand-emerald/10 flex items-center justify-center border border-brand-emerald/20 group-hover:bg-brand-emerald/20 transition-all">
+                        <svg class="w-6 h-6 text-brand-emerald" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                        </svg>
+                    </div>
+                    <h3 class="font-display text-xl font-bold text-slate-200">Automation & APIs</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed flex-grow">
+                        Scheduling background tasks, configuring incoming/outgoing webhooks, and orchestrating API integrations.
+                    </p>
+                    <div class="flex flex-wrap gap-2 pt-2">
+                        <span class="text-xs px-2.5 py-1.5 rounded-md bg-white/5 border border-white/10 text-slate-300 font-mono">APScheduler</span>
+                        <span class="text-xs px-2.5 py-1.5 rounded-md bg-white/5 border border-white/10 text-slate-300 font-mono">Webhooks</span>
+                        <span class="text-xs px-2.5 py-1.5 rounded-md bg-white/5 border border-white/10 text-slate-300 font-mono">Slack/Typeform API</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-24 px-6 relative border-t border-white/5">
+        <div class="max-w-5xl mx-auto">
+            <div class="text-center space-y-4 mb-16">
+                <h2 class="font-display text-3xl sm:text-4xl font-bold">Featured Projects</h2>
+                <p class="text-slate-400 max-w-md mx-auto text-sm">
+                    A demonstration of dynamic loading. The following projects are fetched directly from our SQLite database.
+                </p>
+                <div class="w-12 h-1 bg-gradient-to-r from-brand-indigo to-brand-violet mx-auto rounded-full"></div>
+            </div>
+
+            <!-- Projects Grid (Dynamically Populated) -->
+            <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Loading State (will be replaced by JS) -->
+                <div class="col-span-full py-12 flex flex-col items-center justify-center space-y-4">
+                    <div class="w-8 h-8 rounded-full border-2 border-brand-indigo border-t-transparent animate-spin"></div>
+                    <p class="text-xs font-mono text-slate-500">Querying database engine...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Form Section -->
+    <section id="contact" class="py-24 px-6 relative border-t border-white/5 bg-brand-coal/30">
+        <div class="max-w-xl mx-auto">
+            <div class="text-center space-y-4 mb-12">
+                <h2 class="font-display text-3xl sm:text-4xl font-bold">Get In Touch</h2>
+                <p class="text-slate-400 text-sm">
+                    Have an optimization challenge or systems to integrate? Drop a message.
+                </p>
+                <div class="w-12 h-1 bg-gradient-to-r from-brand-indigo to-brand-violet mx-auto rounded-full"></div>
+            </div>
+
+            <div class="p-8 rounded-3xl bg-brand-coal/50 border border-white/5 backdrop-blur-2xl relative shadow-2xl">
+                <!-- Form Submit Success/Error Toast notification -->
+                <div id="form-notification" class="hidden mb-6 p-4 rounded-xl border text-sm transition-all duration-300"></div>
+
+                <form id="contact-form" class="space-y-6">
+                    <div>
+                        <label for="name" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Your Name</label>
+                        <input type="text" id="name" required class="w-full px-4 py-3 bg-brand-obsidian/80 border border-white/10 rounded-xl focus:border-brand-indigo focus:ring-1 focus:ring-brand-indigo text-slate-200 placeholder-slate-600 focus:outline-none transition font-sans text-sm" placeholder="John Doe">
+                    </div>
+                    
+                    <div>
+                        <label for="email" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Email Address</label>
+                        <input type="email" id="email" required class="w-full px-4 py-3 bg-brand-obsidian/80 border border-white/10 rounded-xl focus:border-brand-indigo focus:ring-1 focus:ring-brand-indigo text-slate-200 placeholder-slate-600 focus:outline-none transition font-sans text-sm" placeholder="john@example.com">
+                    </div>
+
+                    <div>
+                        <label for="subject" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Subject</label>
+                        <input type="text" id="subject" required class="w-full px-4 py-3 bg-brand-obsidian/80 border border-white/10 rounded-xl focus:border-brand-indigo focus:ring-1 focus:ring-brand-indigo text-slate-200 placeholder-slate-600 focus:outline-none transition font-sans text-sm" placeholder="Workflow automation consulting">
+                    </div>
+
+                    <div>
+                        <label for="message" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Message</label>
+                        <textarea id="message" required rows="5" class="w-full px-4 py-3 bg-brand-obsidian/80 border border-white/10 rounded-xl focus:border-brand-indigo focus:ring-1 focus:ring-brand-indigo text-slate-200 placeholder-slate-600 focus:outline-none transition font-sans text-sm resize-none" placeholder="Let's build something..."></textarea>
+                    </div>
+
+                    <button type="submit" id="submit-btn" class="w-full py-4 rounded-xl text-sm font-semibold uppercase tracking-wider text-white bg-gradient-to-r from-brand-indigo to-brand-violet hover:shadow-[0_0_25px_rgba(99,102,241,0.4)] active:scale-[0.98] transition duration-300 flex items-center justify-center space-x-2">
+                        <span id="btn-text">Send Message</span>
+                        <div id="btn-spinner" class="hidden w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin"></div>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 border-t border-white/5 px-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-sm text-slate-500">
+            <div>
+                &copy; 2026 Hafiz Riaz. All rights reserved.
+            </div>
+            <div class="flex space-x-6">
+                <a href="https://github.com/hafizriaz" target="_blank" class="hover:text-slate-300 transition">GitHub</a>
+                <a href="https://linkedin.com" target="_blank" class="hover:text-slate-300 transition">LinkedIn</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script Entry -->
+    <script src="js/main.js"></script>
+</body>
+</html>
