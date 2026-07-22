@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -8,9 +9,13 @@ import models
 import schemas
 from database import engine, get_db
 
-# Initialize database tables
-models.Base.metadata.create_all(bind=engine)
+# Initialize database tables gracefully
+try:
+    models.Base.metadata.create_all(bind=engine)
+except Exception as e:
+    print(f"Database initialization warning: {e}")
 
+# Explicitly export FastAPI application instance
 app = FastAPI(
     title="Hafiz Riaz Portfolio API",
     description="Backend API for portfolio website and contact submissions",
@@ -28,44 +33,51 @@ app.add_middleware(
 
 # Seed database with projects if empty
 def seed_projects():
-    db = next(get_db())
     try:
-        project_count = db.query(models.Project).count()
-        if project_count == 0:
-            projects = [
-                models.Project(
-                    title="E-Commerce Order Processing Engine",
-                    description="A high-performance order processing engine that handles asynchronous orders, logs requests to an SQLite database, and broadcasts live update notifications. Designed for maximum throughput and reliability.",
-                    tech_stack="Python, FastAPI, SQLite, Asynchronous Tasks, Uvicorn",
-                    github_url="https://github.com/hafizriaz/ecommerce-order-engine",
-                    live_url=None,
-                    icon_type="shopping-cart"
-                ),
-                models.Project(
-                    title="Onboarding Automation System",
-                    description="An enterprise-grade automation workflow triggered by Typeform submissions. It automatically feeds user profiles to Google Sheets, creates dedicated workspaces, and triggers real-time onboarding notifications via Slack webhook integrations.",
-                    tech_stack="Python, APScheduler, Webhooks, Google Sheets API, Slack Webhooks",
-                    github_url="https://github.com/hafizriaz/onboarding-automation",
-                    live_url=None,
-                    icon_type="cpu"
-                )
-            ]
-            db.add_all(projects)
-            db.commit()
-            print("Successfully seeded portfolio projects.")
+        db = next(get_db())
+        try:
+            project_count = db.query(models.Project).count()
+            if project_count == 0:
+                projects = [
+                    models.Project(
+                        title="E-Commerce Order Processing Engine",
+                        description="A high-performance order processing engine that handles asynchronous orders, logs requests to an SQLite database, and broadcasts live update notifications. Designed for maximum throughput and reliability.",
+                        tech_stack="Python, FastAPI, SQLite, Asynchronous Tasks, Uvicorn",
+                        github_url="https://github.com/hafizriaz/ecommerce-order-engine",
+                        live_url=None,
+                        icon_type="shopping-cart"
+                    ),
+                    models.Project(
+                        title="Onboarding Automation System",
+                        description="An enterprise-grade automation workflow triggered by Typeform submissions. It automatically feeds user profiles to Google Sheets, creates dedicated workspaces, and triggers real-time onboarding notifications via Slack webhook integrations.",
+                        tech_stack="Python, APScheduler, Webhooks, Google Sheets API, Slack Webhooks",
+                        github_url="https://github.com/hafizriaz/onboarding-automation",
+                        live_url=None,
+                        icon_type="cpu"
+                    )
+                ]
+                db.add_all(projects)
+                db.commit()
+                print("Successfully seeded portfolio projects.")
+        except Exception as e:
+            db.rollback()
+            print(f"Error seeding projects: {e}")
+        finally:
+            db.close()
     except Exception as e:
-        db.rollback()
-        print(f"Error seeding projects: {e}")
-    finally:
-        db.close()
+        print(f"Error accessing DB during seed: {e}")
 
 seed_projects()
 
 @app.get("/api/projects", response_model=List[schemas.ProjectResponse])
 def get_projects(db: Session = Depends(get_db)):
     """Fetch all projects from the database."""
-    projects = db.query(models.Project).all()
-    return projects
+    try:
+        projects = db.query(models.Project).all()
+        return projects
+    except Exception as e:
+        print(f"Error fetching projects: {e}")
+        return []
 
 @app.post("/api/contact", response_model=schemas.ContactMessageResponse, status_code=status.HTTP_201_CREATED)
 def submit_contact_form(message: schemas.ContactMessageCreate, db: Session = Depends(get_db)):
@@ -88,6 +100,8 @@ def submit_contact_form(message: schemas.ContactMessageCreate, db: Session = Dep
             detail=f"An error occurred while saving your message: {str(e)}"
         )
 
-# Serve static frontend files
-# This must be mounted last to ensure it does not override /api routes
-app.mount("/", StaticFiles(directory="static", html=True), name="static")
+# Serve static frontend files relative to application root
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+static_dir = os.path.join(BASE_DIR, "static")
+if os.path.exists(static_dir):
+    app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
