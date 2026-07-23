@@ -1,4 +1,6 @@
 import os
+import json
+import urllib.request
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -81,7 +83,7 @@ def get_projects(db: Session = Depends(get_db)):
 
 @app.post("/api/contact", response_model=schemas.ContactMessageResponse, status_code=status.HTTP_201_CREATED)
 def submit_contact_form(message: schemas.ContactMessageCreate, db: Session = Depends(get_db)):
-    """Save contact form message to the database."""
+    """Save contact form message to the database and forward to Google Apps Script Webhook."""
     try:
         db_message = models.ContactMessage(
             name=message.name,
@@ -92,6 +94,29 @@ def submit_contact_form(message: schemas.ContactMessageCreate, db: Session = Dep
         db.add(db_message)
         db.commit()
         db.refresh(db_message)
+
+        # Forward payload to Google Apps Script Webhook
+        webhook_url = os.getenv(
+            "GOOGLE_APPS_SCRIPT_WEBHOOK_URL",
+            "https://script.google.com/macros/s/AKfycbwRw_vv_nKvnHr8JDp_cYR7xV-JHU6Qr5qOmUCmuy_J34SR0RZLpJ0D1cvwhFn_tFNiLw/exec"
+        )
+        payload = json.dumps({
+            "name": message.name,
+            "email": message.email,
+            "subject": message.subject,
+            "message": message.message
+        }).encode("utf-8")
+        req = urllib.request.Request(
+            webhook_url,
+            data=payload,
+            headers={"Content-Type": "application/json"}
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=10) as response:
+                print(f"Webhook forwarded successfully, status code: {response.getcode()}")
+        except Exception as webhook_err:
+            print(f"Warning: Failed to forward payload to Google Apps Script webhook: {webhook_err}")
+
         return db_message
     except Exception as e:
         db.rollback()
