@@ -14,11 +14,13 @@ class ProjectResponse(BaseModel):
     class Config:
         from_attributes = True
 
-class ContactMessageCreate(BaseModel):
+class ContactRequest(BaseModel):
     name: str
     email: str
     subject: str
     message: str
+
+ContactMessageCreate = ContactRequest
 
 class ContactMessageResponse(BaseModel):
     id: int

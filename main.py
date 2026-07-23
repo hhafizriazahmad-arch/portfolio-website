@@ -93,7 +93,7 @@ def get_projects(db: Session = Depends(get_db)):
         return []
 
 @app.post("/api/contact", response_model=schemas.ContactMessageResponse, status_code=status.HTTP_201_CREATED)
-def submit_contact_form(message: schemas.ContactMessageCreate, db: Session = Depends(get_db)):
+def submit_contact_form(message: schemas.ContactRequest, db: Session = Depends(get_db)):
     """Save contact form message to the database and forward to Google Apps Script Webhook."""
     try:
         db_message = models.ContactMessage(
