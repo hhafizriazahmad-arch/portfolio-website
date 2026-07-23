@@ -33,34 +33,43 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Seed database with projects if empty
+# Seed database with projects if empty or missing default entries
 def seed_projects():
     try:
         db = next(get_db())
         try:
-            project_count = db.query(models.Project).count()
-            if project_count == 0:
-                projects = [
-                    models.Project(
-                        title="E-Commerce Order Processing Engine",
-                        description="A high-performance order processing engine that handles asynchronous orders, logs requests to an SQLite database, and broadcasts live update notifications. Designed for maximum throughput and reliability.",
-                        tech_stack="Python, FastAPI, SQLite, Asynchronous Tasks, Uvicorn",
-                        github_url="https://github.com/hafizriaz/ecommerce-order-engine",
-                        live_url=None,
-                        icon_type="shopping-cart"
-                    ),
-                    models.Project(
-                        title="Onboarding Automation System",
-                        description="An enterprise-grade automation workflow triggered by Typeform submissions. It automatically feeds user profiles to Google Sheets, creates dedicated workspaces, and triggers real-time onboarding notifications via Slack webhook integrations.",
-                        tech_stack="Python, APScheduler, Webhooks, Google Sheets API, Slack Webhooks",
-                        github_url="https://github.com/hafizriaz/onboarding-automation",
-                        live_url=None,
-                        icon_type="cpu"
-                    )
-                ]
-                db.add_all(projects)
-                db.commit()
-                print("Successfully seeded portfolio projects.")
+            default_projects = [
+                {
+                    "title": "E-Commerce Order Processing Engine",
+                    "description": "A high-performance order processing engine that handles asynchronous orders, logs requests to an SQLite database, and broadcasts live update notifications. Designed for maximum throughput and reliability.",
+                    "tech_stack": "Python, FastAPI, SQLite, Asynchronous Tasks, Uvicorn",
+                    "github_url": "https://github.com/hafizriaz/ecommerce-order-engine",
+                    "live_url": None,
+                    "icon_type": "shopping-cart"
+                },
+                {
+                    "title": "Onboarding Automation System",
+                    "description": "An enterprise-grade automation workflow triggered by Typeform submissions. It automatically feeds user profiles to Google Sheets, creates dedicated workspaces, and triggers real-time onboarding notifications via Slack webhook integrations.",
+                    "tech_stack": "Python, APScheduler, Webhooks, Google Sheets API, Slack Webhooks",
+                    "github_url": "https://github.com/hafizriaz/onboarding-automation",
+                    "live_url": None,
+                    "icon_type": "cpu"
+                },
+                {
+                    "title": "Autonomous Lead Intelligence System",
+                    "description": "An AI-driven autonomous lead generation and intelligence pipeline that automatically discovers, scrapes, and qualifies potential client leads. It aggregates business metrics, performs context analysis, and structures leads directly into a database for automated outreach.",
+                    "tech_stack": "Python, AI / LLM Integration, Web Scraping, Data Pipeline, PostgreSQL",
+                    "github_url": "https://github.com/hafizriaz/autonomous-lead-intelligence",
+                    "live_url": None,
+                    "icon_type": "database"
+                }
+            ]
+            for p_data in default_projects:
+                existing = db.query(models.Project).filter_by(title=p_data["title"]).first()
+                if not existing:
+                    db.add(models.Project(**p_data))
+            db.commit()
+            print("Successfully verified and seeded portfolio projects.")
         except Exception as e:
             db.rollback()
             print(f"Error seeding projects: {e}")
