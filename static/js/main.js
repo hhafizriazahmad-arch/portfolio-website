@@ -242,23 +242,41 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify(payload)
             })
             .then(async (response) => {
-                const data = await response.json();
                 if (!response.ok) {
-                    throw new Error(data.detail || 'Failed to submit form.');
+                    let errorText = 'Failed to submit message.';
+                    try {
+                        const rawText = await response.text();
+                        try {
+                            const jsonErr = JSON.parse(rawText);
+                            if (typeof jsonErr.detail === 'string') {
+                                errorText = jsonErr.detail;
+                            } else if (jsonErr.detail && typeof jsonErr.detail === 'object') {
+                                errorText = JSON.stringify(jsonErr.detail);
+                            } else {
+                                errorText = rawText || errorText;
+                            }
+                        } catch (pErr) {
+                            errorText = rawText || errorText;
+                        }
+                    } catch (tErr) {}
+                    throw new Error(errorText);
                 }
-                return data;
+                return response;
             })
-            .then((data) => {
+            .then(() => {
                 // Success
                 notification.className = 'block mb-6 p-4 rounded-xl border border-brand-emerald/20 bg-brand-emerald/10 text-brand-emerald font-medium';
-                notification.textContent = 'Thank you! Your message has been sent successfully and logged in our database.';
+                notification.textContent = 'Thank you! Your message has been sent successfully.';
                 contactForm.reset();
             })
-            .catch((error) => {
+            .catch((err) => {
                 // Error
-                console.error('Contact Form error:', error);
+                console.error('Contact Form error:', err);
+                const displayMsg = (err && typeof err.message === 'string' && err.message !== '[object Object]')
+                    ? err.message
+                    : 'Something went wrong. Please check your connection and try again.';
                 notification.className = 'block mb-6 p-4 rounded-xl border border-red-500/20 bg-red-500/10 text-red-400 font-medium';
-                notification.textContent = error.message || 'Something went wrong. Please check your backend connection and try again.';
+                notification.textContent = displayMsg;
             })
             .finally(() => {
                 // Reset submit button state
