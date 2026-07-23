@@ -43,7 +43,7 @@ def seed_projects():
                     "title": "E-Commerce Order Processing Engine",
                     "description": "A high-performance order processing engine that handles asynchronous orders, logs requests to an SQLite database, and broadcasts live update notifications. Designed for maximum throughput and reliability.",
                     "tech_stack": "Python, FastAPI, SQLite, Asynchronous Tasks, Uvicorn",
-                    "github_url": "https://github.com/hafizriaz/ecommerce-order-engine",
+                    "github_url": "https://github.com/hhafizriazahmad-arch/fluxflow-ecommerce-engine",
                     "live_url": None,
                     "icon_type": "shopping-cart"
                 },
@@ -51,7 +51,7 @@ def seed_projects():
                     "title": "Onboarding Automation System",
                     "description": "An enterprise-grade automation workflow triggered by Typeform submissions. It automatically feeds user profiles to Google Sheets, creates dedicated workspaces, and triggers real-time onboarding notifications via Slack webhook integrations.",
                     "tech_stack": "Python, APScheduler, Webhooks, Google Sheets API, Slack Webhooks",
-                    "github_url": "https://github.com/hafizriaz/onboarding-automation",
+                    "github_url": "https://github.com/hhafizriazahmad-arch/onboarding-automation-system",
                     "live_url": None,
                     "icon_type": "cpu"
                 },
@@ -59,7 +59,7 @@ def seed_projects():
                     "title": "Autonomous Lead Intelligence System",
                     "description": "An AI-driven autonomous lead generation and intelligence pipeline that automatically discovers, scrapes, and qualifies potential client leads. It aggregates business metrics, performs context analysis, and structures leads directly into a database for automated outreach.",
                     "tech_stack": "Python, AI / LLM Integration, Web Scraping, Data Pipeline, PostgreSQL",
-                    "github_url": "https://github.com/hafizriaz/autonomous-lead-intelligence",
+                    "github_url": "https://github.com/hhafizriazahmad-arch/autonomous-lead-intelligence-system",
                     "live_url": None,
                     "icon_type": "database"
                 }
@@ -68,6 +68,8 @@ def seed_projects():
                 existing = db.query(models.Project).filter_by(title=p_data["title"]).first()
                 if not existing:
                     db.add(models.Project(**p_data))
+                else:
+                    existing.github_url = p_data["github_url"]
             db.commit()
             print("Successfully verified and seeded portfolio projects.")
         except Exception as e:
