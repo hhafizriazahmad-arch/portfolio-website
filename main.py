@@ -120,7 +120,7 @@ def submit_contact_form(message: schemas.ContactMessageCreate, db: Session = Dep
         req = urllib.request.Request(
             webhook_url,
             data=payload,
-            headers={"Content-Type": "application/json"}
+            headers={"Content-Type": "text/plain;charset=utf-8"}
         )
         try:
             with urllib.request.urlopen(req, timeout=10) as response:
