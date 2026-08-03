@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
             description: "A high-performance order processing engine that handles asynchronous orders, logs requests to an SQLite database, and broadcasts live update notifications. Designed for maximum throughput and reliability.",
             tech_stack: "Python, FastAPI, SQLite, Asynchronous Tasks, Uvicorn",
             github_url: "https://github.com/hhafizriazahmad-arch/fluxflow-ecommerce-engine",
-            live_url: null,
+            live_url: "https://fluxflow-ecommerce-engine.vercel.app",
             icon_type: "shopping-cart"
         },
         {
@@ -152,6 +152,14 @@ document.addEventListener('DOMContentLoaded', () => {
             tech_stack: "Python, FastAPI, Playwright, Gemini AI, Google Sheets API, Slack API, Vercel",
             github_url: "https://github.com/hhafizriazahmad-arch/autonomous-lead-intelligence-system",
             live_url: "https://autonomous-lead-intelligence-system.vercel.app",
+            icon_type: "database"
+        },
+        {
+            title: "Autonomous AI Cold Prospecting & Web-Research Agent",
+            description: "An autonomous AI agent designed for high-impact prospect research, automated web extraction, and lead intelligence verification running on FastAPI serverless architecture.",
+            tech_stack: "Python, FastAPI, AI Agents, Vercel, Web Scraping",
+            github_url: "https://github.com/hhafizriazahmad-arch/autonomous-prospecting-agent",
+            live_url: "https://autonomous-prospecting-agent.vercel.app",
             icon_type: "cpu"
         }
     ];

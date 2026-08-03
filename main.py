@@ -44,7 +44,7 @@ def seed_projects():
                     "description": "A high-performance order processing engine that handles asynchronous orders, logs requests to an SQLite database, and broadcasts live update notifications. Designed for maximum throughput and reliability.",
                     "tech_stack": "Python, FastAPI, SQLite, Asynchronous Tasks, Uvicorn",
                     "github_url": "https://github.com/hhafizriazahmad-arch/fluxflow-ecommerce-engine",
-                    "live_url": None,
+                    "live_url": "https://fluxflow-ecommerce-engine.vercel.app",
                     "icon_type": "shopping-cart"
                 },
                 {
@@ -61,22 +61,27 @@ def seed_projects():
                     "tech_stack": "Python, FastAPI, Playwright, Gemini AI, Google Sheets API, Slack API, Vercel",
                     "github_url": "https://github.com/hhafizriazahmad-arch/autonomous-lead-intelligence-system",
                     "live_url": "https://autonomous-lead-intelligence-system.vercel.app",
+                    "icon_type": "database"
+                },
+                {
+                    "title": "Autonomous AI Cold Prospecting & Web-Research Agent",
+                    "description": "An autonomous AI agent designed for high-impact prospect research, automated web extraction, and lead intelligence verification running on FastAPI serverless architecture.",
+                    "tech_stack": "Python, FastAPI, AI Agents, Vercel, Web Scraping",
+                    "github_url": "https://github.com/hhafizriazahmad-arch/autonomous-prospecting-agent",
+                    "live_url": "https://autonomous-prospecting-agent.vercel.app",
                     "icon_type": "cpu"
                 }
             ]
             for p_data in default_projects:
-                existing = db.query(models.Project).filter(
-                    (models.Project.title == p_data["title"]) | 
-                    (models.Project.title.like("%Autonomous%"))
-                ).first()
+                existing = db.query(models.Project).filter_by(title=p_data["title"]).first()
                 if not existing:
                     db.add(models.Project(**p_data))
                 else:
-                    existing.title = p_data["title"]
                     existing.github_url = p_data["github_url"]
                     existing.live_url = p_data.get("live_url")
                     existing.description = p_data["description"]
                     existing.tech_stack = p_data["tech_stack"]
+                    existing.icon_type = p_data.get("icon_type", "default")
             db.commit()
             print("Successfully verified and seeded portfolio projects.")
         except Exception as e:
