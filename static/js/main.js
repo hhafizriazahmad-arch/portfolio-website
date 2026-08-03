@@ -129,6 +129,89 @@ document.addEventListener('DOMContentLoaded', () => {
         </svg>`
     };
 
+    const fallbackProjects = [
+        {
+            title: "E-Commerce Order Processing Engine",
+            description: "A high-performance order processing engine that handles asynchronous orders, logs requests to an SQLite database, and broadcasts live update notifications. Designed for maximum throughput and reliability.",
+            tech_stack: "Python, FastAPI, SQLite, Asynchronous Tasks, Uvicorn",
+            github_url: "https://github.com/hhafizriazahmad-arch/fluxflow-ecommerce-engine",
+            live_url: null,
+            icon_type: "shopping-cart"
+        },
+        {
+            title: "Onboarding Automation System",
+            description: "An enterprise-grade automation workflow triggered by Typeform submissions. It automatically feeds user profiles to Google Sheets, creates dedicated workspaces, and triggers real-time onboarding notifications via Slack webhook integrations.",
+            tech_stack: "Python, APScheduler, Webhooks, Google Sheets API, Slack Webhooks",
+            github_url: "https://github.com/hhafizriazahmad-arch/onboarding-automation-system",
+            live_url: null,
+            icon_type: "cpu"
+        },
+        {
+            title: "Autonomous AI Prospecting Agent",
+            description: "An AI-driven autonomous lead generation and intelligence pipeline that automatically discovers, scrapes, and qualifies potential client leads. It aggregates business metrics, performs context analysis, and structures leads directly into a database and Slack for automated outreach.",
+            tech_stack: "Python, AI / LLM Integration, Web Scraping, Data Pipeline, Slack Webhooks",
+            github_url: "https://github.com/hhafizriazahmad-arch/autonomous-prospecting-agent",
+            live_url: "https://autonomous-prospecting-agent.vercel.app",
+            icon_type: "cpu"
+        }
+    ];
+
+    function renderProjectsList(projects) {
+        if (!projects || projects.length === 0) {
+            projectsGrid.innerHTML = `
+                <div class="col-span-full text-center py-8 text-slate-500">
+                    No projects loaded yet. Please check back later.
+                </div>`;
+            return;
+        }
+
+        projectsGrid.innerHTML = ''; // Clear loading spinner
+        projects.forEach(project => {
+            const iconSvg = svgIcons[project.icon_type] || svgIcons['default'];
+            const techStackBadges = project.tech_stack.split(',').map(tech => 
+                `<span class="text-xs px-2.5 py-1 rounded bg-white/5 border border-white/10 text-slate-300 font-mono">${tech.trim()}</span>`
+            ).join('');
+
+            const githubLink = project.github_url ? `
+                <a href="${project.github_url}" target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-white transition flex items-center space-x-1 text-sm font-medium">
+                    <span>GitHub</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                </a>` : '';
+
+            const liveLink = project.live_url ? `
+                <a href="${project.live_url}" target="_blank" rel="noopener noreferrer" class="text-brand-indigo hover:underline transition flex items-center space-x-1 text-sm font-medium">
+                    <span>Live Demo</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                </a>` : '';
+
+            const projectCard = document.createElement('div');
+            projectCard.className = 'p-8 rounded-3xl glass-panel flex flex-col space-y-6 transition-all duration-300 group';
+            projectCard.innerHTML = `
+                <div class="flex items-center justify-between">
+                    <div class="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-white/10 transition-all duration-300">
+                        ${iconSvg}
+                    </div>
+                    <div class="flex space-x-4">
+                        ${githubLink}
+                        ${liveLink}
+                    </div>
+                </div>
+                <div class="space-y-3 flex-grow">
+                    <h3 class="font-display text-2xl font-bold text-slate-100 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-brand-violet transition-all duration-300">
+                        ${project.title}
+                    </h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        ${project.description}
+                    </p>
+                </div>
+                <div class="flex flex-wrap gap-2 pt-2 border-t border-white/5">
+                    ${techStackBadges}
+                </div>
+            `;
+            projectsGrid.appendChild(projectCard);
+        });
+    }
+
     function loadProjects() {
         fetch('/api/projects')
             .then(response => {
@@ -138,70 +221,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 return response.json();
             })
             .then(projects => {
-                if (projects.length === 0) {
-                    projectsGrid.innerHTML = `
-                        <div class="col-span-full text-center py-8 text-slate-500">
-                            No projects loaded yet. Please check back later.
-                        </div>`;
-                    return;
-                }
-
-                projectsGrid.innerHTML = ''; // Clear loading spinner
-                projects.forEach(project => {
-                    const iconSvg = svgIcons[project.icon_type] || svgIcons['default'];
-                    const techStackBadges = project.tech_stack.split(',').map(tech => 
-                        `<span class="text-xs px-2.5 py-1 rounded bg-white/5 border border-white/10 text-slate-300 font-mono">${tech.trim()}</span>`
-                    ).join('');
-
-                    const githubLink = project.github_url ? `
-                        <a href="${project.github_url}" target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-white transition flex items-center space-x-1 text-sm font-medium">
-                            <span>GitHub</span>
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-                        </a>` : '';
-
-                    const liveLink = project.live_url ? `
-                        <a href="${project.live_url}" target="_blank" rel="noopener noreferrer" class="text-brand-indigo hover:underline transition flex items-center space-x-1 text-sm font-medium">
-                            <span>Live Demo</span>
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-                        </a>` : '';
-
-                    const projectCard = document.createElement('div');
-                    projectCard.className = 'p-8 rounded-3xl glass-panel flex flex-col space-y-6 transition-all duration-300 group';
-                    projectCard.innerHTML = `
-                        <div class="flex items-center justify-between">
-                            <div class="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-white/10 transition-all duration-300">
-                                ${iconSvg}
-                            </div>
-                            <div class="flex space-x-4">
-                                ${githubLink}
-                                ${liveLink}
-                            </div>
-                        </div>
-                        <div class="space-y-3 flex-grow">
-                            <h3 class="font-display text-2xl font-bold text-slate-100 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-brand-violet transition-all duration-300">
-                                ${project.title}
-                            </h3>
-                            <p class="text-slate-400 text-sm leading-relaxed">
-                                ${project.description}
-                            </p>
-                        </div>
-                        <div class="flex flex-wrap gap-2 pt-2 border-t border-white/5">
-                            ${techStackBadges}
-                        </div>
-                    `;
-                    projectsGrid.appendChild(projectCard);
-                });
+                renderProjectsList(projects);
             })
             .catch(error => {
-                console.error('Error fetching projects:', error);
-                projectsGrid.innerHTML = `
-                    <div class="col-span-full py-12 flex flex-col items-center justify-center space-y-4 text-center">
-                        <div class="w-12 h-12 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center">
-                            <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-                        </div>
-                        <h3 class="text-sm font-semibold text-slate-300">Failed to load projects</h3>
-                        <p class="text-xs text-slate-500 max-w-xs">The pipeline database API returned a connection failure. Check backend service logs.</p>
-                    </div>`;
+                console.warn('Backend API fetch failed, rendering static fallback projects:', error);
+                renderProjectsList(fallbackProjects);
             });
     }
 
