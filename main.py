@@ -58,7 +58,7 @@ def seed_projects():
                 {
                     "title": "Autonomous AI Prospecting Agent",
                     "description": "An AI-driven autonomous lead generation and intelligence pipeline that automatically discovers, scrapes, and qualifies potential client leads. It aggregates business metrics, performs context analysis, and structures leads directly into a database and Slack for automated outreach.",
-                    "tech_stack": "Python, AI / LLM Integration, Web Scraping, Data Pipeline, Slack Webhooks",
+                    "tech_stack": "Python, Playwright, AI / LLM Integration, Slack API, Vercel",
                     "github_url": "https://github.com/hhafizriazahmad-arch/autonomous-prospecting-agent",
                     "live_url": "https://autonomous-prospecting-agent.vercel.app",
                     "icon_type": "cpu"
