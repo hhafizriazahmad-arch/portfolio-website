@@ -56,19 +56,23 @@ def seed_projects():
                     "icon_type": "cpu"
                 },
                 {
-                    "title": "Autonomous AI Prospecting Agent",
-                    "description": "An AI-driven autonomous lead generation and intelligence pipeline that automatically discovers, scrapes, and qualifies potential client leads. It aggregates business metrics, performs context analysis, and structures leads directly into a database and Slack for automated outreach.",
-                    "tech_stack": "Python, Playwright, AI / LLM Integration, Slack API, Vercel",
-                    "github_url": "https://github.com/hhafizriazahmad-arch/autonomous-prospecting-agent",
-                    "live_url": "https://autonomous-prospecting-agent.vercel.app",
+                    "title": "Autonomous AI Cold Prospecting & Web-Research Agent",
+                    "description": "An enterprise AI-driven autonomous lead enrichment and intelligence pipeline built with FastAPI. It performs multi-node website verification, Gemini AI qualification, pain point extraction, Slack Block Kit notifications, Google Sheets logging, and personalized Gmail outreach generation.",
+                    "tech_stack": "Python, FastAPI, Gemini AI, Google Sheets API, Slack API, Gmail API, Vercel",
+                    "github_url": "https://github.com/hhafizriazahmad-arch/autonomous-lead-intelligence-system",
+                    "live_url": "https://autonomous-lead-intelligence-system.vercel.app",
                     "icon_type": "cpu"
                 }
             ]
             for p_data in default_projects:
-                existing = db.query(models.Project).filter_by(title=p_data["title"]).first()
+                existing = db.query(models.Project).filter(
+                    (models.Project.title == p_data["title"]) | 
+                    (models.Project.title.like("%Autonomous%"))
+                ).first()
                 if not existing:
                     db.add(models.Project(**p_data))
                 else:
+                    existing.title = p_data["title"]
                     existing.github_url = p_data["github_url"]
                     existing.live_url = p_data.get("live_url")
                     existing.description = p_data["description"]
