@@ -56,9 +56,9 @@ def seed_projects():
                     "icon_type": "cpu"
                 },
                 {
-                    "title": "Autonomous AI Cold Prospecting & Web-Research Agent",
-                    "description": "An enterprise AI-driven autonomous lead enrichment and intelligence pipeline built with FastAPI. It performs multi-node website verification, Gemini AI qualification, pain point extraction, Slack Block Kit notifications, Google Sheets logging, and personalized Gmail outreach generation.",
-                    "tech_stack": "Python, FastAPI, Gemini AI, Google Sheets API, Slack API, Gmail API, Vercel",
+                    "title": "Autonomous Lead Intelligence System",
+                    "description": "An autonomous lead enrichment and web-research intelligence pipeline built with FastAPI. Features Playwright and HTTP-based lead scraping & web verification, Gemini AI qualification, Google Sheets logging, and real-time Slack notification pipeline.",
+                    "tech_stack": "Python, FastAPI, Playwright, Gemini AI, Google Sheets API, Slack API, Vercel",
                     "github_url": "https://github.com/hhafizriazahmad-arch/autonomous-lead-intelligence-system",
                     "live_url": "https://autonomous-lead-intelligence-system.vercel.app",
                     "icon_type": "cpu"
