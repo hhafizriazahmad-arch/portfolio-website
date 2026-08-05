@@ -131,6 +131,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const fallbackProjects = [
         {
+            title: "Digital Marketing Web Suite",
+            description: "Full-stack digital marketing platform featuring an interactive dynamic UI, serverless backend integrations, and automated lead intelligence data pipelines.",
+            tech_stack: "Full-Stack Web Dev, JavaScript, Python, REST API, HTML5/CSS3, Vercel",
+            github_url: "https://github.com/hhafizriazahmad-arch/digital-marketing",
+            live_url: "https://digital-marketing-sand.vercel.app",
+            icon_type: "cpu"
+        },
+        {
             title: "E-Commerce Order Processing Engine",
             description: "A high-performance order processing engine that handles asynchronous orders, logs requests to an SQLite database, and broadcasts live update notifications. Designed for maximum throughput and reliability.",
             tech_stack: "Python, FastAPI, SQLite, Asynchronous Tasks, Uvicorn",
@@ -319,3 +327,5 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+

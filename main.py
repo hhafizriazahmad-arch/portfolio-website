@@ -38,7 +38,19 @@ def seed_projects():
     try:
         db = next(get_db())
         try:
+            # Clean up voice agent if previously seeded
+            db.query(models.Project).filter_by(title="Autonomous AI Voice Agent & Receptionist").delete()
+            db.commit()
+
             default_projects = [
+                {
+                    "title": "Digital Marketing Web Suite",
+                    "description": "Full-stack digital marketing platform featuring an interactive dynamic UI, serverless backend integrations, and automated lead intelligence data pipelines.",
+                    "tech_stack": "Full-Stack Web Dev, JavaScript, Python, REST API, HTML5/CSS3, Vercel",
+                    "github_url": "https://github.com/hhafizriazahmad-arch/digital-marketing",
+                    "live_url": "https://digital-marketing-sand.vercel.app",
+                    "icon_type": "cpu"
+                },
                 {
                     "title": "E-Commerce Order Processing Engine",
                     "description": "A high-performance order processing engine that handles asynchronous orders, logs requests to an SQLite database, and broadcasts live update notifications. Designed for maximum throughput and reliability.",
@@ -153,3 +165,8 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 static_dir = os.path.join(BASE_DIR, "static")
 if os.path.exists(static_dir):
     app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+
