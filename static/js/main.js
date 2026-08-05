@@ -194,12 +194,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
                 </a>` : '';
 
-            const liveLink = project.live_url ? `
-                <a href="${project.live_url}" target="_blank" rel="noopener noreferrer" class="text-brand-indigo hover:underline transition flex items-center space-x-1 text-sm font-medium">
-                    <span>Live Demo</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-                </a>` : '';
-
             const projectCard = document.createElement('div');
             projectCard.className = 'p-8 rounded-3xl glass-panel flex flex-col space-y-6 transition-all duration-300 group';
             projectCard.innerHTML = `
@@ -207,9 +201,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-white/10 transition-all duration-300">
                         ${iconSvg}
                     </div>
-                    <div class="flex space-x-4">
+                    <div class="flex items-center">
                         ${githubLink}
-                        ${liveLink}
                     </div>
                 </div>
                 <div class="space-y-3 flex-grow">
