@@ -362,7 +362,7 @@
     <!-- AI Chatbot Floating Widget -->
     <div id="chat-widget-container">
         <!-- Floating Launcher Button -->
-        <button id="chat-trigger" aria-label="Open AI Chatbot" class="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-gradient-to-r from-brand-indigo via-brand-violet to-brand-emerald p-0.5 shadow-[0_0_25px_rgba(99,102,241,0.5)] hover:scale-105 active:scale-95 transition-all duration-300 group flex items-center justify-center">
+        <button id="chat-trigger" aria-label="Open AI Chatbot" class="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-gradient-to-r from-brand-indigo via-brand-violet to-brand-emerald p-0.5 shadow-[0_0_25px_rgba(99,102,241,0.4)] hover:scale-105 active:scale-95 transition-all duration-300 group flex items-center justify-center">
             <div class="w-full h-full rounded-full bg-brand-obsidian/40 backdrop-blur-sm flex items-center justify-center relative">
                 <!-- Status indicator dot -->
                 <span class="absolute top-1 right-1 flex h-3 w-3">
@@ -380,27 +380,16 @@
         </button>
 
         <!-- Floating Chat Modal Window -->
-        <div id="chat-modal" class="fixed bottom-24 right-6 z-50 w-96 max-w-[calc(100vw-3rem)] h-[520px] max-h-[calc(100vh-8rem)] rounded-3xl bg-brand-coal/95 border border-white/10 backdrop-blur-2xl shadow-2xl flex flex-col hidden transition-all duration-300 transform scale-95 opacity-0">
+        <div id="chat-modal" class="fixed bottom-24 right-6 z-50 w-96 max-w-[calc(100vw-3rem)] h-[520px] max-h-[calc(100vh-8rem)] rounded-3xl bg-brand-coal/90 border border-white/10 backdrop-blur-2xl shadow-2xl flex flex-col hidden transition-all duration-300 transform scale-95 opacity-0">
             <!-- Modal Header -->
-            <div class="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-white/5 rounded-t-3xl">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-brand-indigo to-brand-violet p-0.5 relative flex-shrink-0">
-                        <div class="w-full h-full bg-brand-coal rounded-full flex items-center justify-center">
-                            <svg class="w-5 h-5 text-brand-emerald" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                            </svg>
-                        </div>
-                        <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-brand-emerald border-2 border-brand-coal rounded-full"></span>
-                    </div>
-                    <div>
-                        <h3 class="font-display font-bold text-sm text-slate-100 flex items-center gap-1.5">
-                            AI Automation Assistant
-                            <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-brand-indigo/20 text-brand-indigo border border-brand-indigo/30">Gemini</span>
-                        </h3>
-                        <p class="text-slate-400 text-xs">Ask me about services or booking a call</p>
-                    </div>
+            <div class="px-6 py-4 border-b border-white/5 flex items-center justify-between rounded-t-3xl">
+                <div>
+                    <h3 class="font-display font-bold text-sm text-slate-100">
+                        AI Automation Assistant
+                    </h3>
+                    <p class="text-slate-400 text-xs">Ask me about services or booking a call</p>
                 </div>
-                <button id="chat-close-btn" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/10 transition" aria-label="Close Chat">
+                <button id="chat-close-btn" class="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-white/5 transition duration-300" aria-label="Close Chat">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
@@ -411,47 +400,47 @@
             <div id="chat-messages" class="flex-grow overflow-y-auto p-4 space-y-4 font-sans text-xs sm:text-sm custom-scrollbar">
                 <!-- Initial Welcome Message from Assistant -->
                 <div class="flex items-start space-x-2.5">
-                    <div class="w-7 h-7 rounded-full bg-brand-indigo/20 border border-brand-indigo/40 flex items-center justify-center text-brand-indigo font-bold text-xs flex-shrink-0">
+                    <div class="w-7 h-7 rounded-full bg-brand-indigo/20 border border-brand-indigo/30 flex items-center justify-center text-brand-indigo font-bold text-xs flex-shrink-0">
                         AI
                     </div>
-                    <div class="bg-white/5 border border-white/10 rounded-2xl rounded-tl-none p-3.5 text-slate-200 leading-relaxed max-w-[85%]">
+                    <div class="bg-white/5 border border-white/5 rounded-2xl rounded-tl-none p-3.5 text-slate-200 leading-relaxed max-w-[85%]">
                         Hello! 👋 I am Hafiz's AI Assistant. How can I help you today? Ask about Python & FastAPI APIs, web scraping, custom AI agents, or schedule a consultation.
                     </div>
                 </div>
             </div>
 
             <!-- Quick Action Options -->
-            <div id="chat-quick-actions" class="px-4 py-2 border-t border-white/5 flex flex-wrap gap-1.5 bg-brand-obsidian/40">
-                <button class="quick-btn text-[11px] px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-brand-indigo/20 hover:border-brand-indigo/40 transition font-sans" data-prompt="What services do you offer?">
+            <div id="chat-quick-actions" class="px-4 py-2 border-t border-white/5 flex flex-wrap gap-1.5">
+                <button class="quick-btn text-[11px] px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-brand-indigo/20 hover:border-brand-indigo/40 transition duration-300 font-sans cursor-pointer" data-prompt="What services do you offer?">
                     ⚡ What services do you offer?
                 </button>
-                <button class="quick-btn text-[11px] px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-brand-violet/20 hover:border-brand-violet/40 transition font-sans" data-prompt="Can you build custom AI Agents?">
+                <button class="quick-btn text-[11px] px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-brand-indigo/20 hover:border-brand-indigo/40 transition duration-300 font-sans cursor-pointer" data-prompt="Can you build custom AI Agents?">
                     🤖 Tell me about AI Agents
                 </button>
-                <button class="quick-btn text-[11px] px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-brand-emerald/20 hover:border-brand-emerald/40 transition font-sans" data-prompt="I want to book a call / leave contact details">
+                <button class="quick-btn text-[11px] px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-brand-indigo/20 hover:border-brand-indigo/40 transition duration-300 font-sans cursor-pointer" data-prompt="I want to book a call / leave contact details">
                     📅 Book a call / Drop info
                 </button>
             </div>
 
             <!-- Inline Lead Capture Card (Hidden by Default) -->
-            <div id="chat-lead-card" class="hidden px-4 py-3 bg-brand-indigo/10 border-t border-brand-indigo/30 space-y-2">
+            <div id="chat-lead-card" class="hidden px-4 py-3 bg-brand-indigo/10 border-t border-brand-indigo/20 space-y-2">
                 <div class="flex items-center justify-between">
                     <p class="text-xs font-semibold text-brand-indigo">Leave contact info for Hafiz:</p>
                     <button id="chat-lead-close" class="text-slate-400 hover:text-white text-xs">✕</button>
                 </div>
                 <div class="grid grid-cols-2 gap-2">
-                    <input type="text" id="chat-lead-name" placeholder="Your Name" class="w-full px-2.5 py-1.5 bg-brand-obsidian border border-white/10 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-brand-indigo">
-                    <input type="email" id="chat-lead-email" placeholder="Email Address" class="w-full px-2.5 py-1.5 bg-brand-obsidian border border-white/10 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-brand-indigo">
+                    <input type="text" id="chat-lead-name" placeholder="Your Name" class="w-full px-2.5 py-1.5 bg-brand-obsidian/80 border border-white/10 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-brand-indigo">
+                    <input type="email" id="chat-lead-email" placeholder="Email Address" class="w-full px-2.5 py-1.5 bg-brand-obsidian/80 border border-white/10 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-brand-indigo">
                 </div>
-                <button id="chat-lead-submit" class="w-full py-1.5 rounded-lg bg-gradient-to-r from-brand-indigo to-brand-violet text-xs font-semibold text-white hover:shadow-[0_0_15px_rgba(99,102,241,0.4)] transition">
+                <button id="chat-lead-submit" class="w-full py-1.5 rounded-lg bg-gradient-to-r from-brand-indigo to-brand-violet text-xs font-semibold text-white hover:shadow-[0_0_15px_rgba(99,102,241,0.4)] transition duration-300">
                     Submit & Send to Google Sheets
                 </button>
             </div>
 
             <!-- Message Input Bar -->
-            <form id="chat-form" class="p-3 border-t border-white/10 flex items-center space-x-2 bg-brand-coal/90 rounded-b-3xl">
-                <input type="text" id="chat-input" placeholder="Ask a question or leave a message..." required class="flex-grow px-4 py-2.5 bg-brand-obsidian/80 border border-white/10 rounded-xl text-xs sm:text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-brand-indigo transition font-sans">
-                <button type="submit" id="chat-submit-btn" class="p-2.5 rounded-xl bg-gradient-to-r from-brand-indigo to-brand-violet text-white hover:shadow-[0_0_15px_rgba(99,102,241,0.5)] active:scale-95 transition flex items-center justify-center flex-shrink-0" aria-label="Send Message">
+            <form id="chat-form" class="p-3 border-t border-white/5 flex items-center space-x-2 bg-brand-coal/90 rounded-b-3xl">
+                <input type="text" id="chat-input" placeholder="Ask a question or leave a message..." required class="flex-grow px-4 py-2.5 bg-brand-obsidian/80 border border-white/10 rounded-xl text-xs sm:text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-brand-indigo focus:ring-1 focus:ring-brand-indigo transition font-sans">
+                <button type="submit" id="chat-submit-btn" class="p-2.5 rounded-xl bg-gradient-to-r from-brand-indigo to-brand-violet text-white hover:shadow-[0_0_15px_rgba(99,102,241,0.5)] active:scale-95 transition duration-300 flex items-center justify-center flex-shrink-0" aria-label="Send Message">
                     <svg id="chat-send-icon" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3 21l18-9L3 3l3 9zm0 0h7" />
                     </svg>
