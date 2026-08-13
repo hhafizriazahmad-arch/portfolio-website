@@ -275,29 +275,32 @@ def handle_chat_message(request: schemas.ChatRequest, db: Session = Depends(get_
     try:
         # Try SDK first if available
         if 'genai' in globals():
-            try:
-                genai.configure(api_key=api_key)
-                model = genai.GenerativeModel(
-                    model_name="gemini-1.5-flash",
-                    system_instruction=SYSTEM_PROMPT
-                )
-                formatted_history = []
-                for msg in request.messages[:-1]:
-                    formatted_history.append({
-                        "role": "user" if msg.role == "user" else "model",
-                        "parts": [msg.content]
-                    })
-                chat_session = model.start_chat(history=formatted_history)
-                last_msg = request.messages[-1].content
-                response = chat_session.send_message(last_msg)
-                if response and response.text:
-                    ai_reply = response.text.strip()
-            except Exception as sdk_err:
-                print(f"SDK call failed, falling back to REST API: {sdk_err}")
+            for m_name in ["gemini-2.5-flash", "gemini-flash-latest", "gemini-1.5-flash"]:
+                try:
+                    genai.configure(api_key=api_key)
+                    model = genai.GenerativeModel(
+                        model_name=m_name,
+                        system_instruction=SYSTEM_PROMPT
+                    )
+                    formatted_history = []
+                    for msg in request.messages[:-1]:
+                        formatted_history.append({
+                            "role": "user" if msg.role == "user" else "model",
+                            "parts": [msg.content]
+                        })
+                    chat_session = model.start_chat(history=formatted_history)
+                    last_msg = request.messages[-1].content
+                    response = chat_session.send_message(last_msg)
+                    if response and response.text:
+                        ai_reply = response.text.strip()
+                        if ai_reply:
+                            break
+                except Exception as sdk_err:
+                    print(f"SDK model {m_name} failed: {sdk_err}")
 
         # Fallback to direct REST API call if SDK was not loaded or failed
         if not ai_reply:
-            for model_name in ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-pro"]:
+            for model_name in ["gemini-2.5-flash", "gemini-flash-latest", "gemini-3.5-flash", "gemini-1.5-flash", "gemini-pro"]:
                 try:
                     gemini_url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={api_key}"
                     contents = [
