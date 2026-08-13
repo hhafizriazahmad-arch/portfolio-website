@@ -32,3 +32,18 @@ class ContactMessageResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+class ChatMessage(BaseModel):
+    role: str  # "user" or "assistant"
+    content: str
+
+class ChatRequest(BaseModel):
+    messages: list[ChatMessage]
+    name: Optional[str] = None
+    email: Optional[str] = None
+
+class ChatResponse(BaseModel):
+    reply: str
+    lead_captured: bool = False
+    prompt_lead_capture: bool = False
+

@@ -311,6 +311,216 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+
+    // -------------------------------------------------------------------------
+    // 5. Interactive AI Chatbot Controller
+    // -------------------------------------------------------------------------
+    const chatTrigger = document.getElementById('chat-trigger');
+    const chatModal = document.getElementById('chat-modal');
+    const chatCloseBtn = document.getElementById('chat-close-btn');
+    const chatIconOpen = document.getElementById('chat-icon-open');
+    const chatIconClose = document.getElementById('chat-icon-close');
+    const chatMessages = document.getElementById('chat-messages');
+    const chatForm = document.getElementById('chat-form');
+    const chatInput = document.getElementById('chat-input');
+    const chatSubmitBtn = document.getElementById('chat-submit-btn');
+    const chatSendIcon = document.getElementById('chat-send-icon');
+    const chatSpinner = document.getElementById('chat-spinner');
+    const chatLeadCard = document.getElementById('chat-lead-card');
+    const chatLeadName = document.getElementById('chat-lead-name');
+    const chatLeadEmail = document.getElementById('chat-lead-email');
+    const chatLeadSubmit = document.getElementById('chat-lead-submit');
+    const chatLeadClose = document.getElementById('chat-lead-close');
+
+    let chatHistory = [
+        {
+            role: 'assistant',
+            content: "Hello! 👋 I am Hafiz's AI Assistant. How can I help you today? Ask about Python & FastAPI APIs, web scraping, custom AI agents, or schedule a consultation."
+        }
+    ];
+    let isChatOpen = false;
+
+    function toggleChatModal() {
+        isChatOpen = !isChatOpen;
+        if (isChatOpen) {
+            chatModal.classList.remove('hidden');
+            setTimeout(() => {
+                chatModal.classList.remove('scale-95', 'opacity-0');
+                chatModal.classList.add('scale-100', 'opacity-100');
+                chatInput.focus();
+            }, 10);
+            chatIconOpen.classList.add('hidden');
+            chatIconClose.classList.remove('hidden');
+        } else {
+            chatModal.classList.remove('scale-100', 'opacity-100');
+            chatModal.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                chatModal.classList.add('hidden');
+            }, 300);
+            chatIconOpen.classList.remove('hidden');
+            chatIconClose.classList.add('hidden');
+        }
+    }
+
+    if (chatTrigger && chatModal) {
+        chatTrigger.addEventListener('click', toggleChatModal);
+        chatCloseBtn.addEventListener('click', toggleChatModal);
+    }
+
+    function scrollChatToBottom() {
+        if (chatMessages) {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    }
+
+    function appendMessageUI(role, text) {
+        if (!chatMessages) return;
+        const msgDiv = document.createElement('div');
+        msgDiv.className = 'flex items-start space-x-2.5 ' + (role === 'user' ? 'justify-end' : '');
+
+        if (role === 'user') {
+            msgDiv.innerHTML = `
+                <div class="bg-gradient-to-r from-brand-indigo to-brand-violet text-white rounded-2xl rounded-tr-none p-3 text-slate-100 leading-relaxed max-w-[85%] shadow-md">
+                    ${text}
+                </div>
+            `;
+        } else {
+            msgDiv.innerHTML = `
+                <div class="w-7 h-7 rounded-full bg-brand-indigo/20 border border-brand-indigo/40 flex items-center justify-center text-brand-indigo font-bold text-xs flex-shrink-0">
+                    AI
+                </div>
+                <div class="bg-white/5 border border-white/10 rounded-2xl rounded-tl-none p-3.5 text-slate-200 leading-relaxed max-w-[85%]">
+                    ${text.replace(/\n/g, '<br>')}
+                </div>
+            `;
+        }
+        chatMessages.appendChild(msgDiv);
+        scrollChatToBottom();
+    }
+
+    function showTypingIndicator() {
+        const typingDiv = document.createElement('div');
+        typingDiv.id = 'chat-typing-indicator';
+        typingDiv.className = 'flex items-center space-x-2 text-slate-400 text-xs py-2 px-1';
+        typingDiv.innerHTML = `
+            <div class="w-2 h-2 rounded-full bg-brand-indigo animate-bounce"></div>
+            <div class="w-2 h-2 rounded-full bg-brand-violet animate-bounce [animation-delay:0.2s]"></div>
+            <div class="w-2 h-2 rounded-full bg-brand-emerald animate-bounce [animation-delay:0.4s]"></div>
+            <span class="text-slate-500 font-mono text-[11px]">Thinking...</span>
+        `;
+        chatMessages.appendChild(typingDiv);
+        scrollChatToBottom();
+    }
+
+    function hideTypingIndicator() {
+        const indicator = document.getElementById('chat-typing-indicator');
+        if (indicator) {
+            indicator.remove();
+        }
+    }
+
+    async function sendChatMessage(userText, leadData = null) {
+        if (!userText.trim() && !leadData) return;
+
+        if (userText.trim()) {
+            appendMessageUI('user', userText.trim());
+            chatHistory.push({ role: 'user', content: userText.trim() });
+        }
+
+        chatInput.value = '';
+        chatSubmitBtn.disabled = true;
+        chatSendIcon.classList.add('hidden');
+        chatSpinner.classList.remove('hidden');
+        showTypingIndicator();
+
+        const payload = {
+            messages: chatHistory
+        };
+        if (leadData) {
+            payload.name = leadData.name;
+            payload.email = leadData.email;
+        }
+
+        try {
+            const res = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!res.ok) {
+                throw new Error('Chat API returned an error');
+            }
+
+            const data = await res.json();
+            hideTypingIndicator();
+
+            if (data.reply) {
+                appendMessageUI('assistant', data.reply);
+                chatHistory.push({ role: 'assistant', content: data.reply });
+            }
+
+            if (data.prompt_lead_capture && chatLeadCard && !leadData) {
+                chatLeadCard.classList.remove('hidden');
+            }
+        } catch (err) {
+            console.error('Chat error:', err);
+            hideTypingIndicator();
+            appendMessageUI('assistant', "I'm having trouble connecting to the backend server right now. Feel free to use the contact form on the page to drop Hafiz a message!");
+        } finally {
+            chatSubmitBtn.disabled = false;
+            chatSendIcon.classList.remove('hidden');
+            chatSpinner.classList.add('hidden');
+        }
+    }
+
+    if (chatForm) {
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const text = chatInput.value.trim();
+            if (text) {
+                sendChatMessage(text);
+            }
+        });
+    }
+
+    // Quick Action Pill handlers
+    document.querySelectorAll('.quick-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const prompt = btn.getAttribute('data-prompt');
+            if (prompt) {
+                sendChatMessage(prompt);
+            }
+        });
+    });
+
+    // Lead Capture Card Handlers
+    if (chatLeadClose) {
+        chatLeadClose.addEventListener('click', () => {
+            chatLeadCard.classList.add('hidden');
+        });
+    }
+
+    if (chatLeadSubmit) {
+        chatLeadSubmit.addEventListener('click', () => {
+            const nameVal = chatLeadName.value.trim();
+            const emailVal = chatLeadEmail.value.trim();
+
+            if (!nameVal || !emailVal) {
+                alert('Please enter both your Name and Email address.');
+                return;
+            }
+
+            chatLeadCard.classList.add('hidden');
+            sendChatMessage(`Submitting contact info: ${nameVal} (${emailVal})`, {
+                name: nameVal,
+                email: emailVal
+            });
+            chatLeadName.value = '';
+            chatLeadEmail.value = '';
+        });
+    }
 });
+
 
 
