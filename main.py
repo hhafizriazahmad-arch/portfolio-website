@@ -41,7 +41,6 @@ def seed_projects():
             # Clean up removed projects if previously seeded
             db.query(models.Project).filter_by(title="Autonomous AI Voice Agent & Receptionist").delete()
             db.query(models.Project).filter_by(title="Autonomous Lead Intelligence System").delete()
-            db.query(models.Project).filter_by(title="AI Lead Intelligence System").delete()
             db.query(models.Project).filter_by(title="Autonomous AI Cold Prospecting & Web-Research Agent").delete()
             db.commit()
 
@@ -69,6 +68,14 @@ def seed_projects():
                     "github_url": "https://github.com/hhafizriazahmad-arch/onboarding-automation-system",
                     "live_url": None,
                     "icon_type": "cpu"
+                },
+                {
+                    "title": "AI Lead Intelligence System",
+                    "description": "An automated B2B lead generation pipeline engineered to identify, enrich, and qualify profiles of agency founders and CEOs across the US, UK, and Canada. Built on a serverless architecture for high-impact prospect research.",
+                    "tech_stack": "Python, FastAPI, Playwright, Gemini AI, HubSpot API, Slack Webhooks, Vercel",
+                    "github_url": "https://github.com/hhafizriazahmad-arch/ai-lead-intelligence-system",
+                    "live_url": "https://ai-lead-intelligence-system.vercel.app",
+                    "icon_type": "database"
                 }
             ]
             for p_data in default_projects:

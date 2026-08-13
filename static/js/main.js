@@ -153,6 +153,14 @@ document.addEventListener('DOMContentLoaded', () => {
             github_url: "https://github.com/hhafizriazahmad-arch/onboarding-automation-system",
             live_url: null,
             icon_type: "cpu"
+        },
+        {
+            title: "AI Lead Intelligence System",
+            description: "An automated B2B lead generation pipeline engineered to identify, enrich, and qualify profiles of agency founders and CEOs across the US, UK, and Canada. Built on a serverless architecture for high-impact prospect research.",
+            tech_stack: "Python, FastAPI, Playwright, Gemini AI, HubSpot API, Slack Webhooks, Vercel",
+            github_url: "https://github.com/hhafizriazahmad-arch/ai-lead-intelligence-system",
+            live_url: "https://ai-lead-intelligence-system.vercel.app",
+            icon_type: "database"
         }
     ];
 
