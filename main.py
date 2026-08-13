@@ -163,15 +163,10 @@ def submit_contact_form(message: schemas.ContactRequest, db: Session = Depends(g
 import re
 
 SYSTEM_PROMPT = (
-    "You are Hafiz Riaz's AI Automation Assistant. Hafiz Riaz is a Backend & Automation Engineer "
-    "specializing in Python, FastAPI, Web Scraping (Playwright), AI Agents, Lead Generation Pipelines, "
-    "Webhooks, Google Sheets API, and Slack Webhook Integrations. "
-    "Maintain a natural, fluid conversation with the user using the provided conversation history. "
-    "Do NOT repeat your initial greeting or ask questions the user has already answered. "
-    "Answer questions concisely (2-3 sentences), professionally, and persuasively. "
-    "If the visitor wants to book a call, hire Hafiz, get a quote, or leave contact info, "
-    "naturally ask them in plain chat text for their Name and Email address (e.g., 'I would be happy to set that up! What is your name and email address?'). "
-    "Never mention any external forms, widgets, or buttons."
+    "You are a friendly, conversational AI assistant representing Hafiz Riaz Ahmad, "
+    "an expert automation engineer who builds B2B lead generation pipelines and backend systems. "
+    "Speak naturally like a human, keep responses concise, and never repeat yourself. "
+    "If a user expresses interest in working together, politely and naturally ask for their name and email."
 )
 
 def extract_lead_info_from_messages(messages: list) -> tuple[str | None, str | None]:
@@ -186,49 +181,25 @@ def extract_lead_info_from_messages(messages: list) -> tuple[str | None, str | N
             email_match = email_regex.search(text)
             if email_match:
                 found_email = email_match.group(0).strip()
-                # Name extraction heuristic
-                # Match patterns like: "My name is John", "I am John", "John (john@example.com)", "John Doe"
                 name_match = re.search(r'(?:my name is|i am|i\'m)\s+([A-Za-z\s]{2,30})', text, re.IGNORECASE)
                 if name_match:
                     found_name = name_match.group(1).strip()
                 else:
-                    # Clean text removing email and check for remaining words
                     clean_text = email_regex.sub('', text).strip()
                     clean_text = re.sub(r'[^a-zA-Z\s]', '', clean_text).strip()
-                    words = [w for w in clean_text.split() if w.lower() not in ['my', 'name', 'is', 'email', 'and', 'the', 'a', 'to', 'for', 'submitting', 'contact', 'info']]
+                    words = [w for w in clean_text.split() if w.lower() not in ['my', 'name', 'is', 'email', 'and', 'to', 'for', 'submitting', 'info']]
                     if words and len(words) <= 4:
                         found_name = " ".join(words).title()
                     else:
-                        # Fallback to name from email prefix
                         email_prefix = found_email.split('@')[0]
                         found_name = re.sub(r'[^a-zA-Z]', ' ', email_prefix).title().strip() or "Chat Lead"
                 break
 
     return found_name, found_email
 
-def generate_fallback_chat_reply(messages: list) -> tuple[str, bool]:
-    """Generate a smart rule-based response using conversation history when Gemini API key is unavailable."""
-    last_text = messages[-1].content.lower() if messages else ""
-    history_text = " ".join([m.content.lower() for m in messages])
-
-    if any(k in last_text for k in ["book", "call", "hire", "contact", "email", "phone", "touch", "reach"]):
-        reply = "I would be thrilled to connect you with Hafiz! What is your Name and Email address so Hafiz can reach out to you directly?"
-    elif any(k in last_text for k in ["service", "offer", "do", "build", "skill", "stack", "python", "fastapi"]):
-        reply = "Hafiz specializes in building resilient backend systems with Python & FastAPI, web scraping pipelines using Playwright, custom AI Agents, and automated workflows integrating Google Sheets and Slack."
-    elif any(k in last_text for k in ["scrap", "data", "lead", "extract", "pipeline"]):
-        reply = "Hafiz designs production-grade web scraping and lead enrichment pipelines that scale seamlessly, complete with automated validation, HubSpot CRM sync, and real-time Slack/Sheet updates."
-    elif any(k in last_text for k in ["agent", "ai", "gemini", "gpt", "llm"]):
-        reply = "Hafiz builds autonomous AI agents and intelligent workflow bots using Gemini AI and modern Python frameworks tailored specifically to your business workflows."
-    elif any(k in last_text for k in ["price", "cost", "rate", "quote", "budget"]):
-        reply = "Hafiz offers custom pricing based on your project scope and automation requirements. What is your Name and Email address so Hafiz can review your goals and provide a custom proposal?"
-    else:
-        reply = "Thanks for your inquiry! Hafiz builds custom backend APIs, web scrapers, and AI automation pipelines. Could you share your Name and Email so Hafiz can follow up with you?"
-
-    return reply, False
-
 @app.post("/api/chat", response_model=schemas.ChatResponse)
 def handle_chat_message(request: schemas.ChatRequest, db: Session = Depends(get_db)):
-    """Handle chat messages with Gemini AI conversation memory, autonomous lead extraction, and Google Sheets forwarding."""
+    """Handle chat messages by routing directly to Gemini API with full conversational memory and strict error handling."""
     if not request.messages:
         raise HTTPException(status_code=400, detail="Messages array cannot be empty")
 
@@ -243,7 +214,6 @@ def handle_chat_message(request: schemas.ChatRequest, db: Session = Depends(get_
 
     if email_extracted and name_extracted:
         try:
-            # Check if this email was already captured in recent messages to prevent duplication
             existing_lead = db.query(models.ContactMessage).filter(
                 models.ContactMessage.email == email_extracted,
                 models.ContactMessage.subject == "AI Chatbot Conversational Lead"
@@ -271,42 +241,49 @@ def handle_chat_message(request: schemas.ChatRequest, db: Session = Depends(get_
         except Exception as e:
             print(f"Error executing autonomous chat lead capture: {e}")
 
-    # Gemini AI integration with conversational history
+    # Gemini API integration with conversation memory
     api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        return schemas.ChatResponse(
+            reply="I am currently offline, please try again later or use the contact form below.",
+            lead_captured=lead_captured,
+            prompt_lead_capture=False
+        )
+
     ai_reply = None
+    try:
+        gemini_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
+        
+        contents = [
+            {"role": "user", "parts": [{"text": f"System Context: {SYSTEM_PROMPT}"}]}
+        ]
+        for m in request.messages[-10:]:
+            role = "user" if m.role == "user" else "model"
+            contents.append({"role": role, "parts": [{"text": m.content}]})
 
-    if api_key:
-        try:
-            gemini_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
-            
-            contents = [
-                {"role": "user", "parts": [{"text": f"System Context: {SYSTEM_PROMPT}"}]}
-            ]
-            for m in request.messages[-10:]:
-                role = "user" if m.role == "user" else "model"
-                contents.append({"role": role, "parts": [{"text": m.content}]})
-
-            payload = json.dumps({"contents": contents}).encode("utf-8")
-            req = urllib.request.Request(
-                gemini_url,
-                data=payload,
-                headers={"Content-Type": "application/json"}
-            )
-            with urllib.request.urlopen(req, timeout=8) as response:
-                result = json.loads(response.read().decode("utf-8"))
-                candidates = result.get("candidates", [])
-                if candidates:
-                    parts = candidates[0].get("content", {}).get("parts", [])
-                    if parts:
-                        ai_reply = parts[0].get("text", "").strip()
-        except Exception as gemini_err:
-            print(f"Gemini API call failed or timed out: {gemini_err}")
+        payload = json.dumps({"contents": contents}).encode("utf-8")
+        req = urllib.request.Request(
+            gemini_url,
+            data=payload,
+            headers={"Content-Type": "application/json"}
+        )
+        with urllib.request.urlopen(req, timeout=10) as response:
+            result = json.loads(response.read().decode("utf-8"))
+            candidates = result.get("candidates", [])
+            if candidates:
+                parts = candidates[0].get("content", {}).get("parts", [])
+                if parts:
+                    ai_reply = parts[0].get("text", "").strip()
+    except Exception as gemini_err:
+        print(f"Gemini API execution error: {gemini_err}")
+        return schemas.ChatResponse(
+            reply="I am currently offline, please try again later or use the contact form below.",
+            lead_captured=lead_captured,
+            prompt_lead_capture=False
+        )
 
     if not ai_reply:
-        ai_reply, _ = generate_fallback_chat_reply(request.messages)
-
-    if lead_captured:
-        ai_reply += "\n\nThank you! I have passed your details directly to Hafiz. He will get back to you shortly."
+        ai_reply = "I am currently offline, please try again later or use the contact form below."
 
     return schemas.ChatResponse(
         reply=ai_reply,
