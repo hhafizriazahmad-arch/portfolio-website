@@ -326,11 +326,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatSubmitBtn = document.getElementById('chat-submit-btn');
     const chatSendIcon = document.getElementById('chat-send-icon');
     const chatSpinner = document.getElementById('chat-spinner');
-    const chatLeadCard = document.getElementById('chat-lead-card');
-    const chatLeadName = document.getElementById('chat-lead-name');
-    const chatLeadEmail = document.getElementById('chat-lead-email');
-    const chatLeadSubmit = document.getElementById('chat-lead-submit');
-    const chatLeadClose = document.getElementById('chat-lead-close');
 
     let chatHistory = [
         {
@@ -419,13 +414,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    async function sendChatMessage(userText, leadData = null) {
-        if (!userText.trim() && !leadData) return;
+    async function sendChatMessage(userText) {
+        if (!userText.trim()) return;
 
-        if (userText.trim()) {
-            appendMessageUI('user', userText.trim());
-            chatHistory.push({ role: 'user', content: userText.trim() });
-        }
+        appendMessageUI('user', userText.trim());
+        chatHistory.push({ role: 'user', content: userText.trim() });
 
         chatInput.value = '';
         chatSubmitBtn.disabled = true;
@@ -436,10 +429,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const payload = {
             messages: chatHistory
         };
-        if (leadData) {
-            payload.name = leadData.name;
-            payload.email = leadData.email;
-        }
 
         try {
             const res = await fetch('/api/chat', {
@@ -459,14 +448,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 appendMessageUI('assistant', data.reply);
                 chatHistory.push({ role: 'assistant', content: data.reply });
             }
-
-            if (data.prompt_lead_capture && chatLeadCard && !leadData) {
-                chatLeadCard.classList.remove('hidden');
-            }
         } catch (err) {
             console.error('Chat error:', err);
             hideTypingIndicator();
-            appendMessageUI('assistant', "I'm having trouble connecting to the backend server right now. Feel free to use the contact form on the page to drop Hafiz a message!");
+            appendMessageUI('assistant', "I'm having trouble connecting right now. Feel free to use the contact form below to drop Hafiz a message!");
         } finally {
             chatSubmitBtn.disabled = false;
             chatSendIcon.classList.remove('hidden');
@@ -493,33 +478,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
-
-    // Lead Capture Card Handlers
-    if (chatLeadClose) {
-        chatLeadClose.addEventListener('click', () => {
-            chatLeadCard.classList.add('hidden');
-        });
-    }
-
-    if (chatLeadSubmit) {
-        chatLeadSubmit.addEventListener('click', () => {
-            const nameVal = chatLeadName.value.trim();
-            const emailVal = chatLeadEmail.value.trim();
-
-            if (!nameVal || !emailVal) {
-                alert('Please enter both your Name and Email address.');
-                return;
-            }
-
-            chatLeadCard.classList.add('hidden');
-            sendChatMessage(`Submitting contact info: ${nameVal} (${emailVal})`, {
-                name: nameVal,
-                email: emailVal
-            });
-            chatLeadName.value = '';
-            chatLeadEmail.value = '';
-        });
-    }
 });
 
 
