@@ -38,8 +38,11 @@ def seed_projects():
     try:
         db = next(get_db())
         try:
-            # Clean up voice agent if previously seeded
+            # Clean up removed projects if previously seeded
             db.query(models.Project).filter_by(title="Autonomous AI Voice Agent & Receptionist").delete()
+            db.query(models.Project).filter_by(title="Autonomous Lead Intelligence System").delete()
+            db.query(models.Project).filter_by(title="AI Lead Intelligence System").delete()
+            db.query(models.Project).filter_by(title="Autonomous AI Cold Prospecting & Web-Research Agent").delete()
             db.commit()
 
             default_projects = [
@@ -65,22 +68,6 @@ def seed_projects():
                     "tech_stack": "Python, APScheduler, Webhooks, Google Sheets API, Slack Webhooks",
                     "github_url": "https://github.com/hhafizriazahmad-arch/onboarding-automation-system",
                     "live_url": None,
-                    "icon_type": "cpu"
-                },
-                {
-                    "title": "Autonomous Lead Intelligence System",
-                    "description": "An autonomous lead enrichment and web-research intelligence pipeline built with FastAPI. Features Playwright and HTTP-based lead scraping & web verification, Gemini AI qualification, Google Sheets logging, and real-time Slack notification pipeline.",
-                    "tech_stack": "Python, FastAPI, Playwright, Gemini AI, Google Sheets API, Slack API, Vercel",
-                    "github_url": "https://github.com/hhafizriazahmad-arch/autonomous-lead-intelligence-system",
-                    "live_url": "https://autonomous-lead-intelligence-system.vercel.app",
-                    "icon_type": "database"
-                },
-                {
-                    "title": "Autonomous AI Cold Prospecting & Web-Research Agent",
-                    "description": "An autonomous AI agent designed for high-impact prospect research, automated web extraction, and lead intelligence verification running on FastAPI serverless architecture.",
-                    "tech_stack": "Python, FastAPI, AI Agents, Vercel, Web Scraping",
-                    "github_url": "https://github.com/hhafizriazahmad-arch/autonomous-prospecting-agent",
-                    "live_url": "https://autonomous-prospecting-agent.vercel.app",
                     "icon_type": "cpu"
                 }
             ]
