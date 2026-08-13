@@ -327,12 +327,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatSendIcon = document.getElementById('chat-send-icon');
     const chatSpinner = document.getElementById('chat-spinner');
 
-    let chatHistory = [
-        {
-            role: 'assistant',
-            content: "Hello! 👋 I am Hafiz's AI Assistant. How can I help you today? Ask about Python & FastAPI APIs, web scraping, custom AI agents, or schedule a consultation."
-        }
-    ];
+    let chatHistory = [];
     let isChatOpen = false;
 
     function toggleChatModal() {
@@ -414,12 +409,6 @@ document.addEventListener('DOMContentLoaded', () => {
     async function sendChatMessage(userText) {
         if (!userText.trim()) return;
 
-        // Hide quick action pills when conversation starts
-        const quickActions = document.getElementById('chat-quick-actions');
-        if (quickActions) {
-            quickActions.style.display = 'none';
-        }
-
         appendMessageUI('user', userText.trim());
         chatHistory.push({ role: 'user', content: userText.trim() });
 
@@ -471,16 +460,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
-    // Quick Action Pill handlers
-    document.querySelectorAll('.quick-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const prompt = btn.getAttribute('data-prompt');
-            if (prompt) {
-                sendChatMessage(prompt);
-            }
-        });
-    });
 });
 
 

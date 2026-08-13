@@ -383,12 +383,7 @@
         <div id="chat-modal" class="fixed bottom-24 right-6 z-50 w-96 max-w-[calc(100vw-3rem)] h-[520px] max-h-[calc(100vh-8rem)] rounded-3xl bg-brand-coal/90 border border-white/10 backdrop-blur-2xl shadow-2xl flex flex-col overflow-hidden hidden transition-all duration-300 transform scale-95 opacity-0">
             <!-- Modal Header -->
             <div class="px-6 py-4 border-b border-white/5 flex items-center justify-between rounded-t-3xl flex-shrink-0">
-                <div>
-                    <h3 class="font-display font-bold text-sm text-slate-100">
-                        AI Automation Assistant
-                    </h3>
-                    <p class="text-slate-400 text-xs">Ask me about services or booking a call</p>
-                </div>
+                <div></div>
                 <button id="chat-close-btn" class="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-white/5 transition duration-300" aria-label="Close Chat">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -397,27 +392,7 @@
             </div>
 
             <!-- Message Stream Window -->
-            <div id="chat-messages" class="flex-1 min-h-0 overflow-y-auto p-4 pb-6 space-y-4 font-sans text-xs sm:text-sm custom-scrollbar">
-                <!-- Initial Welcome Message from Assistant -->
-                <div class="flex items-start">
-                    <div class="bg-white/5 border border-white/5 rounded-2xl rounded-tl-none p-3.5 text-slate-200 leading-relaxed max-w-[88%]">
-                        Hello! 👋 I am Hafiz's AI Assistant. How can I help you today? Ask about Python & FastAPI APIs, web scraping, custom AI agents, or schedule a consultation.
-                    </div>
-                </div>
-
-                <!-- Quick Action Options (Inside Scrollable Window) -->
-                <div id="chat-quick-actions" class="pt-2 flex flex-wrap gap-1.5">
-                    <button class="quick-btn text-[11px] px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-brand-indigo/20 hover:border-brand-indigo/40 transition duration-300 font-sans cursor-pointer" data-prompt="What services do you offer?">
-                        ⚡ What services do you offer?
-                    </button>
-                    <button class="quick-btn text-[11px] px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-brand-indigo/20 hover:border-brand-indigo/40 transition duration-300 font-sans cursor-pointer" data-prompt="Can you build custom AI Agents?">
-                        🤖 Tell me about AI Agents
-                    </button>
-                    <button class="quick-btn text-[11px] px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-brand-indigo/20 hover:border-brand-indigo/40 transition duration-300 font-sans cursor-pointer" data-prompt="I want to book a call / leave contact details">
-                        📅 Book a call / Drop info
-                    </button>
-                </div>
-            </div>
+            <div id="chat-messages" class="flex-1 min-h-0 overflow-y-auto p-4 pb-6 space-y-4 font-sans text-xs sm:text-sm custom-scrollbar"></div>
 
             <!-- Message Input Bar -->
             <form id="chat-form" class="p-3 border-t border-white/5 flex items-center space-x-2 bg-brand-coal/90 rounded-b-3xl flex-shrink-0">
