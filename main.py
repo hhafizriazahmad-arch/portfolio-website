@@ -1,19 +1,34 @@
 import os
 import json
 import urllib.request
+import re
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 from typing import List
 
+from dotenv import load_dotenv
+load_dotenv()
+
 try:
-    from dotenv import load_dotenv
-    load_dotenv()
-except ImportError:
-    pass
+    import google.generativeai as genai
+    api_key_val = os.getenv('GEMINI_API_KEY')
+    if api_key_val:
+        genai.configure(api_key=api_key_val)
+except Exception as sdk_init_err:
+    print(f"GenerativeAI SDK config warning: {sdk_init_err}")
+
+SYSTEM_PROMPT = (
+    "You are a friendly, conversational AI assistant representing Hafiz, "
+    "an expert automation engineer. Speak naturally like a human in a conversational tone, "
+    "keep responses concise, and never repeat yourself. If a user expresses interest "
+    "in your services, politely and naturally ask for their name and email in the chat flow."
+)
 
 import models
+import schemas
+from database import engine, get_db
 import schemas
 from database import engine, get_db
 
@@ -249,7 +264,7 @@ def handle_chat_message(request: schemas.ChatRequest, db: Session = Depends(get_
 
     # Gemini API integration with conversation memory
     api_key = os.getenv("GEMINI_API_KEY")
-    if not api_key:
+    if not api_key or api_key == "PLACE_YOUR_KEY_HERE":
         return schemas.ChatResponse(
             reply="I am currently offline, please try again later or use the contact form below.",
             lead_captured=lead_captured,
@@ -258,28 +273,57 @@ def handle_chat_message(request: schemas.ChatRequest, db: Session = Depends(get_
 
     ai_reply = None
     try:
-        gemini_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
-        
-        contents = [
-            {"role": "user", "parts": [{"text": f"System Context: {SYSTEM_PROMPT}"}]}
-        ]
-        for m in request.messages[-10:]:
-            role = "user" if m.role == "user" else "model"
-            contents.append({"role": role, "parts": [{"text": m.content}]})
+        # Try SDK first if available
+        if 'genai' in globals():
+            try:
+                genai.configure(api_key=api_key)
+                model = genai.GenerativeModel(
+                    model_name="gemini-1.5-flash",
+                    system_instruction=SYSTEM_PROMPT
+                )
+                formatted_history = []
+                for msg in request.messages[:-1]:
+                    formatted_history.append({
+                        "role": "user" if msg.role == "user" else "model",
+                        "parts": [msg.content]
+                    })
+                chat_session = model.start_chat(history=formatted_history)
+                last_msg = request.messages[-1].content
+                response = chat_session.send_message(last_msg)
+                if response and response.text:
+                    ai_reply = response.text.strip()
+            except Exception as sdk_err:
+                print(f"SDK call failed, falling back to REST API: {sdk_err}")
 
-        payload = json.dumps({"contents": contents}).encode("utf-8")
-        req = urllib.request.Request(
-            gemini_url,
-            data=payload,
-            headers={"Content-Type": "application/json"}
-        )
-        with urllib.request.urlopen(req, timeout=10) as response:
-            result = json.loads(response.read().decode("utf-8"))
-            candidates = result.get("candidates", [])
-            if candidates:
-                parts = candidates[0].get("content", {}).get("parts", [])
-                if parts:
-                    ai_reply = parts[0].get("text", "").strip()
+        # Fallback to direct REST API call if SDK was not loaded or failed
+        if not ai_reply:
+            for model_name in ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-pro"]:
+                try:
+                    gemini_url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={api_key}"
+                    contents = [
+                        {"role": "user", "parts": [{"text": f"System Context: {SYSTEM_PROMPT}"}]}
+                    ]
+                    for m in request.messages[-10:]:
+                        role = "user" if m.role == "user" else "model"
+                        contents.append({"role": role, "parts": [{"text": m.content}]})
+
+                    payload = json.dumps({"contents": contents}).encode("utf-8")
+                    req = urllib.request.Request(
+                        gemini_url,
+                        data=payload,
+                        headers={"Content-Type": "application/json"}
+                    )
+                    with urllib.request.urlopen(req, timeout=10) as response:
+                        result = json.loads(response.read().decode("utf-8"))
+                        candidates = result.get("candidates", [])
+                        if candidates:
+                            parts = candidates[0].get("content", {}).get("parts", [])
+                            if parts:
+                                ai_reply = parts[0].get("text", "").strip()
+                                if ai_reply:
+                                    break
+                except Exception as endpoint_err:
+                    print(f"REST API model {model_name} failed: {endpoint_err}")
     except Exception as gemini_err:
         print(f"Gemini API execution error: {gemini_err}")
         return schemas.ChatResponse(
