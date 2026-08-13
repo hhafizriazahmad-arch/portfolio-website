@@ -371,7 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function appendMessageUI(role, text) {
         if (!chatMessages) return;
         const msgDiv = document.createElement('div');
-        msgDiv.className = 'flex items-start space-x-2.5 ' + (role === 'user' ? 'justify-end' : '');
+        msgDiv.className = 'flex items-start ' + (role === 'user' ? 'justify-end' : '');
 
         if (role === 'user') {
             msgDiv.innerHTML = `
@@ -381,10 +381,7 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         } else {
             msgDiv.innerHTML = `
-                <div class="w-7 h-7 rounded-full bg-brand-indigo/20 border border-brand-indigo/40 flex items-center justify-center text-brand-indigo font-bold text-xs flex-shrink-0">
-                    AI
-                </div>
-                <div class="bg-white/5 border border-white/10 rounded-2xl rounded-tl-none p-3.5 text-slate-200 leading-relaxed max-w-[85%]">
+                <div class="bg-white/5 border border-white/5 rounded-2xl rounded-tl-none p-3.5 text-slate-200 leading-relaxed max-w-[88%]">
                     ${text.replace(/\n/g, '<br>')}
                 </div>
             `;
@@ -416,6 +413,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function sendChatMessage(userText) {
         if (!userText.trim()) return;
+
+        // Hide quick action pills when conversation starts
+        const quickActions = document.getElementById('chat-quick-actions');
+        if (quickActions) {
+            quickActions.style.display = 'none';
+        }
 
         appendMessageUI('user', userText.trim());
         chatHistory.push({ role: 'user', content: userText.trim() });
