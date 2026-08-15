@@ -1,82 +1,84 @@
 document.addEventListener('DOMContentLoaded', () => {
     // -------------------------------------------------------------------------
-    // 1. Interactive Canvas Background (Network Constellation)
+    // 1. Interactive Canvas Background (HR Autonomous Enterprise AI Network Grid)
     // -------------------------------------------------------------------------
     const canvas = document.getElementById('bg-canvas');
-    const ctx = canvas.getContext('2d');
+    if (canvas) {
+        const ctx = canvas.getContext('2d');
 
-    let width = canvas.width = window.innerWidth;
-    let height = canvas.height = window.innerHeight;
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
 
-    window.addEventListener('resize', () => {
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
-    });
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
 
-    const particles = [];
-    const maxParticles = 60;
-    const maxDistance = 120;
+        const particles = [];
+        const maxParticles = 65;
+        const maxDistance = 130;
 
-    class Particle {
-        constructor() {
-            this.x = Math.random() * width;
-            this.y = Math.random() * height;
-            this.vx = (Math.random() - 0.5) * 0.5;
-            this.vy = (Math.random() - 0.5) * 0.5;
-            this.radius = Math.random() * 1.5 + 1;
-        }
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.4;
+                this.vy = (Math.random() - 0.5) * 0.4;
+                this.radius = Math.random() * 1.5 + 1;
+            }
 
-        update() {
-            this.x += this.vx;
-            this.y += this.vy;
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
 
-            if (this.x < 0 || this.x > width) this.vx *= -1;
-            if (this.y < 0 || this.y > height) this.vy *= -1;
-        }
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
 
-        draw() {
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(139, 92, 246, 0.4)'; // violet-500 with opacity
-            ctx.fill();
-        }
-    }
-
-    // Initialize particles
-    for (let i = 0; i < maxParticles; i++) {
-        particles.push(new Particle());
-    }
-
-    function animate() {
-        ctx.clearRect(0, 0, width, height);
-
-        // Draw connections
-        for (let i = 0; i < particles.length; i++) {
-            const p1 = particles[i];
-            p1.update();
-            p1.draw();
-
-            for (let j = i + 1; j < particles.length; j++) {
-                const p2 = particles[j];
-                const dx = p1.x - p2.x;
-                const dy = p1.y - p2.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-
-                if (dist < maxDistance) {
-                    ctx.beginPath();
-                    ctx.moveTo(p1.x, p1.y);
-                    ctx.lineTo(p2.x, p2.y);
-                    // Fade lines out as they get further apart
-                    const alpha = (1 - dist / maxDistance) * 0.15;
-                    ctx.strokeStyle = `rgba(99, 102, 241, ${alpha})`; // indigo-500
-                    ctx.lineWidth = 1;
-                    ctx.stroke();
-                }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(6, 182, 212, 0.5)'; // Secondary Cyan with opacity
+                ctx.fill();
             }
         }
-        requestAnimationFrame(animate);
+
+        // Initialize particles
+        for (let i = 0; i < maxParticles; i++) {
+            particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+
+            // Draw connections
+            for (let i = 0; i < particles.length; i++) {
+                const p1 = particles[i];
+                p1.update();
+                p1.draw();
+
+                for (let j = i + 1; j < particles.length; j++) {
+                    const p2 = particles[j];
+                    const dx = p1.x - p2.x;
+                    const dy = p1.y - p2.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < maxDistance) {
+                        ctx.beginPath();
+                        ctx.moveTo(p1.x, p1.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        // Fade lines out as they get further apart
+                        const alpha = (1 - dist / maxDistance) * 0.20;
+                        ctx.strokeStyle = `rgba(37, 99, 235, ${alpha})`; // Primary Blue
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+        animate();
     }
-    animate();
 
     // -------------------------------------------------------------------------
     // 2. Mobile Menu Toggle
@@ -115,23 +117,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const projectsGrid = document.getElementById('projects-grid');
 
     const svgIcons = {
-        'shopping-cart': `<svg class="w-6 h-6 text-brand-indigo" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        'shopping-cart': `<svg class="w-6 h-6 text-[#06B6D4]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
         </svg>`,
-        'cpu': `<svg class="w-6 h-6 text-brand-emerald" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        'cpu': `<svg class="w-6 h-6 text-[#2563EB]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
         </svg>`,
-        'database': `<svg class="w-6 h-6 text-brand-violet" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        'database': `<svg class="w-6 h-6 text-[#14B8A6]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2.21 3.58 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.58 4 8 4s8-1.79 8-4M4 7c0-2.21 3.58-4 8-4s8 1.79 8 4m0 5c0 2.21-3.58 4-8 4s-8-1.79-8-4" />
         </svg>`,
-        'default': `<svg class="w-6 h-6 text-brand-violet" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+        'default': `<svg class="w-6 h-6 text-[#06B6D4]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
         </svg>`
     };
 
     const fallbackProjects = [
         {
-            title: "Digital Marketing Web Suite",
+            title: "AI Lead Intelligence System",
+            description: "An automated B2B lead generation pipeline engineered to identify, enrich, and qualify profiles of founders and C-level executives. Built on FastAPI and Gemini AI for high-impact prospect research.",
+            tech_stack: "Python, FastAPI, Gemini AI, Playwright, HubSpot API, Webhooks",
+            github_url: "https://github.com/hhafizriazahmad-arch/ai-lead-intelligence-system",
+            live_url: "https://ai-lead-intelligence-system.vercel.app",
+            icon_type: "database"
+        },
+        {
+            title: "Digital Marketing Automation Suite",
             description: "Full-stack digital marketing platform featuring an interactive dynamic UI, serverless backend integrations, and automated lead intelligence data pipelines.",
             tech_stack: "Full-Stack Web Dev, JavaScript, Python, REST API, HTML5/CSS3, Vercel",
             github_url: "https://github.com/hhafizriazahmad-arch/digital-marketing",
@@ -147,28 +157,21 @@ document.addEventListener('DOMContentLoaded', () => {
             icon_type: "shopping-cart"
         },
         {
-            title: "Onboarding Automation System",
-            description: "An enterprise-grade automation workflow triggered by Typeform submissions. It automatically feeds user profiles to Google Sheets, creates dedicated workspaces, and triggers real-time onboarding notifications via Slack webhook integrations.",
+            title: "Onboarding Automation Workflow",
+            description: "An enterprise-grade automation workflow triggered by Typeform submissions. It automatically feeds user profiles to Google Sheets, creates dedicated workspaces, and triggers real-time notifications via Slack webhooks.",
             tech_stack: "Python, APScheduler, Webhooks, Google Sheets API, Slack Webhooks",
             github_url: "https://github.com/hhafizriazahmad-arch/onboarding-automation-system",
             live_url: null,
             icon_type: "cpu"
-        },
-        {
-            title: "AI Lead Intelligence System",
-            description: "An automated B2B lead generation pipeline engineered to identify, enrich, and qualify profiles of agency founders and CEOs across the US, UK, and Canada. Built on a serverless architecture for high-impact prospect research.",
-            tech_stack: "Python, FastAPI, Playwright, Gemini AI, HubSpot API, Slack Webhooks, Vercel",
-            github_url: "https://github.com/hhafizriazahmad-arch/ai-lead-intelligence-system",
-            live_url: "https://ai-lead-intelligence-system.vercel.app",
-            icon_type: "database"
         }
     ];
 
     function renderProjectsList(projects) {
+        if (!projectsGrid) return;
         if (!projects || projects.length === 0) {
             projectsGrid.innerHTML = `
-                <div class="col-span-full text-center py-8 text-slate-500">
-                    No projects loaded yet. Please check back later.
+                <div class="col-span-full text-center py-8 text-[#94A3B8]">
+                    No HR Autonomous projects loaded yet. Please check back later.
                 </div>`;
             return;
         }
@@ -177,11 +180,11 @@ document.addEventListener('DOMContentLoaded', () => {
         projects.forEach(project => {
             const iconSvg = svgIcons[project.icon_type] || svgIcons['default'];
             const techStackBadges = project.tech_stack.split(',').map(tech => 
-                `<span class="text-xs px-2.5 py-1 rounded bg-white/5 border border-white/10 text-slate-300 font-mono">${tech.trim()}</span>`
+                `<span class="text-xs px-2.5 py-1 rounded bg-[#0F172A] border border-[rgba(37,99,235,0.20)] text-[#06B6D4] font-mono">${tech.trim()}</span>`
             ).join('');
 
             const githubLink = project.github_url ? `
-                <a href="${project.github_url}" target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-white transition flex items-center space-x-1 text-sm font-medium">
+                <a href="${project.github_url}" target="_blank" rel="noopener noreferrer" class="text-[#94A3B8] hover:text-[#06B6D4] transition flex items-center space-x-1 text-sm font-medium">
                     <span>GitHub</span>
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
                 </a>` : '';
@@ -190,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
             projectCard.className = 'p-8 rounded-3xl glass-panel flex flex-col space-y-6 transition-all duration-300 group';
             projectCard.innerHTML = `
                 <div class="flex items-center justify-between">
-                    <div class="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-white/10 transition-all duration-300">
+                    <div class="w-12 h-12 rounded-xl bg-[#2563EB]/10 border border-[rgba(37,99,235,0.25)] flex items-center justify-center group-hover:bg-[#2563EB]/20 transition-all duration-300">
                         ${iconSvg}
                     </div>
                     <div class="flex items-center">
@@ -198,10 +201,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
                 <div class="space-y-3 flex-grow">
-                    <h3 class="font-display text-2xl font-bold text-slate-100 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-brand-violet transition-all duration-300">
+                    <h3 class="font-display text-2xl font-bold text-[#F8FAFC] group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[#2563EB] group-hover:via-[#06B6D4] group-hover:to-[#14B8A6] transition-all duration-300">
                         ${project.title}
                     </h3>
-                    <p class="text-slate-400 text-sm leading-relaxed">
+                    <p class="text-[#94A3B8] text-sm leading-relaxed">
                         ${project.description}
                     </p>
                 </div>
@@ -225,7 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderProjectsList(projects);
             })
             .catch(error => {
-                console.warn('Backend API fetch failed, rendering static fallback projects:', error);
+                console.warn('Backend API fetch failed, rendering HR Autonomous fallback projects:', error);
                 renderProjectsList(fallbackProjects);
             });
     }
@@ -290,8 +293,8 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .then(() => {
                 // Success
-                notification.className = 'block mb-6 p-4 rounded-xl border border-brand-emerald/20 bg-brand-emerald/10 text-brand-emerald font-medium';
-                notification.textContent = 'Thank you! Your message has been sent successfully.';
+                notification.className = 'block mb-6 p-4 rounded-xl border border-[#14B8A6]/30 bg-[#14B8A6]/10 text-[#14B8A6] font-medium';
+                notification.textContent = 'Thank you! Your inquiry has been sent successfully to HR Autonomous.';
                 contactForm.reset();
             })
             .catch((err) => {
@@ -300,7 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const displayMsg = (err && typeof err.message === 'string' && err.message !== '[object Object]')
                     ? err.message
                     : 'Something went wrong. Please check your connection and try again.';
-                notification.className = 'block mb-6 p-4 rounded-xl border border-red-500/20 bg-red-500/10 text-red-400 font-medium';
+                notification.className = 'block mb-6 p-4 rounded-xl border border-red-500/30 bg-red-500/10 text-red-400 font-medium';
                 notification.textContent = displayMsg;
             })
             .finally(() => {
@@ -370,13 +373,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (role === 'user') {
             msgDiv.innerHTML = `
-                <div class="bg-gradient-to-r from-brand-indigo to-brand-violet text-white rounded-2xl rounded-tr-none p-3 text-slate-100 leading-relaxed max-w-[85%] shadow-md">
+                <div class="bg-gradient-to-r from-[#2563EB] via-[#06B6D4] to-[#14B8A6] text-white rounded-2xl rounded-tr-none p-3.5 leading-relaxed max-w-[85%] shadow-md">
                     ${text}
                 </div>
             `;
         } else {
             msgDiv.innerHTML = `
-                <div class="bg-white/5 border border-white/5 rounded-2xl rounded-tl-none p-3.5 text-slate-200 leading-relaxed max-w-[88%]">
+                <div class="bg-[#0F172A] border border-[rgba(37,99,235,0.20)] rounded-2xl rounded-tl-none p-3.5 text-[#F8FAFC] leading-relaxed max-w-[88%] shadow-sm">
                     ${text.replace(/\n/g, '<br>')}
                 </div>
             `;
@@ -388,12 +391,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function showTypingIndicator() {
         const typingDiv = document.createElement('div');
         typingDiv.id = 'chat-typing-indicator';
-        typingDiv.className = 'flex items-center space-x-2 text-slate-400 text-xs py-2 px-1';
+        typingDiv.className = 'flex items-center space-x-2 text-[#94A3B8] text-xs py-2 px-1';
         typingDiv.innerHTML = `
-            <div class="w-2 h-2 rounded-full bg-brand-indigo animate-bounce"></div>
-            <div class="w-2 h-2 rounded-full bg-brand-violet animate-bounce [animation-delay:0.2s]"></div>
-            <div class="w-2 h-2 rounded-full bg-brand-emerald animate-bounce [animation-delay:0.4s]"></div>
-            <span class="text-slate-500 font-mono text-[11px]">Thinking...</span>
+            <div class="w-2 h-2 rounded-full bg-[#2563EB] animate-bounce"></div>
+            <div class="w-2 h-2 rounded-full bg-[#06B6D4] animate-bounce [animation-delay:0.2s]"></div>
+            <div class="w-2 h-2 rounded-full bg-[#14B8A6] animate-bounce [animation-delay:0.4s]"></div>
+            <span class="text-[#94A3B8] font-mono text-[11px]">HR Autonomous Assistant thinking...</span>
         `;
         chatMessages.appendChild(typingDiv);
         scrollChatToBottom();
@@ -443,7 +446,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) {
             console.error('Chat error:', err);
             hideTypingIndicator();
-            appendMessageUI('assistant', "I'm having trouble connecting right now. Feel free to use the contact form below to drop Hafiz a message!");
+            appendMessageUI('assistant', "I'm having trouble connecting right now. Feel free to use the contact form below to drop HR Autonomous a message!");
         } finally {
             chatSubmitBtn.disabled = false;
             chatSendIcon.classList.remove('hidden');
@@ -461,6 +464,3 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-
-
-

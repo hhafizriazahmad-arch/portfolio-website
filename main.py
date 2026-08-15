@@ -20,15 +20,16 @@ except Exception as sdk_init_err:
     print(f"GenerativeAI SDK config warning: {sdk_init_err}")
 
 SYSTEM_PROMPT = (
-    "You are a friendly, conversational AI assistant representing Hafiz, "
-    "an expert automation engineer. Speak naturally like a human in a conversational tone, "
-    "keep responses concise, and never repeat yourself. If a user expresses interest "
-    "in your services, politely and naturally ask for their name and email in the chat flow."
+    "You are a friendly, conversational AI assistant representing HR Autonomous "
+    "and Hafiz Riaz, an AI Automation Engineer & Backend Developer. HR Autonomous builds "
+    "intelligent automation systems, AI-powered workflows, backend infrastructure, and scalable "
+    "business process automation solutions using Python, FastAPI, APIs, and modern AI. "
+    "Speak naturally like a human in a professional and engaging tone, keep responses concise, "
+    "and never repeat yourself. If a user expresses interest in automation services or consulting, "
+    "politely and naturally ask for their name and email."
 )
 
 import models
-import schemas
-from database import engine, get_db
 import schemas
 from database import engine, get_db
 
@@ -40,8 +41,8 @@ except Exception as e:
 
 # Explicitly export FastAPI application instance
 app = FastAPI(
-    title="Hafiz Riaz Portfolio API",
-    description="Backend API for portfolio website and contact submissions",
+    title="HR Autonomous API",
+    description="Backend API for HR Autonomous platform and intelligent business process automation services",
     version="1.0.0"
 )
 
@@ -67,7 +68,15 @@ def seed_projects():
 
             default_projects = [
                 {
-                    "title": "Digital Marketing Web Suite",
+                    "title": "AI Lead Intelligence System",
+                    "description": "An automated B2B lead generation pipeline engineered to identify, enrich, and qualify profiles of founders and C-level executives. Built on FastAPI and Gemini AI for high-impact prospect research.",
+                    "tech_stack": "Python, FastAPI, Playwright, Gemini AI, HubSpot API, Slack Webhooks, Vercel",
+                    "github_url": "https://github.com/hhafizriazahmad-arch/ai-lead-intelligence-system",
+                    "live_url": "https://ai-lead-intelligence-system.vercel.app",
+                    "icon_type": "database"
+                },
+                {
+                    "title": "Digital Marketing Automation Suite",
                     "description": "Full-stack digital marketing platform featuring an interactive dynamic UI, serverless backend integrations, and automated lead intelligence data pipelines.",
                     "tech_stack": "Full-Stack Web Dev, JavaScript, Python, REST API, HTML5/CSS3, Vercel",
                     "github_url": "https://github.com/hhafizriazahmad-arch/digital-marketing",
@@ -83,20 +92,12 @@ def seed_projects():
                     "icon_type": "shopping-cart"
                 },
                 {
-                    "title": "Onboarding Automation System",
-                    "description": "An enterprise-grade automation workflow triggered by Typeform submissions. It automatically feeds user profiles to Google Sheets, creates dedicated workspaces, and triggers real-time onboarding notifications via Slack webhook integrations.",
+                    "title": "Onboarding Automation Workflow",
+                    "description": "An enterprise-grade automation workflow triggered by Typeform submissions. It automatically feeds user profiles to Google Sheets, creates dedicated workspaces, and triggers real-time notifications via Slack webhooks.",
                     "tech_stack": "Python, APScheduler, Webhooks, Google Sheets API, Slack Webhooks",
                     "github_url": "https://github.com/hhafizriazahmad-arch/onboarding-automation-system",
                     "live_url": None,
                     "icon_type": "cpu"
-                },
-                {
-                    "title": "AI Lead Intelligence System",
-                    "description": "An automated B2B lead generation pipeline engineered to identify, enrich, and qualify profiles of agency founders and CEOs across the US, UK, and Canada. Built on a serverless architecture for high-impact prospect research.",
-                    "tech_stack": "Python, FastAPI, Playwright, Gemini AI, HubSpot API, Slack Webhooks, Vercel",
-                    "github_url": "https://github.com/hhafizriazahmad-arch/ai-lead-intelligence-system",
-                    "live_url": "https://ai-lead-intelligence-system.vercel.app",
-                    "icon_type": "database"
                 }
             ]
             for p_data in default_projects:
@@ -110,7 +111,7 @@ def seed_projects():
                     existing.tech_stack = p_data["tech_stack"]
                     existing.icon_type = p_data.get("icon_type", "default")
             db.commit()
-            print("Successfully verified and seeded portfolio projects.")
+            print("Successfully verified and seeded HR Autonomous projects.")
         except Exception as e:
             db.rollback()
             print(f"Error seeding projects: {e}")
@@ -181,15 +182,6 @@ def submit_contact_form(message: schemas.ContactRequest, db: Session = Depends(g
             detail=f"An error occurred while saving your message: {str(e)}"
         )
 
-import re
-
-SYSTEM_PROMPT = (
-    "You are a friendly, conversational AI assistant representing Hafiz Riaz Ahmad, "
-    "an expert automation engineer who builds B2B lead generation pipelines and backend systems. "
-    "Speak naturally like a human, keep responses concise, and never repeat yourself. "
-    "If a user expresses interest in working together, politely and naturally ask for their name and email."
-)
-
 def extract_lead_info_from_messages(messages: list) -> tuple[str | None, str | None]:
     """Autonomous extraction of email and name from conversational chat history."""
     email_regex = re.compile(r'[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+')
@@ -237,7 +229,7 @@ def handle_chat_message(request: schemas.ChatRequest, db: Session = Depends(get_
         try:
             existing_lead = db.query(models.ContactMessage).filter(
                 models.ContactMessage.email == email_extracted,
-                models.ContactMessage.subject == "AI Chatbot Conversational Lead"
+                models.ContactMessage.subject == "HR Autonomous AI Conversational Lead"
             ).first()
 
             if not existing_lead:
@@ -245,7 +237,7 @@ def handle_chat_message(request: schemas.ChatRequest, db: Session = Depends(get_
                 db_msg = models.ContactMessage(
                     name=name_extracted,
                     email=email_extracted,
-                    subject="AI Chatbot Conversational Lead",
+                    subject="HR Autonomous AI Conversational Lead",
                     message=f"Chat Transcript:\n{conversation_transcript}"
                 )
                 db.add(db_msg)
@@ -255,7 +247,7 @@ def handle_chat_message(request: schemas.ChatRequest, db: Session = Depends(get_
                 forward_lead_to_webhook(
                     name=name_extracted,
                     email=email_extracted,
-                    subject="AI Chatbot Conversational Lead",
+                    subject="HR Autonomous AI Conversational Lead",
                     message=conversation_transcript
                 )
                 lead_captured = True
@@ -353,5 +345,3 @@ if os.path.exists(static_dir):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
-
-

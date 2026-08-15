@@ -1,37 +1,47 @@
-# Professional Portfolio Website
+# HR Autonomous – Enterprise AI Automation Platform & Portfolio
 
-A lightweight, modern, and professional portfolio website showcasing backend engineering and automation pipelines. Built with a cyber-dark aesthetic, dynamic SQLite content loading, and real-time form submission tracking.
+**HR Autonomous** is a premium, enterprise-grade AI Automation brand and portfolio showcasing intelligent automation systems, backend microservices, and AI-powered workflow architecture. Built with a modern dark SaaS aesthetic, Enterprise AI blue/cyan/teal design system, dynamic SQLite database seeding, and real-time lead capture pipelines.
+
+---
+
+## Brand Identity & Positioning
+
+- **Brand Name:** HR Autonomous
+- **Tagline:** Building Intelligent Automation Systems for Modern Businesses
+- **Founder:** Hafiz Riaz (AI Automation Engineer • Backend Developer • Workflow Architect)
+- **Primary Color Palette:** Enterprise Obsidian (`#020617`), Primary Blue (`#2563EB`), Secondary Cyan (`#06B6D4`), Accent Teal (`#14B8A6`)
+
+---
 
 ## Technology Stack
 
-- **Backend:** Python, FastAPI (API design & static file serving)
-- **Database:** SQLite with SQLAlchemy ORM
-- **Frontend:** HTML5, Tailwind CSS (via CDN), Vanilla JavaScript, custom CSS animations
+- **Backend:** Python 3.11+, FastAPI (REST API design & static file serving), SQLAlchemy ORM, Uvicorn
+- **AI Integration:** Google Gemini AI API with conversational memory & lead capture mechanics
+- **Database:** SQLite with SQLAlchemy ORM (and automatic Vercel `/tmp/portfolio.db` support)
+- **Frontend:** HTML5, Tailwind CSS, Vanilla JavaScript, HTML5 Canvas Network Grid
 
 ---
 
 ## Features
 
-1. **Cyber-Dark Theme:** Modern tech colors, glowing hover micro-interactions, and glassmorphism styling.
-2. **Interactive Background:** A moving constellation particle canvas written in native JavaScript.
-3. **Dynamic Project Showcase:** Projects are automatically loaded from an SQLite database via a `/api/projects` endpoint.
-4. **Active Contact Logging:** Forms submitted to `/api/contact` are validated on the backend and stored in the database.
-5. **Auto-seeding Engine:** Automatically pre-populates the database on startup if no projects are present.
+1. **Enterprise AI Aesthetic:** Custom blue/cyan/teal design system, subtle grid patterns, glowing hover interactions, and glassmorphism.
+2. **Interactive Network Canvas:** Moving blue/cyan particle constellation background written in native JavaScript.
+3. **Dynamic Systems Showcase:** Projects are seeded automatically into SQLite and fetched via `/api/projects`.
+4. **Active Contact & Chat Lead Capture:** Form submissions to `/api/contact` and AI chat leads are logged to SQLite and forwarded via Google Apps Script Webhooks.
+5. **SEO & Social Optimization:** Pre-configured Open Graph, Twitter Card tags, and JSON-LD Structured Data for `Organization` / `HR Autonomous`.
 
 ---
 
 ## Setup & Running Locally
 
-Follow these instructions to run the application on your computer:
+Follow these instructions to run HR Autonomous locally:
 
-### 1. Clone or Open Directory
-Navigate to the directory in your terminal:
+### 1. Navigate to Project Directory
 ```bash
 cd portfolio
 ```
 
-### 2. Create and Activate a Virtual Environment
-Create a virtual environment:
+### 2. Create and Activate Virtual Environment
 ```bash
 # Windows
 python -m venv .venv
@@ -43,55 +53,47 @@ source .venv/bin/activate
 ```
 
 ### 3. Install Dependencies
-Install all required packages:
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Start the Application
-Run the FastAPI development server with Uvicorn:
+### 4. Start the Application Server
+```bash
+python main.py
+```
+Or directly using Uvicorn:
 ```bash
 uvicorn main:app --reload
 ```
 
 The application will start, seed the SQLite database (`portfolio.db`), and serve:
-- **Frontend Portfolio:** [http://127.0.0.1:8000](http://127.0.0.1:8000)
-- **Interactive Swagger Documentation:** [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+- **HR Autonomous Frontend:** [http://127.0.0.1:8000](http://127.0.0.1:8000)
+- **Interactive OpenAPI Documentation:** [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 
 ---
 
-## Folder Structure
+## File Structure
 
 ```
 ├── static/
 │   ├── css/
-│   │   └── style.css      # Custom animations, custom glow transitions, and scrollbar setup
+│   │   └── style.css      # Enterprise CSS variables, glassmorphism, scrollbars, glowing utilities
 │   ├── js/
-│   │   └── main.js        # Interactive canvas drawing, contact submissions, API loader
-│   └── index.html         # Hero, About, Skills, Projects, and Contact sections
+│   │   └── main.js        # Canvas particle animation, project renderer, contact & chat controllers
+│   └── index.html         # Hero, About, Capabilities, Projects showcase, Contact form, Chatbot UI
 ├── .gitignore
-├── database.py            # SQLite connection pool initialization
-├── main.py                # FastAPI endpoints, seeding mechanics, and static file mount
-├── models.py              # SQLAlchemy schemas for database
-├── requirements.txt       # Necessary Python modules
-├── schemas.py             # Pydantic schemas for request validation
-└── README.md              # Instructions & overview
+├── database.py            # SQLite connection pool & Vercel /tmp copy handler
+├── main.py                # FastAPI endpoints, Gemini AI integration, database seeding, static file mount
+├── models.py              # SQLAlchemy schemas for projects and contact messages
+├── requirements.txt       # Dependencies
+├── schemas.py             # Pydantic schemas for request & response validation
+└── README.md              # Brand overview and documentation
 ```
 
 ---
 
 ## API Endpoints
 
-- **`GET /api/projects`**  
-  Returns a JSON array of all projects.
-- **`POST /api/contact`**  
-  Submits contact form payload.  
-  *Payload format:*
-  ```json
-  {
-    "name": "John Doe",
-    "email": "john@example.com",
-    "subject": "Inquiry",
-    "message": "Let's collaborate!"
-  }
-  ```
+- **`GET /api/projects`** — Returns JSON array of HR Autonomous systems & projects.
+- **`POST /api/contact`** — Submits contact form payload.
+- **`POST /api/chat`** — Routes chat messages to Gemini AI with conversational memory.
