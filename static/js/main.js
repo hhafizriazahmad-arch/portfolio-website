@@ -316,7 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // -------------------------------------------------------------------------
-    // 5. Interactive AI Chatbot Controller
+    // 5. Interactive Chat Controller
     // -------------------------------------------------------------------------
     const chatTrigger = document.getElementById('chat-trigger');
     const chatModal = document.getElementById('chat-modal');
@@ -332,6 +332,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let chatHistory = [];
     let isChatOpen = false;
+    let starterPromptsRendered = false;
+
+    function renderInitialChatState() {
+        if (!chatMessages || chatMessages.children.length > 0) return;
+
+        // Render initial human greeting
+        const welcomeText = "Hey! What are you looking to build or automate?";
+        appendMessageUI('assistant', welcomeText);
+
+        // Render starter prompts
+        const startersContainer = document.createElement('div');
+        startersContainer.id = 'chat-starter-prompts';
+        startersContainer.className = 'flex flex-wrap gap-2 pt-2 pb-1';
+
+        const starterOptions = [
+            "What can you automate?",
+            "I need help with lead generation",
+            "Can you automate my CRM?",
+            "I want to build an AI workflow"
+        ];
+
+        starterOptions.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'text-xs px-3 py-1.5 rounded-full bg-[#020617] border border-[rgba(37,99,235,0.30)] text-[#06B6D4] hover:bg-[#2563EB]/20 hover:text-white transition duration-200 font-medium text-left';
+            btn.textContent = opt;
+            btn.addEventListener('click', () => {
+                const starterDiv = document.getElementById('chat-starter-prompts');
+                if (starterDiv) starterDiv.remove();
+                sendChatMessage(opt);
+            });
+            startersContainer.appendChild(btn);
+        });
+
+        chatMessages.appendChild(startersContainer);
+        scrollChatToBottom();
+    }
 
     function toggleChatModal() {
         isChatOpen = !isChatOpen;
@@ -341,6 +378,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 chatModal.classList.remove('scale-95', 'opacity-0');
                 chatModal.classList.add('scale-100', 'opacity-100');
                 chatInput.focus();
+                renderInitialChatState();
             }, 10);
             chatIconOpen.classList.add('hidden');
             chatIconClose.classList.remove('hidden');
@@ -379,7 +417,7 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         } else {
             msgDiv.innerHTML = `
-                <div class="bg-[#0F172A] border border-[rgba(37,99,235,0.20)] rounded-2xl rounded-tl-none p-3.5 text-[#F8FAFC] leading-relaxed max-w-[88%] shadow-sm">
+                <div class="bg-[#020617] border border-[rgba(37,99,235,0.25)] rounded-2xl rounded-tl-none p-3.5 text-[#F8FAFC] leading-relaxed max-w-[88%] shadow-sm">
                     ${text.replace(/\n/g, '<br>')}
                 </div>
             `;
@@ -396,7 +434,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="w-2 h-2 rounded-full bg-[#2563EB] animate-bounce"></div>
             <div class="w-2 h-2 rounded-full bg-[#06B6D4] animate-bounce [animation-delay:0.2s]"></div>
             <div class="w-2 h-2 rounded-full bg-[#14B8A6] animate-bounce [animation-delay:0.4s]"></div>
-            <span class="text-[#94A3B8] font-mono text-[11px]">HR Autonomous Assistant thinking...</span>
+            <span class="text-[#94A3B8] font-mono text-[11px]">Hafiz is typing...</span>
         `;
         chatMessages.appendChild(typingDiv);
         scrollChatToBottom();
@@ -412,6 +450,10 @@ document.addEventListener('DOMContentLoaded', () => {
     async function sendChatMessage(userText) {
         if (!userText.trim()) return;
 
+        // Remove starter prompts container if present
+        const starterDiv = document.getElementById('chat-starter-prompts');
+        if (starterDiv) starterDiv.remove();
+
         appendMessageUI('user', userText.trim());
         chatHistory.push({ role: 'user', content: userText.trim() });
 
@@ -422,8 +464,11 @@ document.addEventListener('DOMContentLoaded', () => {
         showTypingIndicator();
 
         const payload = {
-            messages: chatHistory
+            messages: chatHistory.slice(-6)
         };
+
+        let messageBubbleDiv = null;
+        let aiReplyText = '';
 
         try {
             const res = await fetch('/api/chat', {
@@ -433,25 +478,56 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (!res.ok) {
-                throw new Error('Chat API returned an error');
+                throw new Error('Chat API error');
             }
 
-            const data = await res.json();
             hideTypingIndicator();
 
-            if (data.reply) {
-                appendMessageUI('assistant', data.reply);
-                chatHistory.push({ role: 'assistant', content: data.reply });
+            // Create streaming response bubble
+            const msgContainer = document.createElement('div');
+            msgContainer.className = 'flex items-start';
+            messageBubbleDiv = document.createElement('div');
+            messageBubbleDiv.className = 'bg-[#020617] border border-[rgba(37,99,235,0.25)] rounded-2xl rounded-tl-none p-3.5 text-[#F8FAFC] leading-relaxed max-w-[88%] shadow-sm';
+            msgContainer.appendChild(messageBubbleDiv);
+            chatMessages.appendChild(msgContainer);
+
+            const reader = res.body.getReader();
+            const decoder = new TextDecoder('utf-8');
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                const chunk = decoder.decode(value, { stream: true });
+                aiReplyText += chunk;
+                messageBubbleDiv.innerHTML = aiReplyText.replace(/\n/g, '<br>');
+                scrollChatToBottom();
+            }
+
+            if (aiReplyText.trim()) {
+                chatHistory.push({ role: 'assistant', content: aiReplyText.trim() });
             }
         } catch (err) {
             console.error('Chat error:', err);
             hideTypingIndicator();
-            appendMessageUI('assistant', "I'm having trouble connecting right now. Feel free to use the contact form below to drop HR Autonomous a message!");
+            if (messageBubbleDiv) {
+                messageBubbleDiv.innerHTML = "Sorry, I hit a temporary issue. Could you try that again?";
+            } else {
+                appendMessageUI('assistant', "Sorry, I hit a temporary issue. Could you try that again?");
+            }
         } finally {
             chatSubmitBtn.disabled = false;
             chatSendIcon.classList.remove('hidden');
             chatSpinner.classList.add('hidden');
         }
+    }
+
+    if (chatInput) {
+        chatInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (chatForm) chatForm.requestSubmit();
+            }
+        });
     }
 
     if (chatForm) {
@@ -463,4 +539,33 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // -------------------------------------------------------------------------
+    // 6. CRM & System Operational Status Fetcher
+    // -------------------------------------------------------------------------
+    function loadCRMStatus() {
+        const statusText = document.getElementById('crm-status-text');
+        if (!statusText) return;
+
+        fetch('/api/crm/status')
+            .then(res => res.ok ? res.json() : null)
+            .then(data => {
+                if (data && data.system_status) {
+                    statusText.textContent = `CRM: ${data.system_status.toUpperCase()} (${data.total_contact_messages} Leads)`;
+                }
+            })
+            .catch(err => {
+                console.warn('CRM Status sync notice:', err);
+            });
+    }
+
+    // Global API utilities for developer console / extended inspection
+    window.HRAutonomousAPI = {
+        getCRMStatus: () => fetch('/api/crm/status').then(r => r.json()),
+        getSettings: () => fetch('/api/settings').then(r => r.json()),
+        getAuditLogs: (limit = 20) => fetch(`/api/audit-logs?limit=${limit}`).then(r => r.json())
+    };
+
+    loadCRMStatus();
 });
+

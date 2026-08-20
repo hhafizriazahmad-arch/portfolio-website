@@ -2,44 +2,68 @@ import os
 import json
 import urllib.request
 import re
-from fastapi import FastAPI, Depends, HTTPException, status
+import asyncio
+from datetime import datetime
+from typing import List, Optional
+from fastapi import FastAPI, Depends, HTTPException, status, Request
+from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
-from typing import List
-
 from dotenv import load_dotenv
+
 load_dotenv()
 
-try:
-    import google.generativeai as genai
-    api_key_val = os.getenv('GEMINI_API_KEY')
-    if api_key_val:
-        genai.configure(api_key=api_key_val)
-except Exception as sdk_init_err:
-    print(f"GenerativeAI SDK config warning: {sdk_init_err}")
+# Dual SDK support for Google Gemini AI (Modern google.genai and Legacy google.generativeai)
+GENAI_CLIENT = None
+LEGACY_GENAI = None
 
-SYSTEM_PROMPT = (
-    "You are a friendly, conversational AI assistant representing HR Autonomous "
-    "and Hafiz Riaz, an AI Automation Engineer & Backend Developer. HR Autonomous builds "
-    "intelligent automation systems, AI-powered workflows, backend infrastructure, and scalable "
-    "business process automation solutions using Python, FastAPI, APIs, and modern AI. "
-    "Speak naturally like a human in a professional and engaging tone, keep responses concise, "
-    "and never repeat yourself. If a user expresses interest in automation services or consulting, "
-    "politely and naturally ask for their name and email."
-)
+api_key_val = os.getenv('GEMINI_API_KEY')
+if api_key_val:
+    os.environ["GEMINI_API_KEY"] = api_key_val
+    os.environ["GOOGLE_API_KEY"] = api_key_val
+
+try:
+    from google import genai
+    from google.genai import types
+    if api_key_val:
+        GENAI_CLIENT = genai.Client(api_key=api_key_val)
+except Exception as genai_err:
+    print(f"Modern google.genai SDK notice: {genai_err}")
+
+try:
+    import google.generativeai as legacy_genai
+    if api_key_val:
+        legacy_genai.configure(api_key=api_key_val)
+    LEGACY_GENAI = legacy_genai
+except Exception as sdk_init_err:
+    print(f"Legacy GenerativeAI SDK notice: {sdk_init_err}")
+
+SYSTEM_PROMPT = """You are Hafiz Riaz chatting directly with a visitor or client. You talk naturally, casually, and directly like an experienced backend and automation engineer sending quick messages on Slack or WhatsApp.
+
+STRICT TONE & BEHAVIOR RULES:
+- Never say you are an AI, a language model, an automated system, an assistant, or a virtual assistant.
+- Never use robotic customer service lines (e.g., "Certainly!", "How can I assist you today?", "I'd be glad to help", "Does that give you a good overview?", "Let me know if you have any questions").
+- Write naturally and concisely (1-3 sentences for quick questions).
+- Speak directly in the first person ("I build...", "My tech stack...", "I can help configure...", "I usually run Playwright with FastAPI").
+- When asked what you do or build, mention backend APIs, scraping/outreach workflows, and automation pipelines without over-explaining.
+- End naturally: Ask a single, direct technical question if relevant, or simply stop when the answer is complete.
+"""
+
+
+
+
 
 import models
 import schemas
-from database import engine, get_db
+from database import engine, get_db, SessionLocal
 
-# Initialize database tables gracefully
+# Create database tables on startup safely
 try:
     models.Base.metadata.create_all(bind=engine)
 except Exception as e:
     print(f"Database initialization warning: {e}")
 
-# Explicitly export FastAPI application instance
 app = FastAPI(
     title="HR Autonomous API",
     description="Backend API for HR Autonomous platform and intelligent business process automation services",
@@ -55,73 +79,132 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Seed database with projects if empty or missing default entries
-def seed_projects():
-    try:
-        db = next(get_db())
-        try:
-            # Clean up removed projects if previously seeded
-            db.query(models.Project).filter_by(title="Autonomous AI Voice Agent & Receptionist").delete()
-            db.query(models.Project).filter_by(title="Autonomous Lead Intelligence System").delete()
-            db.query(models.Project).filter_by(title="Autonomous AI Cold Prospecting & Web-Research Agent").delete()
-            db.commit()
+@app.middleware("http")
+async def add_no_cache_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
 
-            default_projects = [
-                {
-                    "title": "AI Lead Intelligence System",
-                    "description": "An automated B2B lead generation pipeline engineered to identify, enrich, and qualify profiles of founders and C-level executives. Built on FastAPI and Gemini AI for high-impact prospect research.",
-                    "tech_stack": "Python, FastAPI, Playwright, Gemini AI, HubSpot API, Slack Webhooks, Vercel",
-                    "github_url": "https://github.com/hhafizriazahmad-arch/ai-lead-intelligence-system",
-                    "live_url": "https://ai-lead-intelligence-system.vercel.app",
-                    "icon_type": "database"
-                },
-                {
-                    "title": "Digital Marketing Automation Suite",
-                    "description": "Full-stack digital marketing platform featuring an interactive dynamic UI, serverless backend integrations, and automated lead intelligence data pipelines.",
-                    "tech_stack": "Full-Stack Web Dev, JavaScript, Python, REST API, HTML5/CSS3, Vercel",
-                    "github_url": "https://github.com/hhafizriazahmad-arch/digital-marketing",
-                    "live_url": "https://digital-marketing-sand.vercel.app",
-                    "icon_type": "cpu"
-                },
-                {
-                    "title": "E-Commerce Order Processing Engine",
-                    "description": "A high-performance order processing engine that handles asynchronous orders, logs requests to an SQLite database, and broadcasts live update notifications. Designed for maximum throughput and reliability.",
-                    "tech_stack": "Python, FastAPI, SQLite, Asynchronous Tasks, Uvicorn",
-                    "github_url": "https://github.com/hhafizriazahmad-arch/fluxflow-ecommerce-engine",
-                    "live_url": "https://fluxflow-ecommerce-engine.vercel.app",
-                    "icon_type": "shopping-cart"
-                },
-                {
-                    "title": "Onboarding Automation Workflow",
-                    "description": "An enterprise-grade automation workflow triggered by Typeform submissions. It automatically feeds user profiles to Google Sheets, creates dedicated workspaces, and triggers real-time notifications via Slack webhooks.",
-                    "tech_stack": "Python, APScheduler, Webhooks, Google Sheets API, Slack Webhooks",
-                    "github_url": "https://github.com/hhafizriazahmad-arch/onboarding-automation-system",
-                    "live_url": None,
-                    "icon_type": "cpu"
-                }
-            ]
-            for p_data in default_projects:
-                existing = db.query(models.Project).filter_by(title=p_data["title"]).first()
-                if not existing:
-                    db.add(models.Project(**p_data))
-                else:
-                    existing.github_url = p_data["github_url"]
-                    existing.live_url = p_data.get("live_url")
-                    existing.description = p_data["description"]
-                    existing.tech_stack = p_data["tech_stack"]
-                    existing.icon_type = p_data.get("icon_type", "default")
-            db.commit()
-            print("Successfully verified and seeded HR Autonomous projects.")
-        except Exception as e:
-            db.rollback()
-            print(f"Error seeding projects: {e}")
+def create_audit_log_internal(db: Session, action: str, details: Optional[str] = None, ip_address: Optional[str] = None):
+    """Helper to record audit logs safely."""
+    try:
+        log_entry = models.AuditLog(
+            action=action,
+            details=details,
+            ip_address=ip_address
+        )
+        db.add(log_entry)
+        db.commit()
+        db.refresh(log_entry)
+        return log_entry
+    except Exception as err:
+        db.rollback()
+        print(f"Audit log recording error: {err}")
+        return None
+
+def seed_settings():
+    """Seed default application settings if not already present."""
+    db = SessionLocal()
+    try:
+        default_settings = [
+            {"key": "site_name", "value": "HR Autonomous", "description": "Platform brand name"},
+            {"key": "owner_name", "value": "Hafiz Riaz", "description": "Founder & AI Automation Engineer"},
+            {"key": "contact_email", "value": "hafizriaz.ai@gmail.com", "description": "Primary contact email"},
+            {"key": "maintenance_mode", "value": "false", "description": "System maintenance mode flag"},
+            {"key": "ai_assistant_enabled", "value": "true", "description": "Conversational Gemini AI toggle"},
+            {"key": "theme", "value": "dark", "description": "Default UI theme"}
+        ]
+        for s in default_settings:
+            existing = db.query(models.Setting).filter_by(key=s["key"]).first()
+            if not existing:
+                db.add(models.Setting(**s))
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        print(f"Error seeding settings: {e}")
+    finally:
+        db.close()
+
+def seed_projects():
+    """Seed default projects if missing or updated."""
+    db = SessionLocal()
+    try:
+        db.query(models.Project).filter_by(title="Autonomous AI Voice Agent & Receptionist").delete()
+        db.query(models.Project).filter_by(title="Autonomous Lead Intelligence System").delete()
+        db.query(models.Project).filter_by(title="Autonomous AI Cold Prospecting & Web-Research Agent").delete()
+        db.commit()
+
+        default_projects = [
+            {
+                "title": "AI Lead Intelligence System",
+                "description": "An automated B2B lead generation pipeline engineered to identify, enrich, and qualify profiles of founders and C-level executives. Built on FastAPI and Gemini AI for high-impact prospect research.",
+                "tech_stack": "Python, FastAPI, Playwright, Gemini AI, HubSpot API, Slack Webhooks, Vercel",
+                "github_url": "https://github.com/hhafizriazahmad-arch/ai-lead-intelligence-system",
+                "live_url": "https://ai-lead-intelligence-system.vercel.app",
+                "icon_type": "database"
+            },
+            {
+                "title": "Digital Marketing Automation Suite",
+                "description": "Full-stack digital marketing platform featuring an interactive dynamic UI, serverless backend integrations, and automated lead intelligence data pipelines.",
+                "tech_stack": "Full-Stack Web Dev, JavaScript, Python, REST API, HTML5/CSS3, Vercel",
+                "github_url": "https://github.com/hhafizriazahmad-arch/digital-marketing",
+                "live_url": "https://digital-marketing-sand.vercel.app",
+                "icon_type": "cpu"
+            },
+            {
+                "title": "E-Commerce Order Processing Engine",
+                "description": "A high-performance order processing engine that handles asynchronous orders, logs requests to an SQLite database, and broadcasts live update notifications. Designed for maximum throughput and reliability.",
+                "tech_stack": "Python, FastAPI, SQLite, Asynchronous Tasks, Uvicorn",
+                "github_url": "https://github.com/hhafizriazahmad-arch/fluxflow-ecommerce-engine",
+                "live_url": "https://fluxflow-ecommerce-engine.vercel.app",
+                "icon_type": "shopping-cart"
+            },
+            {
+                "title": "Onboarding Automation Workflow",
+                "description": "An enterprise-grade automation workflow triggered by Typeform submissions. It automatically feeds user profiles to Google Sheets, creates dedicated workspaces, and triggers real-time notifications via Slack webhooks.",
+                "tech_stack": "Python, APScheduler, Webhooks, Google Sheets API, Slack Webhooks",
+                "github_url": "https://github.com/hhafizriazahmad-arch/onboarding-automation-system",
+                "live_url": None,
+                "icon_type": "cpu"
+            }
+        ]
+        for p_data in default_projects:
+            existing = db.query(models.Project).filter_by(title=p_data["title"]).first()
+            if not existing:
+                db.add(models.Project(**p_data))
+            else:
+                existing.github_url = p_data["github_url"]
+                existing.live_url = p_data.get("live_url")
+                existing.description = p_data["description"]
+                existing.tech_stack = p_data["tech_stack"]
+                existing.icon_type = p_data.get("icon_type", "default")
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        print(f"Error seeding projects: {e}")
+    finally:
+        db.close()
+
+@app.on_event("startup")
+def startup_event():
+    """Run table creation, seeding, and startup audit logging cleanly."""
+    try:
+        models.Base.metadata.create_all(bind=engine)
+        seed_projects()
+        seed_settings()
+        db = SessionLocal()
+        try:
+            create_audit_log_internal(db, "SYSTEM_STARTUP", "FastAPI application started and initialized database schemas.")
         finally:
             db.close()
-    except Exception as e:
-        print(f"Error accessing DB during seed: {e}")
+    except Exception as err:
+        print(f"Startup execution error: {err}")
 
-seed_projects()
-
+# -----------------------------------------------------------------------------
+# API Routes: Projects
+# -----------------------------------------------------------------------------
 @app.get("/api/projects", response_model=List[schemas.ProjectResponse])
 def get_projects(db: Session = Depends(get_db)):
     """Fetch all projects from the database."""
@@ -132,6 +215,9 @@ def get_projects(db: Session = Depends(get_db)):
         print(f"Error fetching projects: {e}")
         return []
 
+# -----------------------------------------------------------------------------
+# API Routes: Contact & Webhook
+# -----------------------------------------------------------------------------
 def forward_lead_to_webhook(name: str, email: str, subject: str, message: str) -> bool:
     """Forward contact/lead details to Google Apps Script Webhook."""
     webhook_url = os.getenv(
@@ -158,8 +244,8 @@ def forward_lead_to_webhook(name: str, email: str, subject: str, message: str) -
         return False
 
 @app.post("/api/contact", response_model=schemas.ContactMessageResponse, status_code=status.HTTP_201_CREATED)
-def submit_contact_form(message: schemas.ContactRequest, db: Session = Depends(get_db)):
-    """Save contact form message to the database and forward to Google Apps Script Webhook."""
+def submit_contact_form(message: schemas.ContactRequest, request: Request, db: Session = Depends(get_db)):
+    """Save contact form message to the database, forward to Webhook, and record audit log."""
     try:
         db_message = models.ContactMessage(
             name=message.name,
@@ -171,8 +257,12 @@ def submit_contact_form(message: schemas.ContactRequest, db: Session = Depends(g
         db.commit()
         db.refresh(db_message)
 
-        # Forward payload to Google Apps Script Webhook
+        # Forward payload to Webhook
         forward_lead_to_webhook(message.name, message.email, message.subject, message.message)
+
+        # Audit log
+        client_ip = request.client.host if request.client else "unknown"
+        create_audit_log_internal(db, "CONTACT_FORM_SUBMITTED", f"From: {message.name} ({message.email})", client_ip)
 
         return db_message
     except Exception as e:
@@ -182,6 +272,9 @@ def submit_contact_form(message: schemas.ContactRequest, db: Session = Depends(g
             detail=f"An error occurred while saving your message: {str(e)}"
         )
 
+# -----------------------------------------------------------------------------
+# API Routes: AI Chatbot
+# -----------------------------------------------------------------------------
 def extract_lead_info_from_messages(messages: list) -> tuple[str | None, str | None]:
     """Autonomous extraction of email and name from conversational chat history."""
     email_regex = re.compile(r'[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+')
@@ -210,137 +303,248 @@ def extract_lead_info_from_messages(messages: list) -> tuple[str | None, str | N
 
     return found_name, found_email
 
-@app.post("/api/chat", response_model=schemas.ChatResponse)
-def handle_chat_message(request: schemas.ChatRequest, db: Session = Depends(get_db)):
-    """Handle chat messages by routing directly to Gemini API with full conversational memory and strict error handling."""
-    if not request.messages:
+@app.post("/api/chat")
+async def handle_chat_message(request_data: schemas.ChatRequest, http_req: Request, db: Session = Depends(get_db)):
+    """Handle chat messages with ultra-fast streaming Gemini AI (max_output_tokens=300, temperature=0.4, last 6 messages context)."""
+    if not request_data.messages:
         raise HTTPException(status_code=400, detail="Messages array cannot be empty")
 
     lead_captured = False
-
-    # Autonomous lead extraction from chat history / payload
-    name_extracted, email_extracted = extract_lead_info_from_messages(request.messages)
-    if request.name:
-        name_extracted = request.name.strip()
-    if request.email:
-        email_extracted = request.email.strip()
+    name_extracted, email_extracted = extract_lead_info_from_messages(request_data.messages)
+    if request_data.name:
+        name_extracted = request_data.name.strip()
+    if request_data.email:
+        email_extracted = request_data.email.strip()
 
     if email_extracted and name_extracted:
         try:
             existing_lead = db.query(models.ContactMessage).filter(
                 models.ContactMessage.email == email_extracted,
-                models.ContactMessage.subject == "HR Autonomous AI Conversational Lead"
+                models.ContactMessage.subject == "HR Autonomous Lead"
             ).first()
 
             if not existing_lead:
-                conversation_transcript = "\n".join([f"{m.role.capitalize()}: {m.content}" for m in request.messages])
+                conversation_transcript = "\n".join([f"{m.role.capitalize()}: {m.content}" for m in request_data.messages])
                 db_msg = models.ContactMessage(
                     name=name_extracted,
                     email=email_extracted,
-                    subject="HR Autonomous AI Conversational Lead",
+                    subject="HR Autonomous Lead",
                     message=f"Chat Transcript:\n{conversation_transcript}"
                 )
                 db.add(db_msg)
                 db.commit()
 
-                # Automatically & invisibly forward lead payload to Google Sheets Webhook
                 forward_lead_to_webhook(
                     name=name_extracted,
                     email=email_extracted,
-                    subject="HR Autonomous AI Conversational Lead",
+                    subject="HR Autonomous Lead",
                     message=conversation_transcript
                 )
+                client_ip = http_req.client.host if http_req.client else "unknown"
+                create_audit_log_internal(db, "CHAT_LEAD_CAPTURED", f"Captured lead: {name_extracted} ({email_extracted})", client_ip)
                 lead_captured = True
         except Exception as e:
-            print(f"Error executing autonomous chat lead capture: {e}")
+            print(f"Error executing chat lead capture: {e}")
 
-    # Gemini API integration with conversation memory
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key or api_key == "PLACE_YOUR_KEY_HERE":
-        return schemas.ChatResponse(
-            reply="I am currently offline, please try again later or use the contact form below.",
-            lead_captured=lead_captured,
-            prompt_lead_capture=False
-        )
+        async def offline_stream():
+            yield "I am currently offline, please try again later or use the contact form below."
+        return StreamingResponse(offline_stream(), media_type="text/plain")
 
-    ai_reply = None
-    try:
-        # Try SDK first if available
-        if 'genai' in globals():
-            for m_name in ["gemini-2.5-flash", "gemini-flash-latest", "gemini-1.5-flash"]:
+    # Trim Chat History to last 6 messages (ultra-fast context window)
+    history_context = []
+    for msg in request_data.messages[-6:]:
+        role_label = "Visitor" if msg.role == "user" else "Hafiz Riaz"
+        history_context.append(f"{role_label}: {msg.content}")
+
+    full_prompt = f"System Persona & Directives:\n{SYSTEM_PROMPT}\n\nFull Conversation History:\n" + "\n".join(history_context) + "\n\nHafiz Riaz:"
+    target_models = ["gemini-2.5-flash", "gemini-flash-latest", "gemini-1.5-flash"]
+
+    async def stream_generator():
+        streamed_any = False
+
+        # 1. Attempt Modern google.genai Client SDK streaming
+        if GENAI_CLIENT is not None:
+            for m_name in target_models:
                 try:
-                    genai.configure(api_key=api_key)
-                    model = genai.GenerativeModel(
-                        model_name=m_name,
-                        system_instruction=SYSTEM_PROMPT
-                    )
-                    formatted_history = []
-                    for msg in request.messages[:-1]:
-                        formatted_history.append({
-                            "role": "user" if msg.role == "user" else "model",
-                            "parts": [msg.content]
-                        })
-                    chat_session = model.start_chat(history=formatted_history)
-                    last_msg = request.messages[-1].content
-                    response = chat_session.send_message(last_msg)
-                    if response and response.text:
-                        ai_reply = response.text.strip()
-                        if ai_reply:
-                            break
+                    def get_sdk_stream(m=m_name):
+                        return GENAI_CLIENT.models.generate_content_stream(
+                            model=m,
+                            contents=full_prompt,
+                            config=types.GenerateContentConfig(
+                                max_output_tokens=300,
+                                temperature=0.4
+                            )
+                        )
+                    
+                    sdk_stream = await asyncio.to_thread(get_sdk_stream)
+                    for chunk in sdk_stream:
+                        if chunk and chunk.text:
+                            streamed_any = True
+                            yield chunk.text
+                    if streamed_any:
+                        return
+                except Exception as client_err:
+                    print(f"Modern google.genai SDK streaming failed for {m_name}: {client_err}")
+
+        # 2. Fallback to Legacy SDK
+        if not streamed_any and LEGACY_GENAI is not None:
+            for m_name in target_models:
+                try:
+                    def get_legacy_resp(m=m_name):
+                        gen_model = LEGACY_GENAI.GenerativeModel(
+                            model_name=m,
+                            system_instruction=SYSTEM_PROMPT,
+                            generation_config={"max_output_tokens": 300, "temperature": 0.4}
+                        )
+                        return gen_model.generate_content(full_prompt)
+
+                    legacy_res = await asyncio.to_thread(get_legacy_resp)
+                    if legacy_res and legacy_res.text:
+                        streamed_any = True
+                        yield legacy_res.text.strip()
+                        return
                 except Exception as sdk_err:
-                    print(f"SDK model {m_name} failed: {sdk_err}")
+                    print(f"Legacy SDK failed for {m_name}: {sdk_err}")
 
-        # Fallback to direct REST API call if SDK was not loaded or failed
-        if not ai_reply:
-            for model_name in ["gemini-2.5-flash", "gemini-flash-latest", "gemini-3.5-flash", "gemini-1.5-flash", "gemini-pro"]:
+        # 3. Fallback to Direct REST API Call
+        if not streamed_any:
+            for model_name in target_models:
                 try:
-                    gemini_url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={api_key}"
-                    contents = [
-                        {"role": "user", "parts": [{"text": f"System Context: {SYSTEM_PROMPT}"}]}
-                    ]
-                    for m in request.messages[-10:]:
-                        role = "user" if m.role == "user" else "model"
-                        contents.append({"role": role, "parts": [{"text": m.content}]})
+                    def get_rest_resp(m=model_name):
+                        gemini_url = f"https://generativelanguage.googleapis.com/v1beta/models/{m}:generateContent?key={api_key}"
+                        payload = json.dumps({
+                            "contents": [{"role": "user", "parts": [{"text": full_prompt}]}],
+                            "generationConfig": {"maxOutputTokens": 300, "temperature": 0.4}
+                        }).encode("utf-8")
+                        req = urllib.request.Request(gemini_url, data=payload, headers={"Content-Type": "application/json"})
+                        with urllib.request.urlopen(req, timeout=8) as resp:
+                            result = json.loads(resp.read().decode("utf-8"))
+                            candidates = result.get("candidates", [])
+                            if candidates:
+                                parts = candidates[0].get("content", {}).get("parts", [])
+                                if parts:
+                                    return parts[0].get("text", "").strip()
+                        return None
 
-                    payload = json.dumps({"contents": contents}).encode("utf-8")
-                    req = urllib.request.Request(
-                        gemini_url,
-                        data=payload,
-                        headers={"Content-Type": "application/json"}
-                    )
-                    with urllib.request.urlopen(req, timeout=10) as response:
-                        result = json.loads(response.read().decode("utf-8"))
-                        candidates = result.get("candidates", [])
-                        if candidates:
-                            parts = candidates[0].get("content", {}).get("parts", [])
-                            if parts:
-                                ai_reply = parts[0].get("text", "").strip()
-                                if ai_reply:
-                                    break
+                    rest_reply = await asyncio.to_thread(get_rest_resp)
+                    if rest_reply:
+                        streamed_any = True
+                        yield rest_reply
+                        return
                 except Exception as endpoint_err:
-                    print(f"REST API model {model_name} failed: {endpoint_err}")
-    except Exception as gemini_err:
-        print(f"Gemini API execution error: {gemini_err}")
-        return schemas.ChatResponse(
-            reply="I am currently offline, please try again later or use the contact form below.",
-            lead_captured=lead_captured,
-            prompt_lead_capture=False
+                    print(f"REST API failed for {model_name}: {endpoint_err}")
+
+        if not streamed_any:
+            yield "Sorry, I hit a temporary issue. Could you try that again?"
+
+    return StreamingResponse(stream_generator(), media_type="text/plain")
+
+# -----------------------------------------------------------------------------
+# API Routes: Settings
+# -----------------------------------------------------------------------------
+@app.get("/api/settings", response_model=List[schemas.SettingResponse])
+def get_settings(db: Session = Depends(get_db)):
+    """Fetch all application settings."""
+    try:
+        return db.query(models.Setting).all()
+    except Exception as e:
+        print(f"Error fetching settings: {e}")
+        return []
+
+@app.put("/api/settings/{key}", response_model=schemas.SettingResponse)
+def update_setting(key: str, update: schemas.SettingUpdate, request: Request, db: Session = Depends(get_db)):
+    """Update a specific setting by key."""
+    setting = db.query(models.Setting).filter_by(key=key).first()
+    if not setting:
+        setting = models.Setting(key=key, value=update.value, description=update.description)
+        db.add(setting)
+    else:
+        setting.value = update.value
+        if update.description is not None:
+            setting.description = update.description
+
+    db.commit()
+    db.refresh(setting)
+
+    client_ip = request.client.host if request.client else "unknown"
+    create_audit_log_internal(db, "SETTING_UPDATED", f"Key: {key} = {update.value}", client_ip)
+    return setting
+
+# -----------------------------------------------------------------------------
+# API Routes: CRM & System Status
+# -----------------------------------------------------------------------------
+@app.get("/api/crm/status", response_model=schemas.CRMStatusResponse)
+def get_crm_status(db: Session = Depends(get_db)):
+    """Get system and CRM operational status."""
+    try:
+        total_messages = db.query(models.ContactMessage).count()
+        total_projects = db.query(models.Project).count()
+        total_logs = db.query(models.AuditLog).count()
+
+        last_msg = db.query(models.ContactMessage).order_by(models.ContactMessage.created_at.desc()).first()
+        last_activity = last_msg.created_at if last_msg else None
+
+        webhook_url = os.getenv("GOOGLE_APPS_SCRIPT_WEBHOOK_URL")
+        has_webhook = bool(webhook_url and webhook_url != "PLACE_HOLDER")
+
+        api_key = os.getenv("GEMINI_API_KEY")
+        gemini_status = "operational" if (api_key and api_key != "PLACE_YOUR_KEY_HERE") else "unconfigured"
+
+        return schemas.CRMStatusResponse(
+            system_status="online",
+            total_contact_messages=total_messages,
+            total_projects=total_projects,
+            total_audit_logs=total_logs,
+            webhook_configured=has_webhook,
+            gemini_ai_status=gemini_status,
+            last_activity=last_activity
+        )
+    except Exception as e:
+        print(f"Error fetching CRM status: {e}")
+        return schemas.CRMStatusResponse(
+            system_status="degraded",
+            total_contact_messages=0,
+            total_projects=0,
+            total_audit_logs=0,
+            webhook_configured=False,
+            gemini_ai_status="error",
+            last_activity=None
         )
 
-    if not ai_reply:
-        ai_reply = "I am currently offline, please try again later or use the contact form below."
+# -----------------------------------------------------------------------------
+# API Routes: Audit Logs
+# -----------------------------------------------------------------------------
+@app.get("/api/audit-logs", response_model=List[schemas.AuditLogResponse])
+def get_audit_logs(limit: int = 50, db: Session = Depends(get_db)):
+    """Fetch system audit logs."""
+    try:
+        return db.query(models.AuditLog).order_by(models.AuditLog.timestamp.desc()).limit(limit).all()
+    except Exception as e:
+        print(f"Error fetching audit logs: {e}")
+        return []
 
-    return schemas.ChatResponse(
-        reply=ai_reply,
-        lead_captured=lead_captured,
-        prompt_lead_capture=False
-    )
+@app.post("/api/audit-logs", response_model=schemas.AuditLogResponse, status_code=status.HTTP_201_CREATED)
+def create_audit_log_endpoint(log_data: schemas.AuditLogCreate, request: Request, db: Session = Depends(get_db)):
+    """Create a manual audit log entry."""
+    client_ip = log_data.ip_address or (request.client.host if request.client else "unknown")
+    entry = create_audit_log_internal(db, log_data.action, log_data.details, client_ip)
+    if not entry:
+        raise HTTPException(status_code=500, detail="Failed to create audit log")
+    return entry
 
-# Serve static frontend files relative to application root
+# -----------------------------------------------------------------------------
+# Serve Static Frontend
+# -----------------------------------------------------------------------------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 static_dir = os.path.join(BASE_DIR, "static")
 if os.path.exists(static_dir):
-    app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
+    app.mount("/static", StaticFiles(directory=static_dir), name="static")
+
+    @app.get("/")
+    def read_root():
+        return FileResponse(os.path.join(static_dir, "index.html"))
 
 if __name__ == "__main__":
     import uvicorn

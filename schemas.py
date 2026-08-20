@@ -47,3 +47,41 @@ class ChatResponse(BaseModel):
     lead_captured: bool = False
     prompt_lead_capture: bool = False
 
+class SettingResponse(BaseModel):
+    key: str
+    value: str
+    description: Optional[str] = None
+    updated_at: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
+
+class SettingUpdate(BaseModel):
+    value: str
+    description: Optional[str] = None
+
+class CRMStatusResponse(BaseModel):
+    system_status: str
+    total_contact_messages: int
+    total_projects: int
+    total_audit_logs: int
+    webhook_configured: bool
+    gemini_ai_status: str
+    last_activity: Optional[datetime] = None
+
+class AuditLogCreate(BaseModel):
+    action: str
+    details: Optional[str] = None
+    ip_address: Optional[str] = None
+
+class AuditLogResponse(BaseModel):
+    id: int
+    action: str
+    details: Optional[str] = None
+    ip_address: Optional[str] = None
+    timestamp: datetime
+
+    class Config:
+        from_attributes = True
+
+

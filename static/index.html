@@ -40,6 +40,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     
+    <!-- Favicon SVG -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23020617'/><text x='50%' y='65%' font-size='50' font-weight='900' fill='%2306B6D4' text-anchor='middle'>HR</text></svg>">
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -68,7 +71,7 @@
         }
     </script>
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="/static/css/style.css?v=3.0">
 </head>
 <body class="bg-[#020617] text-[#F8FAFC] font-sans antialiased overflow-x-hidden relative bg-ai-grid">
     <!-- Canvas for interactive network grid background -->
@@ -102,7 +105,11 @@
                 <a href="#contact" class="text-sm font-medium text-[#94A3B8] hover:text-[#06B6D4] transition duration-300">Contact</a>
             </nav>
 
-            <div class="hidden md:block">
+            <div class="hidden md:flex items-center space-x-4">
+                <div id="crm-status-pill" class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#020617] border border-[rgba(37,99,235,0.30)] text-xs font-mono text-[#06B6D4]">
+                    <span class="w-2 h-2 rounded-full bg-[#14B8A6] animate-pulse"></span>
+                    <span id="crm-status-text">CRM: Online</span>
+                </div>
                 <a href="#contact" class="px-6 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider text-white bg-gradient-to-r from-[#2563EB] via-[#06B6D4] to-[#14B8A6] hover:shadow-[0_0_25px_rgba(37,99,235,0.5)] active:scale-95 transition duration-300">
                     Get in Touch
                 </a>
@@ -429,11 +436,11 @@
         </div>
     </section>
 
-    <!-- AI Assistant Floating Widget -->
+    <!-- Chat Floating Widget -->
     <div id="chat-widget-container">
         <!-- Floating Launcher Button -->
-        <button id="chat-trigger" aria-label="Open HR Autonomous AI Assistant" class="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-gradient-to-r from-[#2563EB] via-[#06B6D4] to-[#14B8A6] p-0.5 shadow-[0_0_25px_rgba(37,99,235,0.5)] hover:scale-105 active:scale-95 transition-all duration-300 group flex items-center justify-center">
-            <div class="w-full h-full rounded-full bg-[#020617]/50 backdrop-blur-sm flex items-center justify-center relative">
+        <button id="chat-trigger" aria-label="Open Chat with Hafiz Riaz" class="fixed bottom-6 right-6 z-[100] w-14 h-14 rounded-full bg-gradient-to-r from-[#2563EB] via-[#06B6D4] to-[#14B8A6] p-0.5 shadow-[0_0_25px_rgba(37,99,235,0.5)] hover:scale-105 active:scale-95 transition-all duration-300 group flex items-center justify-center">
+            <div class="w-full h-full rounded-full bg-[#020617] flex items-center justify-center relative">
                 <!-- Status indicator dot -->
                 <span class="absolute top-1 right-1 flex h-3 w-3">
                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#14B8A6] opacity-75"></span>
@@ -450,12 +457,20 @@
         </button>
 
         <!-- Floating Chat Modal Window -->
-        <div id="chat-modal" class="fixed bottom-24 right-6 z-50 w-96 max-w-[calc(100vw-3rem)] h-[520px] max-h-[calc(100vh-8rem)] rounded-3xl bg-[#0F172A]/95 border border-[rgba(37,99,235,0.25)] backdrop-blur-2xl shadow-2xl flex flex-col overflow-hidden hidden transition-all duration-300 transform scale-95 opacity-0">
+        <div id="chat-modal" class="fixed bottom-24 right-6 z-[100] w-96 max-w-[calc(100vw-3rem)] h-[520px] max-h-[calc(100vh-8rem)] rounded-3xl bg-[#0F172A] border border-[rgba(37,99,235,0.30)] shadow-2xl flex flex-col overflow-hidden hidden transition-all duration-300 transform scale-95 opacity-0">
             <!-- Modal Header -->
-            <div class="px-6 py-4 border-b border-white/10 flex items-center justify-between rounded-t-3xl flex-shrink-0 bg-[#020617]/50">
-                <div class="flex items-center space-x-2">
-                    <span class="w-2.5 h-2.5 rounded-full bg-[#06B6D4] animate-pulse"></span>
-                    <span class="font-display text-sm font-bold text-[#F8FAFC]">HR Autonomous AI Assistant</span>
+            <div class="px-6 py-4 border-b border-white/10 flex items-center justify-between rounded-t-3xl flex-shrink-0 bg-[#020617]">
+                <div class="flex items-center space-x-3">
+                    <span class="w-8 h-8 rounded-lg bg-gradient-to-r from-[#2563EB] to-[#06B6D4] p-[1px] inline-flex items-center justify-center">
+                        <span class="w-full h-full bg-[#020617] rounded-[7px] flex items-center justify-center text-xs font-black text-[#06B6D4]">HR</span>
+                    </span>
+                    <div>
+                        <div class="font-display text-sm font-bold text-[#F8FAFC]">Hafiz Riaz</div>
+                        <div class="text-[10px] font-mono text-[#14B8A6] flex items-center space-x-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-[#14B8A6] inline-block animate-pulse"></span>
+                            <span>Online</span>
+                        </div>
+                    </div>
                 </div>
                 <button id="chat-close-btn" class="text-[#94A3B8] hover:text-white p-1.5 rounded-lg hover:bg-white/5 transition duration-300" aria-label="Close Chat">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -468,8 +483,8 @@
             <div id="chat-messages" class="flex-1 min-h-0 overflow-y-auto p-4 pb-6 space-y-4 font-sans text-xs sm:text-sm custom-scrollbar"></div>
 
             <!-- Message Input Bar -->
-            <form id="chat-form" class="p-3 border-t border-white/10 flex items-center space-x-2 bg-[#020617]/80 rounded-b-3xl flex-shrink-0">
-                <input type="text" id="chat-input" placeholder="Ask about HR Autonomous AI systems..." required class="flex-grow px-4 py-2.5 bg-[#0F172A] border border-[rgba(37,99,235,0.20)] rounded-xl text-xs sm:text-sm text-[#F8FAFC] placeholder-slate-500 focus:outline-none focus:border-[#06B6D4] focus:ring-1 focus:ring-[#06B6D4] transition font-sans">
+            <form id="chat-form" class="p-3 border-t border-white/10 flex items-center space-x-2 bg-[#020617] rounded-b-3xl flex-shrink-0">
+                <input type="text" id="chat-input" placeholder="Type a message..." required class="flex-grow px-4 py-2.5 bg-[#0F172A] border border-[rgba(37,99,235,0.25)] rounded-xl text-xs sm:text-sm text-[#F8FAFC] placeholder-slate-500 focus:outline-none focus:border-[#06B6D4] focus:ring-1 focus:ring-[#06B6D4] transition font-sans">
                 <button type="submit" id="chat-submit-btn" class="p-2.5 rounded-xl bg-gradient-to-r from-[#2563EB] via-[#06B6D4] to-[#14B8A6] text-white hover:shadow-[0_0_15px_rgba(37,99,235,0.5)] active:scale-95 transition duration-300 flex items-center justify-center flex-shrink-0" aria-label="Send Message">
                     <svg id="chat-send-icon" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3 21l18-9L3 3l3 9zm0 0h7" />
@@ -495,6 +510,6 @@
     </footer>
 
     <!-- Script Entry -->
-    <script src="js/main.js"></script>
+    <script src="/static/js/main.js?v=3.0"></script>
 </body>
 </html>
