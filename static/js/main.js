@@ -338,7 +338,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!chatMessages || chatMessages.children.length > 0) return;
 
         // Render initial human greeting
-        const welcomeText = "Hey! What are you looking to build or automate?";
+        const welcomeText = "Hi, welcome to HR Autonomous. What are you working on right now?";
         appendMessageUI('assistant', welcomeText);
 
         // Render starter prompts
@@ -434,7 +434,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="w-2 h-2 rounded-full bg-[#2563EB] animate-bounce"></div>
             <div class="w-2 h-2 rounded-full bg-[#06B6D4] animate-bounce [animation-delay:0.2s]"></div>
             <div class="w-2 h-2 rounded-full bg-[#14B8A6] animate-bounce [animation-delay:0.4s]"></div>
-            <span class="text-[#94A3B8] font-mono text-[11px]">Hafiz is typing...</span>
+            <span class="text-[#94A3B8] font-mono text-[11px]">HR Autonomous is typing...</span>
         `;
         chatMessages.appendChild(typingDiv);
         scrollChatToBottom();
