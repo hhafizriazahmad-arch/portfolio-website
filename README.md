@@ -1,6 +1,6 @@
 # HR Autonomous – Enterprise AI Automation Platform & Portfolio
 
-**HR Autonomous** is a premium, enterprise-grade AI Automation brand and portfolio showcasing intelligent automation systems, backend microservices, and AI-powered workflow architecture. Built with a modern dark SaaS aesthetic, Enterprise AI blue/cyan/teal design system, dynamic SQLite database seeding, and real-time lead capture pipelines.
+**HR Autonomous** is a premium, enterprise-grade AI Automation brand and portfolio showcasing intelligent automation systems, backend microservices, and AI-powered workflow architecture. Built with a modern dark SaaS aesthetic, Gray & Gold luxury design system, dynamic SQLite database seeding, and real-time lead capture pipelines.
 
 ---
 
@@ -9,7 +9,7 @@
 - **Brand Name:** HR Autonomous
 - **Tagline:** Building Intelligent Automation Systems for Modern Businesses
 - **Founder:** Hafiz Riaz (AI Automation Engineer • Backend Developer • Workflow Architect)
-- **Primary Color Palette:** Enterprise Obsidian (`#020617`), Primary Blue (`#2563EB`), Secondary Cyan (`#06B6D4`), Accent Teal (`#14B8A6`)
+- **Primary Color Palette:** Primary Dark (`#111111`), Secondary Dark (`#1E1E1E`), Card Dark (`#2A2A2A`), Primary Gold (`#D4AF37`), Premium Gold Hover (`#F4C542`), Primary Text (`#F5F5F5`), Secondary Text (`#B0B0B0`)
 
 ---
 
@@ -24,8 +24,8 @@
 
 ## Features
 
-1. **Enterprise AI Aesthetic:** Custom blue/cyan/teal design system, subtle grid patterns, glowing hover interactions, and glassmorphism.
-2. **Interactive Network Canvas:** Moving blue/cyan particle constellation background written in native JavaScript.
+1. **Luxury Gray & Gold Aesthetic:** Sophisticated dark gray and gold design system, gold borders (`rgba(212,175,55,0.25)`), glassmorphism, and gold hover glows.
+2. **Interactive Network Canvas:** Dynamic gold particle constellation network background written in native JavaScript.
 3. **Dynamic Systems Showcase:** Projects are seeded automatically into SQLite and fetched via `/api/projects`.
 4. **Active Contact & Chat Lead Capture:** Form submissions to `/api/contact` and AI chat leads are logged to SQLite and forwarded via Google Apps Script Webhooks.
 5. **SEO & Social Optimization:** Pre-configured Open Graph, Twitter Card tags, and JSON-LD Structured Data for `Organization` / `HR Autonomous`.

@@ -41,7 +41,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     
     <!-- Favicon SVG -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23020617'/><text x='50%' y='65%' font-size='50' font-weight='900' fill='%2306B6D4' text-anchor='middle'>HR</text></svg>">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23111111'/><text x='50%' y='65%' font-size='50' font-weight='900' fill='%23D4AF37' text-anchor='middle'>HR</text></svg>">
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -56,14 +56,15 @@
                     },
                     colors: {
                         brand: {
-                            bgPrimary: '#020617',
-                            bgSecondary: '#0F172A',
-                            bgCard: '#111827',
-                            blue: '#2563EB',
-                            cyan: '#06B6D4',
-                            teal: '#14B8A6',
-                            textPrimary: '#F8FAFC',
-                            textSecondary: '#94A3B8',
+                            bgPrimary: '#111111',
+                            bgSecondary: '#1E1E1E',
+                            bgCard: '#2A2A2A',
+                            gold: '#D4AF37',
+                            goldHover: '#F4C542',
+                            borderGold: 'rgba(212,175,55,0.25)',
+                            borderGoldHover: 'rgba(244,197,66,0.45)',
+                            textPrimary: '#F5F5F5',
+                            textSecondary: '#B0B0B0',
                         }
                     }
                 }
@@ -71,52 +72,52 @@
         }
     </script>
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/static/css/style.css?v=3.0">
+    <link rel="stylesheet" href="/static/css/style.css?v=4.0">
 </head>
-<body class="bg-[#020617] text-[#F8FAFC] font-sans antialiased overflow-x-hidden relative bg-ai-grid">
+<body class="bg-[#111111] text-[#F5F5F5] font-sans antialiased overflow-x-hidden relative bg-ai-grid">
     <!-- Canvas for interactive network grid background -->
     <canvas id="bg-canvas" class="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none opacity-60"></canvas>
 
-    <!-- Decorative Enterprise Glow Blobs -->
-    <div class="fixed top-[-10%] left-[-10%] w-[55%] h-[55%] rounded-full bg-[#2563EB]/15 blur-[140px] pointer-events-none -z-10"></div>
-    <div class="fixed bottom-[-10%] right-[-10%] w-[55%] h-[55%] rounded-full bg-[#06B6D4]/15 blur-[140px] pointer-events-none -z-10"></div>
-    <div class="fixed top-[40%] left-[30%] w-[40%] h-[40%] rounded-full bg-[#14B8A6]/10 blur-[160px] pointer-events-none -z-10"></div>
+    <!-- Decorative Gold Ambient Glow Blobs -->
+    <div class="fixed top-[-10%] left-[-10%] w-[55%] h-[55%] rounded-full bg-[#D4AF37]/10 blur-[150px] pointer-events-none -z-10"></div>
+    <div class="fixed bottom-[-10%] right-[-10%] w-[55%] h-[55%] rounded-full bg-[#F4C542]/08 blur-[160px] pointer-events-none -z-10"></div>
+    <div class="fixed top-[40%] left-[30%] w-[40%] h-[40%] rounded-full bg-[#D4AF37]/05 blur-[160px] pointer-events-none -z-10"></div>
 
     <!-- Navigation Header -->
-    <header class="fixed top-0 left-0 w-full z-50 bg-[#0F172A]/80 backdrop-blur-xl border-b border-[rgba(37,99,235,0.20)] transition-all duration-300">
+    <header class="fixed top-0 left-0 w-full z-50 bg-[#1E1E1E]/80 backdrop-blur-xl border-b border-[rgba(212,175,55,0.25)] transition-all duration-300">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
             <!-- Premium Enterprise Logo Treatment -->
             <a href="#" class="font-display font-bold text-2xl tracking-tight flex items-center space-x-3 group">
-                <span class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#2563EB] via-[#06B6D4] to-[#14B8A6] p-[1.5px] inline-flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.4)] group-hover:shadow-[0_0_25px_rgba(6,182,212,0.6)] transition duration-300">
-                    <span class="w-full h-full bg-[#020617] rounded-[10px] flex items-center justify-center text-xs font-black text-transparent bg-clip-text bg-gradient-to-r from-[#2563EB] via-[#06B6D4] to-[#14B8A6]">HR</span>
+                <span class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#D4AF37] via-[#F4C542] to-[#D4AF37] p-[1.5px] inline-flex items-center justify-center shadow-[0_0_20px_rgba(212,175,55,0.35)] group-hover:shadow-[0_0_25px_rgba(244,197,66,0.5)] transition duration-300">
+                    <span class="w-full h-full bg-[#111111] rounded-[10px] flex items-center justify-center text-xs font-black text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] via-[#F4C542] to-[#D4AF37]">HR</span>
                 </span>
                 <span class="text-xl sm:text-2xl">
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#2563EB] via-[#06B6D4] to-[#14B8A6]">HR</span>
-                    <span class="text-[#F8FAFC]"> Autonomous</span>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] via-[#F4C542] to-[#D4AF37]">HR</span>
+                    <span class="text-[#F5F5F5]"> Autonomous</span>
                 </span>
             </a>
             
-            <!-- Updated Navigation Links -->
+            <!-- Navigation Links -->
             <nav class="hidden md:flex items-center space-x-8">
-                <a href="#solutions" class="text-sm font-medium text-[#94A3B8] hover:text-[#06B6D4] transition duration-300">Solutions</a>
-                <a href="#systems" class="text-sm font-medium text-[#94A3B8] hover:text-[#06B6D4] transition duration-300">Automation Systems</a>
-                <a href="#projects" class="text-sm font-medium text-[#94A3B8] hover:text-[#06B6D4] transition duration-300">Case Studies</a>
-                <a href="#about" class="text-sm font-medium text-[#94A3B8] hover:text-[#06B6D4] transition duration-300">About</a>
-                <a href="#contact" class="text-sm font-medium text-[#94A3B8] hover:text-[#06B6D4] transition duration-300">Contact</a>
+                <a href="#solutions" class="text-sm font-medium text-[#B0B0B0] hover:text-[#D4AF37] transition duration-300">Solutions</a>
+                <a href="#systems" class="text-sm font-medium text-[#B0B0B0] hover:text-[#D4AF37] transition duration-300">Automation Systems</a>
+                <a href="#projects" class="text-sm font-medium text-[#B0B0B0] hover:text-[#D4AF37] transition duration-300">Case Studies</a>
+                <a href="#about" class="text-sm font-medium text-[#B0B0B0] hover:text-[#D4AF37] transition duration-300">About</a>
+                <a href="#contact" class="text-sm font-medium text-[#B0B0B0] hover:text-[#D4AF37] transition duration-300">Contact</a>
             </nav>
 
             <div class="hidden md:flex items-center space-x-4">
-                <div id="crm-status-pill" class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#020617] border border-[rgba(37,99,235,0.30)] text-xs font-mono text-[#06B6D4]">
-                    <span class="w-2 h-2 rounded-full bg-[#14B8A6] animate-pulse"></span>
+                <div id="crm-status-pill" class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#111111] border border-[rgba(212,175,55,0.25)] text-xs font-mono text-[#D4AF37]">
+                    <span class="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse"></span>
                     <span id="crm-status-text">CRM: Online</span>
                 </div>
-                <a href="#contact" class="px-6 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider text-white bg-gradient-to-r from-[#2563EB] via-[#06B6D4] to-[#14B8A6] hover:shadow-[0_0_25px_rgba(37,99,235,0.5)] active:scale-95 transition duration-300">
+                <a href="#contact" class="px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider text-[#111111] bg-[#D4AF37] hover:bg-[#F4C542] hover:shadow-[0_0_25px_rgba(212,175,55,0.45)] active:scale-95 transition duration-300">
                     Get in Touch
                 </a>
             </div>
 
             <!-- Mobile Menu Toggle Button -->
-            <button id="menu-btn" class="md:hidden flex flex-col justify-between w-6 h-4 text-[#94A3B8] focus:outline-none" aria-label="Toggle Menu">
+            <button id="menu-btn" class="md:hidden flex flex-col justify-between w-6 h-4 text-[#B0B0B0] focus:outline-none" aria-label="Toggle Menu">
                 <span class="w-full h-0.5 bg-current transition-all duration-300"></span>
                 <span class="w-full h-0.5 bg-current transition-all duration-300"></span>
                 <span class="w-full h-0.5 bg-current transition-all duration-300"></span>
@@ -124,13 +125,13 @@
         </div>
 
         <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden md:hidden absolute top-20 left-0 w-full bg-[#0F172A]/95 backdrop-blur-2xl border-b border-[rgba(37,99,235,0.20)] py-6 px-6 flex flex-col space-y-4">
-            <a href="#solutions" class="text-base font-medium text-[#94A3B8] hover:text-white transition">Solutions</a>
-            <a href="#systems" class="text-base font-medium text-[#94A3B8] hover:text-white transition">Automation Systems</a>
-            <a href="#projects" class="text-base font-medium text-[#94A3B8] hover:text-white transition">Case Studies</a>
-            <a href="#about" class="text-base font-medium text-[#94A3B8] hover:text-white transition">About</a>
-            <a href="#contact" class="text-base font-medium text-[#94A3B8] hover:text-white transition">Contact</a>
-            <a href="#contact" class="text-center px-5 py-3 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-[#2563EB] via-[#06B6D4] to-[#14B8A6] transition">
+        <div id="mobile-menu" class="hidden md:hidden absolute top-20 left-0 w-full bg-[#1E1E1E]/95 backdrop-blur-2xl border-b border-[rgba(212,175,55,0.25)] py-6 px-6 flex flex-col space-y-4">
+            <a href="#solutions" class="text-base font-medium text-[#B0B0B0] hover:text-[#D4AF37] transition">Solutions</a>
+            <a href="#systems" class="text-base font-medium text-[#B0B0B0] hover:text-[#D4AF37] transition">Automation Systems</a>
+            <a href="#projects" class="text-base font-medium text-[#B0B0B0] hover:text-[#D4AF37] transition">Case Studies</a>
+            <a href="#about" class="text-base font-medium text-[#B0B0B0] hover:text-[#D4AF37] transition">About</a>
+            <a href="#contact" class="text-base font-medium text-[#B0B0B0] hover:text-[#D4AF37] transition">Contact</a>
+            <a href="#contact" class="text-center px-5 py-3 rounded-xl text-sm font-bold text-[#111111] bg-[#D4AF37] hover:bg-[#F4C542] transition">
                 Get in Touch
             </a>
         </div>
@@ -142,37 +143,37 @@
             
             <!-- Hero Text Content -->
             <div class="lg:col-span-7 flex flex-col justify-center space-y-6 text-left">
-                <div class="inline-flex items-center space-x-2.5 px-4 py-2 rounded-full bg-[#2563EB]/10 border border-[rgba(37,99,235,0.25)] w-fit backdrop-blur-md">
+                <div class="inline-flex items-center space-x-2.5 px-4 py-2 rounded-full bg-[#D4AF37]/10 border border-[rgba(212,175,55,0.25)] w-fit backdrop-blur-md">
                     <span class="flex h-2.5 w-2.5 relative">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#06B6D4] opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#06B6D4]"></span>
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#D4AF37] opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#D4AF37]"></span>
                     </span>
-                    <span class="text-xs font-semibold uppercase tracking-wider text-[#06B6D4]">Enterprise AI Platform</span>
+                    <span class="text-xs font-semibold uppercase tracking-wider text-[#D4AF37]">Enterprise AI Platform</span>
                 </div>
                 
                 <div class="space-y-4">
                     <h1 class="font-display text-5xl sm:text-7xl font-extrabold tracking-tight leading-none">
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#2563EB] via-[#06B6D4] to-[#14B8A6]">HR Autonomous</span>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] via-[#F4C542] to-[#E6C200]">HR Autonomous</span>
                     </h1>
-                    <p class="font-display text-2xl sm:text-3xl font-bold text-[#F8FAFC] tracking-tight leading-snug">
+                    <p class="font-display text-2xl sm:text-3xl font-bold text-[#F5F5F5] tracking-tight leading-snug">
                         Building Intelligent Automation Systems for Modern Businesses
                     </p>
                     <div class="flex flex-wrap gap-2.5 pt-1">
-                        <span class="px-3.5 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider text-[#06B6D4] bg-[#2563EB]/10 border border-[rgba(37,99,235,0.25)]">AI Automation Systems</span>
-                        <span class="px-3.5 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider text-[#14B8A6] bg-[#14B8A6]/10 border border-[rgba(20,184,166,0.25)]">Intelligent Workflows</span>
-                        <span class="px-3.5 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider text-blue-400 bg-[#2563EB]/10 border border-[rgba(37,99,235,0.25)]">Backend Infrastructure</span>
+                        <span class="px-3.5 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider text-[#D4AF37] bg-[#D4AF37]/10 border border-[rgba(212,175,55,0.25)]">AI Automation Systems</span>
+                        <span class="px-3.5 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider text-[#F4C542] bg-[#D4AF37]/10 border border-[rgba(212,175,55,0.25)]">Intelligent Workflows</span>
+                        <span class="px-3.5 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider text-[#D4AF37] bg-[#D4AF37]/10 border border-[rgba(212,175,55,0.25)]">Backend Infrastructure</span>
                     </div>
                 </div>
 
-                <p class="text-base sm:text-lg text-[#94A3B8] max-w-2xl leading-relaxed">
+                <p class="text-base sm:text-lg text-[#B0B0B0] max-w-2xl leading-relaxed">
                     I build intelligent automation systems, AI-powered workflows, backend infrastructure, and scalable business process automation solutions using Python, FastAPI, APIs, databases, and modern AI technologies.
                 </p>
 
                 <div class="flex flex-col sm:flex-row items-stretch sm:items-center space-y-4 sm:space-y-0 sm:space-x-5 pt-4">
-                    <a href="#projects" class="px-8 py-4 rounded-xl font-semibold text-center text-white bg-gradient-to-r from-[#2563EB] via-[#06B6D4] to-[#14B8A6] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)] hover:scale-[1.02] active:scale-[0.98] transition duration-300 shadow-lg">
+                    <a href="#projects" class="px-8 py-4 rounded-xl font-bold text-center text-[#111111] bg-[#D4AF37] hover:bg-[#F4C542] hover:shadow-[0_0_30px_rgba(212,175,55,0.45)] hover:scale-[1.02] active:scale-[0.98] transition duration-300 shadow-lg">
                         View Case Studies
                     </a>
-                    <a href="#contact" class="px-8 py-4 rounded-xl font-semibold text-center text-[#F8FAFC] bg-[#0F172A]/80 border border-[rgba(37,99,235,0.20)] hover:bg-[#111827] hover:border-[#06B6D4]/50 hover:text-white hover:shadow-[0_0_20px_rgba(6,182,212,0.15)] transition duration-300 backdrop-blur-md">
+                    <a href="#contact" class="px-8 py-4 rounded-xl font-semibold text-center text-[#D4AF37] bg-transparent border border-[rgba(212,175,55,0.40)] hover:bg-[#D4AF37]/10 hover:border-[#F4C542] hover:text-[#F4C542] hover:shadow-[0_0_20px_rgba(212,175,55,0.20)] transition duration-300 backdrop-blur-md">
                         Contact HR Autonomous
                     </a>
                 </div>
@@ -180,10 +181,10 @@
 
             <!-- Hero Interactive Visual (Autonomous Engine Mockup) -->
             <div class="lg:col-span-5 flex justify-center">
-                <div class="relative w-full max-w-lg aspect-square rounded-3xl bg-[#111827]/80 border border-[rgba(37,99,235,0.20)] p-6 flex flex-col justify-between overflow-hidden shadow-2xl backdrop-blur-2xl group hover:border-[#06B6D4]/40 hover:shadow-[0_0_35px_rgba(37,99,235,0.2)] transition-all duration-500">
+                <div class="relative w-full max-w-lg aspect-square rounded-3xl bg-[#2A2A2A]/90 border border-[rgba(212,175,55,0.25)] p-6 flex flex-col justify-between overflow-hidden shadow-2xl backdrop-blur-2xl group hover:border-[#F4C542]/50 hover:shadow-[0_0_35px_rgba(212,175,55,0.25)] transition-all duration-500">
                     <!-- Internal Glow effects -->
-                    <div class="absolute -top-12 -right-12 w-48 h-48 bg-[#06B6D4]/15 rounded-full blur-3xl group-hover:bg-[#06B6D4]/25 transition-all"></div>
-                    <div class="absolute -bottom-12 -left-12 w-48 h-48 bg-[#2563EB]/15 rounded-full blur-3xl group-hover:bg-[#2563EB]/25 transition-all"></div>
+                    <div class="absolute -top-12 -right-12 w-48 h-48 bg-[#D4AF37]/15 rounded-full blur-3xl group-hover:bg-[#D4AF37]/25 transition-all"></div>
+                    <div class="absolute -bottom-12 -left-12 w-48 h-48 bg-[#F4C542]/15 rounded-full blur-3xl group-hover:bg-[#F4C542]/25 transition-all"></div>
                     
                     <!-- Top Window Bar -->
                     <div class="flex items-center justify-between border-b border-white/10 pb-4 relative z-10">
@@ -192,30 +193,30 @@
                             <span class="w-3 h-3 rounded-full bg-yellow-500/80"></span>
                             <span class="w-3 h-3 rounded-full bg-green-500/80"></span>
                         </div>
-                        <span class="text-xs font-mono text-[#06B6D4]">hr_autonomous_orchestrator.py</span>
+                        <span class="text-xs font-mono text-[#D4AF37]">hr_autonomous_orchestrator.py</span>
                     </div>
 
                     <!-- Autonomous Code simulation -->
-                    <div class="flex-grow py-5 font-mono text-xs text-[#94A3B8] space-y-2 relative z-10">
-                        <p class="text-[#06B6D4]"><span class="text-slate-600">1</span> import fastapi, gemini_ai</p>
-                        <p class="text-[#06B6D4]"><span class="text-slate-600">2</span> from hr_autonomous import AIWorkflowAgent</p>
-                        <p class="text-slate-500"><span class="text-slate-600">3</span> </p>
-                        <p class="text-[#14B8A6]"><span class="text-slate-600">4</span> agent = AIWorkflowAgent(model="gemini-3.6-flash")</p>
-                        <p class="text-slate-500"><span class="text-slate-600">5</span> </p>
-                        <p class="text-slate-400"><span class="text-slate-600">6</span> @app.post("/api/v1/autonomous/execute")</p>
-                        <p class="text-slate-300"><span class="text-slate-600">7</span> <span class="text-[#2563EB]">async def</span> <span class="text-cyan-300">run_intelligent_pipeline</span>(payload):</p>
-                        <p class="text-slate-400"><span class="text-slate-600">8</span> &nbsp;&nbsp;&nbsp;&nbsp;result = await agent.process(payload)</p>
-                        <p class="text-slate-400"><span class="text-slate-600">9</span> &nbsp;&nbsp;&nbsp;&nbsp;await db.log_autonomous_action(result.id)</p>
-                        <p class="text-[#14B8A6]"><span class="text-slate-600">10</span> &nbsp;&nbsp;&nbsp;return {"status": "SUCCESS", "brand": "HR Autonomous"}</p>
+                    <div class="flex-grow py-5 font-mono text-xs text-[#B0B0B0] space-y-2 relative z-10">
+                        <p class="text-[#D4AF37]"><span class="text-neutral-500">1</span> import fastapi, gemini_ai</p>
+                        <p class="text-[#D4AF37]"><span class="text-neutral-500">2</span> from hr_autonomous import AIWorkflowAgent</p>
+                        <p class="text-neutral-500"><span class="text-neutral-500">3</span> </p>
+                        <p class="text-[#F4C542]"><span class="text-neutral-500">4</span> agent = AIWorkflowAgent(model="gemini-3.6-flash")</p>
+                        <p class="text-neutral-500"><span class="text-neutral-500">5</span> </p>
+                        <p class="text-neutral-400"><span class="text-neutral-500">6</span> @app.post("/api/v1/autonomous/execute")</p>
+                        <p class="text-neutral-300"><span class="text-neutral-500">7</span> <span class="text-[#D4AF37]">async def</span> <span class="text-[#F4C542]">run_intelligent_pipeline</span>(payload):</p>
+                        <p class="text-neutral-400"><span class="text-neutral-500">8</span> &nbsp;&nbsp;&nbsp;&nbsp;result = await agent.process(payload)</p>
+                        <p class="text-neutral-400"><span class="text-neutral-500">9</span> &nbsp;&nbsp;&nbsp;&nbsp;await db.log_autonomous_action(result.id)</p>
+                        <p class="text-[#D4AF37]"><span class="text-neutral-500">10</span> &nbsp;&nbsp;&nbsp;return {"status": "SUCCESS", "brand": "HR Autonomous"}</p>
                     </div>
 
                     <!-- Output console status simulation -->
-                    <div class="bg-[#020617]/90 border border-[rgba(37,99,235,0.20)] rounded-xl p-4 font-mono text-xs flex items-center justify-between relative z-10">
+                    <div class="bg-[#111111]/90 border border-[rgba(212,175,55,0.25)] rounded-xl p-4 font-mono text-xs flex items-center justify-between relative z-10">
                         <div class="flex items-center space-x-2.5">
-                            <span class="w-2.5 h-2.5 rounded-full bg-[#14B8A6] animate-pulse"></span>
-                            <span class="text-[#94A3B8]">HR Autonomous Engine:</span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-[#D4AF37] animate-pulse"></span>
+                            <span class="text-[#B0B0B0]">HR Autonomous Engine:</span>
                         </div>
-                        <span class="text-[#14B8A6] font-bold tracking-wider">ACTIVE • 99.9% UPTIME</span>
+                        <span class="text-[#D4AF37] font-bold tracking-wider">ACTIVE • 99.9% UPTIME</span>
                     </div>
                 </div>
             </div>
@@ -224,45 +225,45 @@
     </section>
 
     <!-- Solutions Section -->
-    <section id="solutions" class="py-24 px-6 relative border-t border-[rgba(37,99,235,0.15)] bg-[#0F172A]/40">
+    <section id="solutions" class="py-24 px-6 relative border-t border-[rgba(212,175,55,0.25)] bg-[#1E1E1E]/50">
         <div class="max-w-5xl mx-auto">
             <div class="text-center space-y-4 mb-16">
-                <h2 class="font-display text-3xl sm:text-4xl font-bold">HR Autonomous Solutions</h2>
-                <div class="w-16 h-1 bg-gradient-to-r from-[#2563EB] via-[#06B6D4] to-[#14B8A6] mx-auto rounded-full"></div>
-                <p class="text-[#94A3B8] text-sm max-w-xl mx-auto">Building Intelligent Automation Systems for Modern Businesses</p>
+                <h2 class="font-display text-3xl sm:text-4xl font-bold text-[#F5F5F5]">HR Autonomous Solutions</h2>
+                <div class="w-16 h-1 bg-gradient-to-r from-[#D4AF37] via-[#F4C542] to-[#D4AF37] mx-auto rounded-full"></div>
+                <p class="text-[#B0B0B0] text-sm max-w-xl mx-auto">Building Intelligent Automation Systems for Modern Businesses</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                 <!-- Text Details -->
                 <div class="space-y-6">
-                    <h3 class="font-display text-2xl font-semibold text-[#F8FAFC]">
+                    <h3 class="font-display text-2xl font-semibold text-[#F5F5F5]">
                         Architecting enterprise-grade backend engines and autonomous AI workflows
                     </h3>
-                    <p class="text-[#94A3B8] leading-relaxed">
-                        Under the brand <strong class="text-white">HR Autonomous</strong>, Hafiz Riaz specializes in engineering end-to-end AI automation pipelines, asynchronous Python microservices, and robust backend API ecosystems.
+                    <p class="text-[#B0B0B0] leading-relaxed">
+                        Under the brand <strong class="text-[#F5F5F5]">HR Autonomous</strong>, Hafiz Riaz specializes in engineering end-to-end AI automation pipelines, asynchronous Python microservices, and robust backend API ecosystems.
                     </p>
-                    <p class="text-[#94A3B8] leading-relaxed">
+                    <p class="text-[#B0B0B0] leading-relaxed">
                         From integrating LLM intelligence into operational workflows to building resilient FastAPI architectures and automated data scrapers, our mission is to eliminate manual bottlenecks and scale enterprise productivity seamlessly.
                     </p>
                 </div>
 
                 <!-- Enterprise Stats / Cards Grid -->
                 <div class="grid grid-cols-2 gap-4">
-                    <div class="p-6 rounded-2xl bg-[#111827] border border-[rgba(37,99,235,0.20)] hover:border-[#06B6D4]/40 transition duration-300 flex flex-col justify-center space-y-2">
-                        <span class="text-3xl font-display font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#2563EB] to-[#06B6D4]">AI Native</span>
-                        <span class="text-xs font-semibold uppercase tracking-wider text-[#94A3B8]">Workflow Engineering</span>
+                    <div class="p-6 rounded-2xl bg-[#2A2A2A] border border-[rgba(212,175,55,0.25)] hover:border-[#F4C542]/50 hover:shadow-[0_0_25px_rgba(212,175,55,0.15)] transition duration-300 flex flex-col justify-center space-y-2">
+                        <span class="text-3xl font-display font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-[#F4C542]">AI Native</span>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-[#B0B0B0]">Workflow Engineering</span>
                     </div>
-                    <div class="p-6 rounded-2xl bg-[#111827] border border-[rgba(37,99,235,0.20)] hover:border-[#06B6D4]/40 transition duration-300 flex flex-col justify-center space-y-2">
-                        <span class="text-3xl font-display font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#06B6D4] to-[#14B8A6]">FastAPI</span>
-                        <span class="text-xs font-semibold uppercase tracking-wider text-[#94A3B8]">Async Microservices</span>
+                    <div class="p-6 rounded-2xl bg-[#2A2A2A] border border-[rgba(212,175,55,0.25)] hover:border-[#F4C542]/50 hover:shadow-[0_0_25px_rgba(212,175,55,0.15)] transition duration-300 flex flex-col justify-center space-y-2">
+                        <span class="text-3xl font-display font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#F4C542] to-[#D4AF37]">FastAPI</span>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-[#B0B0B0]">Async Microservices</span>
                     </div>
-                    <div class="p-6 rounded-2xl bg-[#111827] border border-[rgba(37,99,235,0.20)] hover:border-[#06B6D4]/40 transition duration-300 flex flex-col justify-center space-y-2">
-                        <span class="text-3xl font-display font-extrabold text-[#14B8A6]">100%</span>
-                        <span class="text-xs font-semibold uppercase tracking-wider text-[#94A3B8]">Automated Pipelines</span>
+                    <div class="p-6 rounded-2xl bg-[#2A2A2A] border border-[rgba(212,175,55,0.25)] hover:border-[#F4C542]/50 hover:shadow-[0_0_25px_rgba(212,175,55,0.15)] transition duration-300 flex flex-col justify-center space-y-2">
+                        <span class="text-3xl font-display font-extrabold text-[#D4AF37]">100%</span>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-[#B0B0B0]">Automated Pipelines</span>
                     </div>
-                    <div class="p-6 rounded-2xl bg-[#111827] border border-[rgba(37,99,235,0.20)] hover:border-[#06B6D4]/40 transition duration-300 flex flex-col justify-center space-y-2">
-                        <span class="text-3xl font-display font-extrabold text-[#F8FAFC]">Scale</span>
-                        <span class="text-xs font-semibold uppercase tracking-wider text-[#94A3B8]">Production Ready</span>
+                    <div class="p-6 rounded-2xl bg-[#2A2A2A] border border-[rgba(212,175,55,0.25)] hover:border-[#F4C542]/50 hover:shadow-[0_0_25px_rgba(212,175,55,0.15)] transition duration-300 flex flex-col justify-center space-y-2">
+                        <span class="text-3xl font-display font-extrabold text-[#F5F5F5]">Scale</span>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-[#B0B0B0]">Production Ready</span>
                     </div>
                 </div>
             </div>
@@ -270,66 +271,66 @@
     </section>
 
     <!-- Automation Systems / Enterprise Capabilities Section -->
-    <section id="systems" class="py-24 px-6 relative border-t border-[rgba(37,99,235,0.15)] bg-[#020617]">
+    <section id="systems" class="py-24 px-6 relative border-t border-[rgba(212,175,55,0.25)] bg-[#111111]">
         <div class="max-w-5xl mx-auto">
             <div class="text-center space-y-4 mb-16">
-                <h2 class="font-display text-3xl sm:text-4xl font-bold">Automation Systems</h2>
-                <div class="w-16 h-1 bg-gradient-to-r from-[#2563EB] via-[#06B6D4] to-[#14B8A6] mx-auto rounded-full"></div>
-                <p class="text-[#94A3B8] text-sm max-w-xl mx-auto">Core technical pillars driving HR Autonomous intelligent infrastructure</p>
+                <h2 class="font-display text-3xl sm:text-4xl font-bold text-[#F5F5F5]">Automation Systems</h2>
+                <div class="w-16 h-1 bg-gradient-to-r from-[#D4AF37] via-[#F4C542] to-[#D4AF37] mx-auto rounded-full"></div>
+                <p class="text-[#B0B0B0] text-sm max-w-xl mx-auto">Core technical pillars driving HR Autonomous intelligent infrastructure</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- AI & Workflow Automation -->
-                <div class="p-8 rounded-2xl bg-[#111827]/90 border border-[rgba(37,99,235,0.20)] hover:border-[#06B6D4]/40 hover:shadow-[0_0_25px_rgba(37,99,235,0.15)] transition-all duration-300 group flex flex-col space-y-5">
-                    <div class="w-12 h-12 rounded-xl bg-[#2563EB]/10 flex items-center justify-center border border-[rgba(37,99,235,0.3)] group-hover:bg-[#2563EB]/20 transition-all">
-                        <svg class="w-6 h-6 text-[#06B6D4]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <div class="p-8 rounded-2xl bg-[#2A2A2A]/90 border border-[rgba(212,175,55,0.25)] hover:border-[#F4C542]/50 hover:shadow-[0_0_25px_rgba(212,175,55,0.2)] transition-all duration-300 group flex flex-col space-y-5">
+                    <div class="w-12 h-12 rounded-xl bg-[#D4AF37]/10 flex items-center justify-center border border-[rgba(212,175,55,0.25)] group-hover:bg-[#D4AF37]/20 transition-all">
+                        <svg class="w-6 h-6 text-[#D4AF37]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
                     </div>
-                    <h3 class="font-display text-xl font-bold text-[#F8FAFC]">AI & Autonomous Workflows</h3>
-                    <p class="text-[#94A3B8] text-sm leading-relaxed flex-grow">
+                    <h3 class="font-display text-xl font-bold text-[#F5F5F5]">AI & Autonomous Workflows</h3>
+                    <p class="text-[#B0B0B0] text-sm leading-relaxed flex-grow">
                         Architecting self-correcting AI agent chains, automated B2B lead enrichment pipelines, and LLM-powered business tools.
                     </p>
                     <div class="flex flex-wrap gap-2 pt-2">
-                        <span class="text-xs px-2.5 py-1.5 rounded-md bg-[#0F172A] border border-[rgba(37,99,235,0.20)] text-[#06B6D4] font-mono">Gemini AI</span>
-                        <span class="text-xs px-2.5 py-1.5 rounded-md bg-[#0F172A] border border-[rgba(37,99,235,0.20)] text-[#06B6D4] font-mono">Playwright</span>
-                        <span class="text-xs px-2.5 py-1.5 rounded-md bg-[#0F172A] border border-[rgba(37,99,235,0.20)] text-[#06B6D4] font-mono">AI Agents</span>
+                        <span class="text-xs px-2.5 py-1.5 rounded-md bg-[#1E1E1E] border border-[rgba(212,175,55,0.25)] text-[#D4AF37] font-mono">Gemini AI</span>
+                        <span class="text-xs px-2.5 py-1.5 rounded-md bg-[#1E1E1E] border border-[rgba(212,175,55,0.25)] text-[#D4AF37] font-mono">Playwright</span>
+                        <span class="text-xs px-2.5 py-1.5 rounded-md bg-[#1E1E1E] border border-[rgba(212,175,55,0.25)] text-[#D4AF37] font-mono">AI Agents</span>
                     </div>
                 </div>
 
                 <!-- Backend Engineering -->
-                <div class="p-8 rounded-2xl bg-[#111827]/90 border border-[rgba(37,99,235,0.20)] hover:border-[#06B6D4]/40 hover:shadow-[0_0_25px_rgba(37,99,235,0.15)] transition-all duration-300 group flex flex-col space-y-5">
-                    <div class="w-12 h-12 rounded-xl bg-[#06B6D4]/10 flex items-center justify-center border border-[rgba(6,182,212,0.3)] group-hover:bg-[#06B6D4]/20 transition-all">
-                        <svg class="w-6 h-6 text-[#2563EB]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <div class="p-8 rounded-2xl bg-[#2A2A2A]/90 border border-[rgba(212,175,55,0.25)] hover:border-[#F4C542]/50 hover:shadow-[0_0_25px_rgba(212,175,55,0.2)] transition-all duration-300 group flex flex-col space-y-5">
+                    <div class="w-12 h-12 rounded-xl bg-[#D4AF37]/10 flex items-center justify-center border border-[rgba(212,175,55,0.25)] group-hover:bg-[#D4AF37]/20 transition-all">
+                        <svg class="w-6 h-6 text-[#D4AF37]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
                         </svg>
                     </div>
-                    <h3 class="font-display text-xl font-bold text-[#F8FAFC]">Backend Development</h3>
-                    <p class="text-[#94A3B8] text-sm leading-relaxed flex-grow">
+                    <h3 class="font-display text-xl font-bold text-[#F5F5F5]">Backend Development</h3>
+                    <p class="text-[#B0B0B0] text-sm leading-relaxed flex-grow">
                         Designing clean REST APIs, asynchronous request processors, webhook handlers, and enterprise microservices.
                     </p>
                     <div class="flex flex-wrap gap-2 pt-2">
-                        <span class="text-xs px-2.5 py-1.5 rounded-md bg-[#0F172A] border border-[rgba(37,99,235,0.20)] text-[#06B6D4] font-mono">Python</span>
-                        <span class="text-xs px-2.5 py-1.5 rounded-md bg-[#0F172A] border border-[rgba(37,99,235,0.20)] text-[#06B6D4] font-mono">FastAPI</span>
-                        <span class="text-xs px-2.5 py-1.5 rounded-md bg-[#0F172A] border border-[rgba(37,99,235,0.20)] text-[#06B6D4] font-mono">AsyncIO</span>
+                        <span class="text-xs px-2.5 py-1.5 rounded-md bg-[#1E1E1E] border border-[rgba(212,175,55,0.25)] text-[#D4AF37] font-mono">Python</span>
+                        <span class="text-xs px-2.5 py-1.5 rounded-md bg-[#1E1E1E] border border-[rgba(212,175,55,0.25)] text-[#D4AF37] font-mono">FastAPI</span>
+                        <span class="text-xs px-2.5 py-1.5 rounded-md bg-[#1E1E1E] border border-[rgba(212,175,55,0.25)] text-[#D4AF37] font-mono">AsyncIO</span>
                     </div>
                 </div>
 
                 <!-- Database & Infrastructure -->
-                <div class="p-8 rounded-2xl bg-[#111827]/90 border border-[rgba(37,99,235,0.20)] hover:border-[#06B6D4]/40 hover:shadow-[0_0_25px_rgba(37,99,235,0.15)] transition-all duration-300 group flex flex-col space-y-5">
-                    <div class="w-12 h-12 rounded-xl bg-[#14B8A6]/10 flex items-center justify-center border border-[rgba(20,184,166,0.3)] group-hover:bg-[#14B8A6]/20 transition-all">
-                        <svg class="w-6 h-6 text-[#14B8A6]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <div class="p-8 rounded-2xl bg-[#2A2A2A]/90 border border-[rgba(212,175,55,0.25)] hover:border-[#F4C542]/50 hover:shadow-[0_0_25px_rgba(212,175,55,0.2)] transition-all duration-300 group flex flex-col space-y-5">
+                    <div class="w-12 h-12 rounded-xl bg-[#D4AF37]/10 flex items-center justify-center border border-[rgba(212,175,55,0.25)] group-hover:bg-[#D4AF37]/20 transition-all">
+                        <svg class="w-6 h-6 text-[#D4AF37]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2.21 3.58 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.58 4 8 4s8-1.79 8-4M4 7c0-2.21 3.58-4 8-4s8 1.79 8 4m0 5c0 2.21-3.58 4-8 4s-8-1.79-8-4" />
                         </svg>
                     </div>
-                    <h3 class="font-display text-xl font-bold text-[#F8FAFC]">Databases & Integrations</h3>
-                    <p class="text-[#94A3B8] text-sm leading-relaxed flex-grow">
+                    <h3 class="font-display text-xl font-bold text-[#F5F5F5]">Databases & Integrations</h3>
+                    <p class="text-[#B0B0B0] text-sm leading-relaxed flex-grow">
                         Building relational schemas, background cron schedulers, and multi-platform API orchestrations.
                     </p>
                     <div class="flex flex-wrap gap-2 pt-2">
-                        <span class="text-xs px-2.5 py-1.5 rounded-md bg-[#0F172A] border border-[rgba(37,99,235,0.20)] text-[#06B6D4] font-mono">PostgreSQL</span>
-                        <span class="text-xs px-2.5 py-1.5 rounded-md bg-[#0F172A] border border-[rgba(37,99,235,0.20)] text-[#06B6D4] font-mono">SQLAlchemy</span>
-                        <span class="text-xs px-2.5 py-1.5 rounded-md bg-[#0F172A] border border-[rgba(37,99,235,0.20)] text-[#06B6D4] font-mono">APScheduler</span>
+                        <span class="text-xs px-2.5 py-1.5 rounded-md bg-[#1E1E1E] border border-[rgba(212,175,55,0.25)] text-[#D4AF37] font-mono">PostgreSQL</span>
+                        <span class="text-xs px-2.5 py-1.5 rounded-md bg-[#1E1E1E] border border-[rgba(212,175,55,0.25)] text-[#D4AF37] font-mono">SQLAlchemy</span>
+                        <span class="text-xs px-2.5 py-1.5 rounded-md bg-[#1E1E1E] border border-[rgba(212,175,55,0.25)] text-[#D4AF37] font-mono">APScheduler</span>
                     </div>
                 </div>
             </div>
@@ -337,30 +338,30 @@
     </section>
 
     <!-- Case Studies / Projects Section -->
-    <section id="projects" class="py-24 px-6 relative border-t border-[rgba(37,99,235,0.15)] bg-[#0F172A]/40">
+    <section id="projects" class="py-24 px-6 relative border-t border-[rgba(212,175,55,0.25)] bg-[#1E1E1E]/50">
         <div class="max-w-6xl mx-auto">
             <div class="text-center space-y-4 mb-16">
-                <h2 class="font-display text-3xl sm:text-4xl font-bold">Case Studies & Deployed Systems</h2>
-                <p class="text-[#94A3B8] max-w-lg mx-auto text-sm">
+                <h2 class="font-display text-3xl sm:text-4xl font-bold text-[#F5F5F5]">Case Studies & Deployed Systems</h2>
+                <p class="text-[#B0B0B0] max-w-lg mx-auto text-sm">
                     Production AI platforms, automation workflows, and backend infrastructure engineered by HR Autonomous.
                 </p>
-                <div class="w-16 h-1 bg-gradient-to-r from-[#2563EB] via-[#06B6D4] to-[#14B8A6] mx-auto rounded-full"></div>
+                <div class="w-16 h-1 bg-gradient-to-r from-[#D4AF37] via-[#F4C542] to-[#D4AF37] mx-auto rounded-full"></div>
             </div>
 
             <!-- Projects Grid (Dynamically Populated) -->
             <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <!-- Loading State (replaced by JS) -->
                 <div class="col-span-full py-12 flex flex-col items-center justify-center space-y-4">
-                    <div class="w-9 h-9 rounded-full border-2 border-[#06B6D4] border-t-transparent animate-spin"></div>
-                    <p class="text-xs font-mono text-[#94A3B8]">Loading HR Autonomous case studies...</p>
+                    <div class="w-9 h-9 rounded-full border-2 border-[#D4AF37] border-t-transparent animate-spin"></div>
+                    <p class="text-xs font-mono text-[#B0B0B0]">Loading HR Autonomous case studies...</p>
                 </div>
                 <noscript>
                     <div class="p-8 rounded-3xl glass-panel flex flex-col space-y-6">
                         <div class="flex items-center justify-between">
-                            <h3 class="font-display text-2xl font-bold text-[#F8FAFC]">AI Lead Intelligence System</h3>
-                            <a href="https://github.com/hhafizriazahmad-arch/ai-lead-intelligence-system" target="_blank" rel="noopener noreferrer" class="text-[#06B6D4] hover:text-white transition flex items-center space-x-1 text-sm font-medium">GitHub</a>
+                            <h3 class="font-display text-2xl font-bold text-[#F5F5F5]">AI Lead Intelligence System</h3>
+                            <a href="https://github.com/hhafizriazahmad-arch/ai-lead-intelligence-system" target="_blank" rel="noopener noreferrer" class="text-[#D4AF37] hover:text-white transition flex items-center space-x-1 text-sm font-medium">GitHub</a>
                         </div>
-                        <p class="text-[#94A3B8] text-sm leading-relaxed">Automated B2B lead generation pipeline engineered to identify, enrich, and qualify prospects using Gemini AI and FastAPI.</p>
+                        <p class="text-[#B0B0B0] text-sm leading-relaxed">Automated B2B lead generation pipeline engineered to identify, enrich, and qualify prospects using Gemini AI and FastAPI.</p>
                     </div>
                 </noscript>
             </div>
@@ -368,68 +369,68 @@
     </section>
 
     <!-- About HR Autonomous Section -->
-    <section id="about" class="py-24 px-6 relative border-t border-[rgba(37,99,235,0.15)] bg-[#020617]">
+    <section id="about" class="py-24 px-6 relative border-t border-[rgba(212,175,55,0.25)] bg-[#111111]">
         <div class="max-w-5xl mx-auto">
             <div class="text-center space-y-4 mb-16">
-                <h2 class="font-display text-3xl sm:text-4xl font-bold">About the Founder</h2>
-                <div class="w-16 h-1 bg-gradient-to-r from-[#2563EB] via-[#06B6D4] to-[#14B8A6] mx-auto rounded-full"></div>
+                <h2 class="font-display text-3xl sm:text-4xl font-bold text-[#F5F5F5]">About the Founder</h2>
+                <div class="w-16 h-1 bg-gradient-to-r from-[#D4AF37] via-[#F4C542] to-[#D4AF37] mx-auto rounded-full"></div>
             </div>
 
-            <div class="p-8 sm:p-12 rounded-3xl bg-[#111827]/90 border border-[rgba(37,99,235,0.20)] shadow-2xl space-y-6 text-[#94A3B8] leading-relaxed">
-                <h3 class="font-display text-2xl font-bold text-[#F8FAFC]">
+            <div class="p-8 sm:p-12 rounded-3xl bg-[#2A2A2A]/90 border border-[rgba(212,175,55,0.25)] shadow-2xl space-y-6 text-[#B0B0B0] leading-relaxed">
+                <h3 class="font-display text-2xl font-bold text-[#F5F5F5]">
                     Hafiz Riaz — Founder & Lead Engineer at HR Autonomous
                 </h3>
                 <p>
-                    Hafiz Riaz is an AI Automation Engineer, Backend Developer, and Workflow Architect specializing in custom automation systems, Python backend services, and AI agent integration. Through <strong class="text-white">HR Autonomous</strong>, he provides businesses with robust technological infrastructure that automates complex operations, accelerates sales pipelines, and optimizes business processes.
+                    Hafiz Riaz is an AI Automation Engineer, Backend Developer, and Workflow Architect specializing in custom automation systems, Python backend services, and AI agent integration. Through <strong class="text-[#F5F5F5]">HR Autonomous</strong>, he provides businesses with robust technological infrastructure that automates complex operations, accelerates sales pipelines, and optimizes business processes.
                 </p>
                 <div class="flex flex-wrap gap-3 pt-2">
-                    <span class="px-3.5 py-1.5 rounded-lg bg-[#0F172A] border border-[rgba(37,99,235,0.20)] text-[#06B6D4] font-mono text-xs">AI Agent Engineering</span>
-                    <span class="px-3.5 py-1.5 rounded-lg bg-[#0F172A] border border-[rgba(37,99,235,0.20)] text-[#06B6D4] font-mono text-xs">FastAPI & Async Systems</span>
-                    <span class="px-3.5 py-1.5 rounded-lg bg-[#0F172A] border border-[rgba(37,99,235,0.20)] text-[#06B6D4] font-mono text-xs">Enterprise API Workflows</span>
+                    <span class="px-3.5 py-1.5 rounded-lg bg-[#1E1E1E] border border-[rgba(212,175,55,0.25)] text-[#D4AF37] font-mono text-xs">AI Agent Engineering</span>
+                    <span class="px-3.5 py-1.5 rounded-lg bg-[#1E1E1E] border border-[rgba(212,175,55,0.25)] text-[#D4AF37] font-mono text-xs">FastAPI & Async Systems</span>
+                    <span class="px-3.5 py-1.5 rounded-lg bg-[#1E1E1E] border border-[rgba(212,175,55,0.25)] text-[#D4AF37] font-mono text-xs">Enterprise API Workflows</span>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Contact Form Section -->
-    <section id="contact" class="py-24 px-6 relative border-t border-[rgba(37,99,235,0.15)] bg-[#0F172A]/40">
+    <section id="contact" class="py-24 px-6 relative border-t border-[rgba(212,175,55,0.25)] bg-[#1E1E1E]/50">
         <div class="max-w-xl mx-auto">
             <div class="text-center space-y-4 mb-12">
-                <h2 class="font-display text-3xl sm:text-4xl font-bold">Contact HR Autonomous</h2>
-                <p class="text-[#94A3B8] text-sm">
+                <h2 class="font-display text-3xl sm:text-4xl font-bold text-[#F5F5F5]">Contact HR Autonomous</h2>
+                <p class="text-[#B0B0B0] text-sm">
                     Ready to build intelligent automation systems or backend infrastructure? Let's discuss your project.
                 </p>
-                <div class="w-16 h-1 bg-gradient-to-r from-[#2563EB] via-[#06B6D4] to-[#14B8A6] mx-auto rounded-full"></div>
+                <div class="w-16 h-1 bg-gradient-to-r from-[#D4AF37] via-[#F4C542] to-[#D4AF37] mx-auto rounded-full"></div>
             </div>
 
-            <div class="p-8 rounded-3xl bg-[#111827]/90 border border-[rgba(37,99,235,0.20)] backdrop-blur-2xl relative shadow-2xl">
+            <div class="p-8 rounded-3xl bg-[#2A2A2A]/90 border border-[rgba(212,175,55,0.25)] backdrop-blur-2xl relative shadow-2xl">
                 <!-- Form Submit Success/Error Toast notification -->
                 <div id="form-notification" class="hidden mb-6 p-4 rounded-xl border text-sm transition-all duration-300"></div>
 
                 <form id="contact-form" class="space-y-6">
                     <div>
-                        <label for="name" class="block text-xs font-semibold uppercase tracking-wider text-[#94A3B8] mb-2">Your Name</label>
-                        <input type="text" id="name" required class="w-full px-4 py-3 bg-[#020617]/90 border border-[rgba(37,99,235,0.20)] rounded-xl focus:border-[#06B6D4] focus:ring-1 focus:ring-[#06B6D4] text-[#F8FAFC] placeholder-slate-600 focus:outline-none transition font-sans text-sm" placeholder="John Doe">
+                        <label for="name" class="block text-xs font-semibold uppercase tracking-wider text-[#B0B0B0] mb-2">Your Name</label>
+                        <input type="text" id="name" required class="w-full px-4 py-3 bg-[#111111]/90 border border-[rgba(212,175,55,0.25)] rounded-xl focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] text-[#F5F5F5] placeholder-neutral-500 focus:outline-none transition font-sans text-sm" placeholder="John Doe">
                     </div>
                     
                     <div>
-                        <label for="email" class="block text-xs font-semibold uppercase tracking-wider text-[#94A3B8] mb-2">Email Address</label>
-                        <input type="email" id="email" required class="w-full px-4 py-3 bg-[#020617]/90 border border-[rgba(37,99,235,0.20)] rounded-xl focus:border-[#06B6D4] focus:ring-1 focus:ring-[#06B6D4] text-[#F8FAFC] placeholder-slate-600 focus:outline-none transition font-sans text-sm" placeholder="john@company.com">
+                        <label for="email" class="block text-xs font-semibold uppercase tracking-wider text-[#B0B0B0] mb-2">Email Address</label>
+                        <input type="email" id="email" required class="w-full px-4 py-3 bg-[#111111]/90 border border-[rgba(212,175,55,0.25)] rounded-xl focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] text-[#F5F5F5] placeholder-neutral-500 focus:outline-none transition font-sans text-sm" placeholder="john@company.com">
                     </div>
 
                     <div>
-                        <label for="subject" class="block text-xs font-semibold uppercase tracking-wider text-[#94A3B8] mb-2">Subject</label>
-                        <input type="text" id="subject" required class="w-full px-4 py-3 bg-[#020617]/90 border border-[rgba(37,99,235,0.20)] rounded-xl focus:border-[#06B6D4] focus:ring-1 focus:ring-[#06B6D4] text-[#F8FAFC] placeholder-slate-600 focus:outline-none transition font-sans text-sm" placeholder="AI Automation System Inquiry">
+                        <label for="subject" class="block text-xs font-semibold uppercase tracking-wider text-[#B0B0B0] mb-2">Subject</label>
+                        <input type="text" id="subject" required class="w-full px-4 py-3 bg-[#111111]/90 border border-[rgba(212,175,55,0.25)] rounded-xl focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] text-[#F5F5F5] placeholder-neutral-500 focus:outline-none transition font-sans text-sm" placeholder="AI Automation System Inquiry">
                     </div>
 
                     <div>
-                        <label for="message" class="block text-xs font-semibold uppercase tracking-wider text-[#94A3B8] mb-2">Message</label>
-                        <textarea id="message" required rows="5" class="w-full px-4 py-3 bg-[#020617]/90 border border-[rgba(37,99,235,0.20)] rounded-xl focus:border-[#06B6D4] focus:ring-1 focus:ring-[#06B6D4] text-[#F8FAFC] placeholder-slate-600 focus:outline-none transition font-sans text-sm resize-none" placeholder="Describe your automation requirements or backend needs..."></textarea>
+                        <label for="message" class="block text-xs font-semibold uppercase tracking-wider text-[#B0B0B0] mb-2">Message</label>
+                        <textarea id="message" required rows="5" class="w-full px-4 py-3 bg-[#111111]/90 border border-[rgba(212,175,55,0.25)] rounded-xl focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] text-[#F5F5F5] placeholder-neutral-500 focus:outline-none transition font-sans text-sm resize-none" placeholder="Describe your automation requirements or backend needs..."></textarea>
                     </div>
 
-                    <button type="submit" id="submit-btn" class="w-full py-4 rounded-xl text-sm font-semibold uppercase tracking-wider text-white bg-gradient-to-r from-[#2563EB] via-[#06B6D4] to-[#14B8A6] hover:shadow-[0_0_25px_rgba(37,99,235,0.5)] active:scale-[0.98] transition duration-300 flex items-center justify-center space-x-2">
+                    <button type="submit" id="submit-btn" class="w-full py-4 rounded-xl text-sm font-bold uppercase tracking-wider text-[#111111] bg-[#D4AF37] hover:bg-[#F4C542] hover:shadow-[0_0_25px_rgba(212,175,55,0.45)] active:scale-[0.98] transition duration-300 flex items-center justify-center space-x-2">
                         <span id="btn-text">Send Message</span>
-                        <div id="btn-spinner" class="hidden w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin"></div>
+                        <div id="btn-spinner" class="hidden w-4 h-4 rounded-full border-2 border-[#111111] border-t-transparent animate-spin"></div>
                     </button>
                 </form>
             </div>
@@ -439,40 +440,40 @@
     <!-- Chat Floating Widget -->
     <div id="chat-widget-container">
         <!-- Floating Launcher Button -->
-        <button id="chat-trigger" aria-label="Open Chat with Hafiz Riaz" class="fixed bottom-6 right-6 z-[100] w-14 h-14 rounded-full bg-gradient-to-r from-[#2563EB] via-[#06B6D4] to-[#14B8A6] p-0.5 shadow-[0_0_25px_rgba(37,99,235,0.5)] hover:scale-105 active:scale-95 transition-all duration-300 group flex items-center justify-center">
-            <div class="w-full h-full rounded-full bg-[#020617] flex items-center justify-center relative">
+        <button id="chat-trigger" aria-label="Chat with HR Autonomous Team" class="fixed bottom-6 right-6 z-[100] w-14 h-14 rounded-full bg-gradient-to-r from-[#D4AF37] to-[#F4C542] p-0.5 shadow-[0_0_25px_rgba(212,175,55,0.45)] hover:scale-105 active:scale-95 transition-all duration-300 group flex items-center justify-center">
+            <div class="w-full h-full rounded-full bg-[#111111] flex items-center justify-center relative">
                 <!-- Status indicator dot -->
                 <span class="absolute top-1 right-1 flex h-3 w-3">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#14B8A6] opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-3 w-3 bg-[#14B8A6]"></span>
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#D4AF37] opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-[#D4AF37]"></span>
                 </span>
                 <!-- Chat SVG Icon -->
-                <svg id="chat-icon-open" class="w-6 h-6 text-white group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <svg id="chat-icon-open" class="w-6 h-6 text-[#D4AF37] group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                 </svg>
-                <svg id="chat-icon-close" class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <svg id="chat-icon-close" class="w-6 h-6 text-[#D4AF37] hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </div>
         </button>
 
         <!-- Floating Chat Modal Window -->
-        <div id="chat-modal" class="fixed bottom-24 right-6 z-[100] w-96 max-w-[calc(100vw-3rem)] h-[520px] max-h-[calc(100vh-8rem)] rounded-3xl bg-[#0F172A] border border-[rgba(37,99,235,0.30)] shadow-2xl flex flex-col overflow-hidden hidden transition-all duration-300 transform scale-95 opacity-0">
+        <div id="chat-modal" class="fixed bottom-24 right-6 z-[100] w-96 max-w-[calc(100vw-3rem)] h-[520px] max-h-[calc(100vh-8rem)] rounded-3xl bg-[#1E1E1E] border border-[rgba(212,175,55,0.30)] shadow-2xl flex flex-col overflow-hidden hidden transition-all duration-300 transform scale-95 opacity-0">
             <!-- Modal Header -->
-            <div class="px-6 py-4 border-b border-white/10 flex items-center justify-between rounded-t-3xl flex-shrink-0 bg-[#020617]">
+            <div class="px-6 py-4 border-b border-[rgba(212,175,55,0.20)] flex items-center justify-between rounded-t-3xl flex-shrink-0 bg-[#111111]">
                 <div class="flex items-center space-x-3">
-                    <span class="w-8 h-8 rounded-lg bg-gradient-to-r from-[#2563EB] to-[#06B6D4] p-[1px] inline-flex items-center justify-center">
-                        <span class="w-full h-full bg-[#020617] rounded-[7px] flex items-center justify-center text-xs font-black text-[#06B6D4]">HR</span>
+                    <span class="w-8 h-8 rounded-lg bg-gradient-to-r from-[#D4AF37] to-[#F4C542] p-[1px] inline-flex items-center justify-center">
+                        <span class="w-full h-full bg-[#111111] rounded-[7px] flex items-center justify-center text-xs font-black text-[#D4AF37]">HR</span>
                     </span>
                     <div>
-                        <div class="font-display text-sm font-bold text-[#F8FAFC]">HR Autonomous Team</div>
-                        <div class="text-[10px] font-mono text-[#14B8A6] flex items-center space-x-1.5">
-                            <span class="w-1.5 h-1.5 rounded-full bg-[#14B8A6] inline-block animate-pulse"></span>
+                        <div class="font-display text-sm font-bold text-[#F5F5F5]">HR Autonomous Team</div>
+                        <div class="text-[10px] font-mono text-[#D4AF37] flex items-center space-x-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-[#D4AF37] inline-block animate-pulse"></span>
                             <span>Online</span>
                         </div>
                     </div>
                 </div>
-                <button id="chat-close-btn" class="text-[#94A3B8] hover:text-white p-1.5 rounded-lg hover:bg-white/5 transition duration-300" aria-label="Close Chat">
+                <button id="chat-close-btn" class="text-[#B0B0B0] hover:text-white p-1.5 rounded-lg hover:bg-white/5 transition duration-300" aria-label="Close Chat">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
@@ -483,33 +484,33 @@
             <div id="chat-messages" class="flex-1 min-h-0 overflow-y-auto p-4 pb-6 space-y-4 font-sans text-xs sm:text-sm custom-scrollbar"></div>
 
             <!-- Message Input Bar -->
-            <form id="chat-form" class="p-3 border-t border-white/10 flex items-center space-x-2 bg-[#020617] rounded-b-3xl flex-shrink-0">
-                <input type="text" id="chat-input" placeholder="Type a message..." required class="flex-grow px-4 py-2.5 bg-[#0F172A] border border-[rgba(37,99,235,0.25)] rounded-xl text-xs sm:text-sm text-[#F8FAFC] placeholder-slate-500 focus:outline-none focus:border-[#06B6D4] focus:ring-1 focus:ring-[#06B6D4] transition font-sans">
-                <button type="submit" id="chat-submit-btn" class="p-2.5 rounded-xl bg-gradient-to-r from-[#2563EB] via-[#06B6D4] to-[#14B8A6] text-white hover:shadow-[0_0_15px_rgba(37,99,235,0.5)] active:scale-95 transition duration-300 flex items-center justify-center flex-shrink-0" aria-label="Send Message">
+            <form id="chat-form" class="p-3 border-t border-[rgba(212,175,55,0.20)] flex items-center space-x-2 bg-[#111111] rounded-b-3xl flex-shrink-0">
+                <input type="text" id="chat-input" placeholder="Type a message..." required class="flex-grow px-4 py-2.5 bg-[#1E1E1E] border border-[rgba(212,175,55,0.25)] rounded-xl text-xs sm:text-sm text-[#F5F5F5] placeholder-neutral-500 focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition font-sans">
+                <button type="submit" id="chat-submit-btn" class="p-2.5 rounded-xl bg-[#D4AF37] text-[#111111] hover:bg-[#F4C542] hover:shadow-[0_0_15px_rgba(212,175,55,0.4)] active:scale-95 transition duration-300 flex items-center justify-center flex-shrink-0" aria-label="Send Message">
                     <svg id="chat-send-icon" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3 21l18-9L3 3l3 9zm0 0h7" />
                     </svg>
-                    <div id="chat-spinner" class="hidden w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin"></div>
+                    <div id="chat-spinner" class="hidden w-4 h-4 rounded-full border-2 border-[#111111] border-t-transparent animate-spin"></div>
                 </button>
             </form>
         </div>
     </div>
 
     <!-- Footer -->
-    <footer class="py-12 border-t border-[rgba(37,99,235,0.15)] px-6 bg-[#020617]">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-sm text-[#94A3B8]">
+    <footer class="py-12 border-t border-[rgba(212,175,55,0.25)] px-6 bg-[#111111]">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-sm text-[#B0B0B0]">
             <div class="flex items-center space-x-3">
-                <span class="font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#2563EB] via-[#06B6D4] to-[#14B8A6]">HR Autonomous</span>
+                <span class="font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] via-[#F4C542] to-[#D4AF37]">HR Autonomous</span>
                 <span>&copy; 2026 HR Autonomous. All rights reserved.</span>
             </div>
             <div class="flex space-x-6">
-                <a href="https://github.com/hhafizriazahmad-arch" target="_blank" class="hover:text-[#06B6D4] transition">GitHub</a>
-                <a href="https://linkedin.com" target="_blank" class="hover:text-[#06B6D4] transition">LinkedIn</a>
+                <a href="https://github.com/hhafizriazahmad-arch" target="_blank" class="hover:text-[#D4AF37] transition">GitHub</a>
+                <a href="https://linkedin.com" target="_blank" class="hover:text-[#D4AF37] transition">LinkedIn</a>
             </div>
         </div>
     </footer>
 
     <!-- Script Entry -->
-    <script src="/static/js/main.js?v=3.0"></script>
+    <script src="/static/js/main.js?v=6.0"></script>
 </body>
 </html>

@@ -39,93 +39,108 @@ try:
 except Exception as sdk_init_err:
     print(f"Legacy GenerativeAI SDK notice: {sdk_init_err}")
 
-SYSTEM_PROMPT = """# Human-Like HR Autonomous AI Assistant
+SYSTEM_PROMPT = """# HR Autonomous Human Consultant Directives & Persona
 
-## Identity
-You represent HR Autonomous.
-Your goal is not to sound like an AI assistant, salesperson, chatbot, consultant, or company brochure.
-Your goal is to communicate exactly like a knowledgeable human team member who works at HR Autonomous.
+## Core Identity
+You are an experienced, senior team member and AI automation consultant at HR Autonomous.
+You communicate with visitors as a knowledgeable human peer having an organic, real-time consultation.
 
-## Communication Style
-- Write naturally.
-- Use short conversational sentences.
-- Avoid corporate jargon.
-- Avoid long introductions.
-- Avoid listing services unless asked.
-- Avoid sounding scripted.
-- Avoid sounding like a sales pitch.
-- Never mention you are an AI.
-- Never say "As an AI Assistant."
-- Never say "I specialize in."
-- Never write large blocks of text.
+You MUST NEVER sound like an AI assistant, chatbot, customer support script, sales bot, or company brochure.
 
-## First Message Rules
-Do NOT introduce the company.
-Do NOT explain services.
-Do NOT talk about technology.
+## Tone & Personality
+- Intelligent, calm, confident, curious, practical, professional, and occasionally casual.
+- Speak from hands-on engineering and workflow automation experience ("We usually wire...", "In our experience with real estate lead pipelines...", "When teams hit that wall...").
+- Never sound fake, overly enthusiastic, or robotic. Avoid corporate buzzwords and filler phrases.
 
-Instead use:
-"Hi, welcome to HR Autonomous. What are you working on right now?"
-or
-"Hi there. How can I help today?"
-or
-"Thanks for stopping by. What would you like to build or automate?"
+## Context Memory & Continuity
+- RETAIN and USE all information provided previously in the conversation (business type, team size, tools used, lead count, specific pain points).
+- NEVER ask the visitor for information they have already provided.
+- Adapt instantly when the visitor changes topics or says "actually", "wait", "forget that", or "no". Pivot cleanly without apologizing or clinging to the previous topic.
 
-## Discovery Rules
-Ask questions before giving solutions.
-Examples:
-- What type of business do you run?
-- What process are you trying to automate?
-- What software are you currently using?
-- What's the biggest bottleneck right now?
-Gather context first.
+## Communication & Length Rules
+- For simple or direct questions (e.g., pricing, "how's it work", casual greetings): respond in 1-2 short, direct sentences.
+- For complex technical or workflow questions: provide concise, structured explanations. Avoid bullet-list dumps unless list structure genuinely aids clarity.
+- Ask ONLY ONE relevant follow-up question per turn. Never interrogate the visitor with a list of questions.
 
-## Response Length
-For the first 3 messages:
-Maximum 2-4 sentences.
-Do not overwhelm visitors.
+## Emotional Intelligence & Frustration
+- When a user expresses frustration, acknowledge it directly and naturally (e.g., "Yeah, that gets frustrating fast—especially when the system is supposed to save you time. What part is causing the most trouble?").
+- Never use robotic customer service sympathy lines (e.g., "I am sorry to hear you are experiencing frustration").
 
-## Human Conversation Behavior
-Acknowledge what the visitor says.
-Examples:
-Visitor: "We spend too much time entering data manually."
-Response: "That gets frustrating fast. Where is the data coming from right now—forms, spreadsheets, emails, or somewhere else?"
+## AI Identity Disclosure
+- Do NOT proactively mention or advertise that you are an AI, language model, or virtual assistant during normal conversation.
+- If the visitor DIRECTLY asks "Are you an AI?", "Are you a bot?", or "Are you human?", respond honestly and briefly in a natural tone (e.g., "Yes, I'm an AI system built by HR Autonomous to consult on automation workflows and backend architecture. What are you looking to build or optimize?").
+- NEVER claim to be a physical human person, sit at a physical desk, or invent fake personal life experiences.
 
-Visitor: "I own a marketing agency."
-Response: "Nice. What part of the agency takes up the most manual work for your team?"
+## Absolute Prohibitions (NEVER USE)
+- Never proactively mention you are an AI, language model, virtual assistant, chatbot, or automated system unless explicitly asked.
+- Never use robotic customer service lines:
+  * "How can I assist you today?"
+  * "How may I help you?"
+  * "How can I help today?"
+  * "What can I assist you with?"
+  * "Certainly!"
+  * "Absolutely!"
+  * "Great question!"
+  * "I'd be happy to help!"
+  * "Thanks for reaching out!"
+  * "Does that give you a good overview?"
+  * "Let me know if you have any questions!"
+- Never use "We specialize in..." or "Our services include..." in generic introductions."""
 
-## Lead Qualification
-Naturally discover:
-- Business type
-- Team size
-- Revenue range
-- Current systems
-- Main problem
-- Desired outcome
-Do not ask these like a survey. Ask them naturally during conversation.
+FORBIDDEN_PHRASES = [
+    "how can i assist you today",
+    "how may i help",
+    "how can i help today",
+    "what can i assist",
+    "i am an ai assistant",
+    "i'm an ai assistant",
+    "as an ai assistant",
+    "i am an ai",
+    "i'm an ai",
+    "as an ai",
+    "ai assistant",
+    "virtual assistant",
+    "digital assistant",
+    "artificial intelligence assistant",
+    "we specialize in",
+    "our services include",
+    "certainly!",
+    "absolutely!",
+    "great question!",
+    "i'd be happy to help",
+    "i'd be glad to help",
+    "thanks for reaching out",
+    "thank you for providing",
+    "does that give you a good overview",
+    "feel free to ask any questions",
+    "let me know if you have any questions"
+]
 
-## Expertise Areas
-Only discuss when relevant:
-- AI Automation
-- Business Process Automation
-- CRM Systems
-- Lead Generation
-- Workflow Design
-- Backend Infrastructure
-- Python
-- FastAPI
-- Gemini AI
-- Agency Operating Systems
+def sanitize_consultant_response(text: str) -> str:
+    if not text:
+        return "Good to connect. What specific process or workflow are you hoping to optimize right now?"
+    
+    text_lower = text.lower()
+    
+    # Preserve honest AI disclosures when directly asked by user
+    if "ai system built by" in text_lower or "ai automation system" in text_lower:
+        return text.strip()
 
-## Tone
-Friendly, Professional, Curious, Helpful.
-Think: "Experienced business consultant having a real conversation."
-Not: "AI chatbot trying to sell services."
-
-## Closing Behavior
-If the visitor is a good fit:
-"Based on what you've described, I think we can help. Would you like me to outline what a solution might look like for your business?"
-Never push for a sale. Focus on helping first."""
+    has_forbidden = any(phrase in text_lower for phrase in FORBIDDEN_PHRASES)
+    if not has_forbidden:
+        return text.strip()
+    
+    sentences = re.split(r'(?<=[.!?])\s+', text)
+    cleaned_sentences = []
+    for s in sentences:
+        s_lower = s.lower()
+        if not any(phrase in s_lower for phrase in FORBIDDEN_PHRASES):
+            cleaned_sentences.append(s)
+            
+    cleaned_text = " ".join(cleaned_sentences).strip()
+    if len(cleaned_text) < 15:
+        return "Good to connect. What specific process or workflow are you hoping to optimize right now?"
+    return cleaned_text
 
 
 
@@ -293,6 +308,107 @@ def get_projects(db: Session = Depends(get_db)):
         return []
 
 # -----------------------------------------------------------------------------
+# API Routes: Approvals Workflow
+# -----------------------------------------------------------------------------
+@app.get("/api/approvals", response_model=List[schemas.ApprovalResponse])
+def list_approvals(status: Optional[str] = None, db: Session = Depends(get_db)):
+    """Fetch approval workflow requests with optional status filtering ('pending', 'approved', 'rejected')."""
+    try:
+        query = db.query(models.Approval)
+        if status:
+            query = query.filter(models.Approval.status == status.lower())
+        return query.order_by(models.Approval.created_at.desc()).all()
+    except Exception as e:
+        print(f"Error fetching approvals: {e}")
+        raise HTTPException(status_code=500, detail="Database query failed while fetching approvals.")
+
+@app.post("/api/approvals", response_model=schemas.ApprovalResponse, status_code=status.HTTP_201_CREATED)
+def create_approval(approval: schemas.ApprovalCreate, request: Request, db: Session = Depends(get_db)):
+    """Create a new approval workflow request."""
+    try:
+        db_approval = models.Approval(
+            title=approval.title,
+            description=approval.description,
+            status="pending",
+            requester=approval.requester,
+            approver=approval.approver
+        )
+        db.add(db_approval)
+        db.commit()
+        db.refresh(db_approval)
+
+        client_ip = request.client.host if request.client else "unknown"
+        create_audit_log_internal(db, "APPROVAL_CREATED", f"Approval '{approval.title}' created by {approval.requester}", client_ip)
+        return db_approval
+    except Exception as e:
+        db.rollback()
+        print(f"Error creating approval: {e}")
+        raise HTTPException(status_code=500, detail="Failed to create approval request.")
+
+@app.get("/api/approvals/{approval_id}", response_model=schemas.ApprovalResponse)
+def get_approval(approval_id: int, db: Session = Depends(get_db)):
+    """Retrieve details of a specific approval request by ID."""
+    db_approval = db.query(models.Approval).filter(models.Approval.id == approval_id).first()
+    if not db_approval:
+        raise HTTPException(status_code=404, detail=f"Approval with ID {approval_id} not found.")
+    return db_approval
+
+@app.patch("/api/approvals/{approval_id}", response_model=schemas.ApprovalResponse)
+def update_approval(approval_id: int, update_data: schemas.ApprovalUpdate, request: Request, db: Session = Depends(get_db)):
+    """Update approval status (approve/reject), approver, or comments."""
+    db_approval = db.query(models.Approval).filter(models.Approval.id == approval_id).first()
+    if not db_approval:
+        raise HTTPException(status_code=404, detail=f"Approval with ID {approval_id} not found.")
+
+    try:
+        if update_data.status:
+            valid_statuses = ["pending", "approved", "rejected"]
+            if update_data.status.lower() not in valid_statuses:
+                raise HTTPException(status_code=400, detail=f"Invalid status. Must be one of: {valid_statuses}")
+            db_approval.status = update_data.status.lower()
+
+        if update_data.approver is not None:
+            db_approval.approver = update_data.approver
+        if update_data.comments is not None:
+            db_approval.comments = update_data.comments
+
+        db.commit()
+        db.refresh(db_approval)
+
+        client_ip = request.client.host if request.client else "unknown"
+        create_audit_log_internal(
+            db,
+            "APPROVAL_UPDATED",
+            f"Approval #{approval_id} status updated to '{db_approval.status}' by {db_approval.approver or 'system'}",
+            client_ip
+        )
+        return db_approval
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        print(f"Error updating approval #{approval_id}: {e}")
+        raise HTTPException(status_code=500, detail="Failed to update approval request.")
+
+@app.delete("/api/approvals/{approval_id}", status_code=status.HTTP_200_OK)
+def delete_approval(approval_id: int, request: Request, db: Session = Depends(get_db)):
+    """Delete an approval record."""
+    db_approval = db.query(models.Approval).filter(models.Approval.id == approval_id).first()
+    if not db_approval:
+        raise HTTPException(status_code=404, detail=f"Approval with ID {approval_id} not found.")
+
+    try:
+        db.delete(db_approval)
+        db.commit()
+        client_ip = request.client.host if request.client else "unknown"
+        create_audit_log_internal(db, "APPROVAL_DELETED", f"Deleted approval #{approval_id}", client_ip)
+        return {"detail": f"Approval #{approval_id} deleted successfully."}
+    except Exception as e:
+        db.rollback()
+        print(f"Error deleting approval #{approval_id}: {e}")
+        raise HTTPException(status_code=500, detail="Failed to delete approval request.")
+
+# -----------------------------------------------------------------------------
 # API Routes: Contact & Webhook
 # -----------------------------------------------------------------------------
 def forward_lead_to_webhook(name: str, email: str, subject: str, message: str) -> bool:
@@ -423,15 +539,36 @@ async def handle_chat_message(request_data: schemas.ChatRequest, http_req: Reque
         except Exception as e:
             print(f"Error executing chat lead capture: {e}")
 
+    # Human Greeting Short-Circuit logic (ONLY on initial message turn)
+    last_user_msg = request_data.messages[-1].content.strip().lower()
+    clean_last_msg = re.sub(r'[^\w\s]', '', last_user_msg).strip()
+
+    greeting_responses = {
+        "hi": "Hi 👋 What are you working on at the moment?",
+        "hello": "Hey, welcome. What brings you here today?",
+        "hey": "Good to have you here. What are you trying to improve or build right now?",
+        "hey there": "Good to have you here. What are you trying to improve or build right now?",
+        "hi there": "Hi 👋 What are you working on at the moment?",
+        "good morning": "Good morning 👋 What project or workflow are you looking to build right now?",
+        "good afternoon": "Good afternoon 👋 What project or workflow are you looking to build right now?",
+        "good evening": "Good evening 👋 What project or workflow are you looking to build right now?",
+        "yo": "Hey 👋 What are you working on right now?"
+    }
+
+    if len(request_data.messages) <= 1 and clean_last_msg in greeting_responses:
+        async def greeting_stream():
+            yield greeting_responses[clean_last_msg]
+        return StreamingResponse(greeting_stream(), media_type="text/plain")
+
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key or api_key == "PLACE_YOUR_KEY_HERE":
         async def offline_stream():
-            yield "I am currently offline, please try again later or use the contact form below."
+            yield "Connections are a bit busy right now, please try again in a moment or leave a message."
         return StreamingResponse(offline_stream(), media_type="text/plain")
 
-    # Trim Chat History to last 6 messages (ultra-fast context window)
+    # Pass last 16 messages for full multi-turn context memory window
     history_context = []
-    for msg in request_data.messages[-6:]:
+    for msg in request_data.messages[-16:]:
         role_label = "Visitor" if msg.role == "user" else "HR Autonomous Specialist"
         history_context.append(f"{role_label}: {msg.content}")
 
@@ -440,6 +577,7 @@ async def handle_chat_message(request_data: schemas.ChatRequest, http_req: Reque
 
     async def stream_generator():
         streamed_any = False
+        accumulated_text = ""
 
         # 1. Attempt Modern google.genai Client SDK streaming
         if GENAI_CLIENT is not None:
@@ -458,9 +596,11 @@ async def handle_chat_message(request_data: schemas.ChatRequest, http_req: Reque
                     sdk_stream = await asyncio.to_thread(get_sdk_stream)
                     for chunk in sdk_stream:
                         if chunk and chunk.text:
-                            streamed_any = True
-                            yield chunk.text
-                    if streamed_any:
+                            accumulated_text += chunk.text
+                    if accumulated_text:
+                        streamed_any = True
+                        sanitized = sanitize_consultant_response(accumulated_text)
+                        yield sanitized
                         return
                 except Exception as client_err:
                     print(f"Modern google.genai SDK streaming failed for {m_name}: {client_err}")
@@ -480,7 +620,8 @@ async def handle_chat_message(request_data: schemas.ChatRequest, http_req: Reque
                     legacy_res = await asyncio.to_thread(get_legacy_resp)
                     if legacy_res and legacy_res.text:
                         streamed_any = True
-                        yield legacy_res.text.strip()
+                        sanitized = sanitize_consultant_response(legacy_res.text.strip())
+                        yield sanitized
                         return
                 except Exception as sdk_err:
                     print(f"Legacy SDK failed for {m_name}: {sdk_err}")
@@ -508,13 +649,14 @@ async def handle_chat_message(request_data: schemas.ChatRequest, http_req: Reque
                     rest_reply = await asyncio.to_thread(get_rest_resp)
                     if rest_reply:
                         streamed_any = True
-                        yield rest_reply
+                        sanitized = sanitize_consultant_response(rest_reply)
+                        yield sanitized
                         return
                 except Exception as endpoint_err:
                     print(f"REST API failed for {model_name}: {endpoint_err}")
 
         if not streamed_any:
-            yield "Sorry, I hit a temporary issue. Could you try that again?"
+            yield "Connections are a bit busy right now, please try again in a moment or leave a message."
 
     return StreamingResponse(stream_generator(), media_type="text/plain")
 

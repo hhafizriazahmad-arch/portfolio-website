@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // -------------------------------------------------------------------------
-    // 1. Interactive Canvas Background (HR Autonomous Enterprise AI Network Grid)
+    // 1. Interactive Canvas Background (HR Autonomous Gray & Gold Luxury Network Grid)
     // -------------------------------------------------------------------------
     const canvas = document.getElementById('bg-canvas');
     if (canvas) {
@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
             draw() {
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(6, 182, 212, 0.5)'; // Secondary Cyan with opacity
+                ctx.fillStyle = 'rgba(212, 175, 55, 0.5)'; // Primary Gold Accent with opacity
                 ctx.fill();
             }
         }
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         ctx.lineTo(p2.x, p2.y);
                         // Fade lines out as they get further apart
                         const alpha = (1 - dist / maxDistance) * 0.20;
-                        ctx.strokeStyle = `rgba(37, 99, 235, ${alpha})`; // Primary Blue
+                        ctx.strokeStyle = `rgba(212, 175, 55, ${alpha})`; // Primary Gold
                         ctx.lineWidth = 1;
                         ctx.stroke();
                     }
@@ -117,16 +117,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const projectsGrid = document.getElementById('projects-grid');
 
     const svgIcons = {
-        'shopping-cart': `<svg class="w-6 h-6 text-[#06B6D4]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        'shopping-cart': `<svg class="w-6 h-6 text-[#D4AF37]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
         </svg>`,
-        'cpu': `<svg class="w-6 h-6 text-[#2563EB]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        'cpu': `<svg class="w-6 h-6 text-[#D4AF37]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
         </svg>`,
-        'database': `<svg class="w-6 h-6 text-[#14B8A6]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        'database': `<svg class="w-6 h-6 text-[#D4AF37]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2.21 3.58 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.58 4 8 4s8-1.79 8-4M4 7c0-2.21 3.58-4 8-4s8 1.79 8 4m0 5c0 2.21-3.58 4-8 4s-8-1.79-8-4" />
         </svg>`,
-        'default': `<svg class="w-6 h-6 text-[#06B6D4]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        'default': `<svg class="w-6 h-6 text-[#D4AF37]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
         </svg>`
     };
@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!projectsGrid) return;
         if (!projects || projects.length === 0) {
             projectsGrid.innerHTML = `
-                <div class="col-span-full text-center py-8 text-[#94A3B8]">
+                <div class="col-span-full text-center py-8 text-[#B0B0B0]">
                     No HR Autonomous projects loaded yet. Please check back later.
                 </div>`;
             return;
@@ -180,11 +180,11 @@ document.addEventListener('DOMContentLoaded', () => {
         projects.forEach(project => {
             const iconSvg = svgIcons[project.icon_type] || svgIcons['default'];
             const techStackBadges = project.tech_stack.split(',').map(tech => 
-                `<span class="text-xs px-2.5 py-1 rounded bg-[#0F172A] border border-[rgba(37,99,235,0.20)] text-[#06B6D4] font-mono">${tech.trim()}</span>`
+                `<span class="text-xs px-2.5 py-1 rounded bg-[#1E1E1E] border border-[rgba(212,175,55,0.25)] text-[#D4AF37] font-mono">${tech.trim()}</span>`
             ).join('');
 
             const githubLink = project.github_url ? `
-                <a href="${project.github_url}" target="_blank" rel="noopener noreferrer" class="text-[#94A3B8] hover:text-[#06B6D4] transition flex items-center space-x-1 text-sm font-medium">
+                <a href="${project.github_url}" target="_blank" rel="noopener noreferrer" class="text-[#B0B0B0] hover:text-[#F4C542] transition flex items-center space-x-1 text-sm font-medium">
                     <span>GitHub</span>
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
                 </a>` : '';
@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
             projectCard.className = 'p-8 rounded-3xl glass-panel flex flex-col space-y-6 transition-all duration-300 group';
             projectCard.innerHTML = `
                 <div class="flex items-center justify-between">
-                    <div class="w-12 h-12 rounded-xl bg-[#2563EB]/10 border border-[rgba(37,99,235,0.25)] flex items-center justify-center group-hover:bg-[#2563EB]/20 transition-all duration-300">
+                    <div class="w-12 h-12 rounded-xl bg-[#D4AF37]/10 border border-[rgba(212,175,55,0.25)] flex items-center justify-center group-hover:bg-[#D4AF37]/20 transition-all duration-300">
                         ${iconSvg}
                     </div>
                     <div class="flex items-center">
@@ -201,10 +201,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
                 <div class="space-y-3 flex-grow">
-                    <h3 class="font-display text-2xl font-bold text-[#F8FAFC] group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[#2563EB] group-hover:via-[#06B6D4] group-hover:to-[#14B8A6] transition-all duration-300">
+                    <h3 class="font-display text-2xl font-bold text-[#F5F5F5] group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[#D4AF37] group-hover:via-[#F4C542] group-hover:to-[#E6C200] transition-all duration-300">
                         ${project.title}
                     </h3>
-                    <p class="text-[#94A3B8] text-sm leading-relaxed">
+                    <p class="text-[#B0B0B0] text-sm leading-relaxed">
                         ${project.description}
                     </p>
                 </div>
@@ -293,7 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .then(() => {
                 // Success
-                notification.className = 'block mb-6 p-4 rounded-xl border border-[#14B8A6]/30 bg-[#14B8A6]/10 text-[#14B8A6] font-medium';
+                notification.className = 'block mb-6 p-4 rounded-xl border border-[#D4AF37]/40 bg-[#D4AF37]/10 text-[#D4AF37] font-medium';
                 notification.textContent = 'Thank you! Your inquiry has been sent successfully to HR Autonomous.';
                 contactForm.reset();
             })
@@ -356,7 +356,7 @@ document.addEventListener('DOMContentLoaded', () => {
         starterOptions.forEach(opt => {
             const btn = document.createElement('button');
             btn.type = 'button';
-            btn.className = 'text-xs px-3 py-1.5 rounded-full bg-[#020617] border border-[rgba(37,99,235,0.30)] text-[#06B6D4] hover:bg-[#2563EB]/20 hover:text-white transition duration-200 font-medium text-left';
+            btn.className = 'text-xs px-3 py-1.5 rounded-full bg-[#111111] border border-[rgba(212,175,55,0.30)] text-[#D4AF37] hover:bg-[#D4AF37]/20 hover:text-[#F5F5F5] transition duration-200 font-medium text-left';
             btn.textContent = opt;
             btn.addEventListener('click', () => {
                 const starterDiv = document.getElementById('chat-starter-prompts');
@@ -411,13 +411,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (role === 'user') {
             msgDiv.innerHTML = `
-                <div class="bg-gradient-to-r from-[#2563EB] via-[#06B6D4] to-[#14B8A6] text-white rounded-2xl rounded-tr-none p-3.5 leading-relaxed max-w-[85%] shadow-md">
+                <div class="bg-[#D4AF37] text-[#111111] font-medium rounded-2xl rounded-tr-none p-3.5 leading-relaxed max-w-[85%] shadow-md">
                     ${text}
                 </div>
             `;
         } else {
             msgDiv.innerHTML = `
-                <div class="bg-[#020617] border border-[rgba(37,99,235,0.25)] rounded-2xl rounded-tl-none p-3.5 text-[#F8FAFC] leading-relaxed max-w-[88%] shadow-sm">
+                <div class="bg-[#111111] border border-[rgba(212,175,55,0.25)] rounded-2xl rounded-tl-none p-3.5 text-[#F5F5F5] leading-relaxed max-w-[88%] shadow-sm">
                     ${text.replace(/\n/g, '<br>')}
                 </div>
             `;
@@ -429,12 +429,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function showTypingIndicator() {
         const typingDiv = document.createElement('div');
         typingDiv.id = 'chat-typing-indicator';
-        typingDiv.className = 'flex items-center space-x-2 text-[#94A3B8] text-xs py-2 px-1';
+        typingDiv.className = 'flex items-center space-x-2 text-[#B0B0B0] text-xs py-2 px-1';
         typingDiv.innerHTML = `
-            <div class="w-2 h-2 rounded-full bg-[#2563EB] animate-bounce"></div>
-            <div class="w-2 h-2 rounded-full bg-[#06B6D4] animate-bounce [animation-delay:0.2s]"></div>
-            <div class="w-2 h-2 rounded-full bg-[#14B8A6] animate-bounce [animation-delay:0.4s]"></div>
-            <span class="text-[#94A3B8] font-mono text-[11px]">HR Autonomous is typing...</span>
+            <div class="w-2 h-2 rounded-full bg-[#D4AF37] animate-bounce"></div>
+            <div class="w-2 h-2 rounded-full bg-[#F4C542] animate-bounce [animation-delay:0.2s]"></div>
+            <div class="w-2 h-2 rounded-full bg-[#E6C200] animate-bounce [animation-delay:0.4s]"></div>
+            <span class="text-[#B0B0B0] font-mono text-[11px]">HR Autonomous Team is typing...</span>
         `;
         chatMessages.appendChild(typingDiv);
         scrollChatToBottom();
@@ -464,7 +464,7 @@ document.addEventListener('DOMContentLoaded', () => {
         showTypingIndicator();
 
         const payload = {
-            messages: chatHistory.slice(-6)
+            messages: chatHistory.slice(-16)
         };
 
         let messageBubbleDiv = null;
@@ -487,7 +487,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const msgContainer = document.createElement('div');
             msgContainer.className = 'flex items-start';
             messageBubbleDiv = document.createElement('div');
-            messageBubbleDiv.className = 'bg-[#020617] border border-[rgba(37,99,235,0.25)] rounded-2xl rounded-tl-none p-3.5 text-[#F8FAFC] leading-relaxed max-w-[88%] shadow-sm';
+            messageBubbleDiv.className = 'bg-[#111111] border border-[rgba(212,175,55,0.25)] rounded-2xl rounded-tl-none p-3.5 text-[#F5F5F5] leading-relaxed max-w-[88%] shadow-sm';
             msgContainer.appendChild(messageBubbleDiv);
             chatMessages.appendChild(msgContainer);
 
@@ -510,9 +510,9 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Chat error:', err);
             hideTypingIndicator();
             if (messageBubbleDiv) {
-                messageBubbleDiv.innerHTML = "Sorry, I hit a temporary issue. Could you try that again?";
+                messageBubbleDiv.innerHTML = "Something went wrong on my end. Give that another try.";
             } else {
-                appendMessageUI('assistant', "Sorry, I hit a temporary issue. Could you try that again?");
+                appendMessageUI('assistant', "Something went wrong on my end. Give that another try.");
             }
         } finally {
             chatSubmitBtn.disabled = false;

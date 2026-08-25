@@ -84,4 +84,29 @@ class AuditLogResponse(BaseModel):
     class Config:
         from_attributes = True
 
+class ApprovalCreate(BaseModel):
+    title: str
+    description: Optional[str] = None
+    requester: str
+    approver: Optional[str] = None
+
+class ApprovalUpdate(BaseModel):
+    status: Optional[str] = None  # "pending", "approved", "rejected"
+    approver: Optional[str] = None
+    comments: Optional[str] = None
+
+class ApprovalResponse(BaseModel):
+    id: int
+    title: str
+    description: Optional[str] = None
+    status: str
+    requester: str
+    approver: Optional[str] = None
+    comments: Optional[str] = None
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
+
 
