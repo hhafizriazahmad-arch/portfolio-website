@@ -149,14 +149,6 @@ document.addEventListener('DOMContentLoaded', () => {
             icon_type: "cpu"
         },
         {
-            title: "E-Commerce Order Processing Engine",
-            description: "A high-performance order processing engine that handles asynchronous orders, logs requests to an SQLite database, and broadcasts live update notifications. Designed for maximum throughput and reliability.",
-            tech_stack: "Python, FastAPI, SQLite, Asynchronous Tasks, Uvicorn",
-            github_url: "https://github.com/hhafizriazahmad-arch/fluxflow-ecommerce-engine",
-            live_url: "https://fluxflow-ecommerce-engine.vercel.app",
-            icon_type: "shopping-cart"
-        },
-        {
             title: "Onboarding Automation Workflow",
             description: "An enterprise-grade automation workflow triggered by Typeform submissions. It automatically feeds user profiles to Google Sheets, creates dedicated workspaces, and triggers real-time notifications via Slack webhooks.",
             tech_stack: "Python, APScheduler, Webhooks, Google Sheets API, Slack Webhooks",

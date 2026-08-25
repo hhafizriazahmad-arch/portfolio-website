@@ -226,6 +226,7 @@ def seed_projects():
         db.query(models.Project).filter_by(title="Autonomous AI Voice Agent & Receptionist").delete()
         db.query(models.Project).filter_by(title="Autonomous Lead Intelligence System").delete()
         db.query(models.Project).filter_by(title="Autonomous AI Cold Prospecting & Web-Research Agent").delete()
+        db.query(models.Project).filter_by(title="E-Commerce Order Processing Engine").delete()
         db.commit()
 
         default_projects = [
@@ -244,14 +245,6 @@ def seed_projects():
                 "github_url": "https://github.com/hhafizriazahmad-arch/digital-marketing",
                 "live_url": "https://digital-marketing-sand.vercel.app",
                 "icon_type": "cpu"
-            },
-            {
-                "title": "E-Commerce Order Processing Engine",
-                "description": "A high-performance order processing engine that handles asynchronous orders, logs requests to an SQLite database, and broadcasts live update notifications. Designed for maximum throughput and reliability.",
-                "tech_stack": "Python, FastAPI, SQLite, Asynchronous Tasks, Uvicorn",
-                "github_url": "https://github.com/hhafizriazahmad-arch/fluxflow-ecommerce-engine",
-                "live_url": "https://fluxflow-ecommerce-engine.vercel.app",
-                "icon_type": "shopping-cart"
             },
             {
                 "title": "Onboarding Automation Workflow",
