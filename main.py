@@ -223,6 +223,14 @@ def seed_projects():
 
         default_projects = [
             {
+                "title": "AI Agency Operating System",
+                "description": "An enterprise-grade autonomous workflow orchestration engine executing a 16-stage deterministic pipeline. Features automated BANT lead qualification, Gemini-powered proposal generation, human-in-the-loop approval gates, dynamic revenue attribution, and real-time Google Sheets audit synchronization.",
+                "tech_stack": "Next.js, TypeScript, Prisma ORM, SQLite, Gemini AI, Google Sheets API, Slack Webhooks, Vercel",
+                "github_url": "https://github.com/hhafizriazahmad-arch/AI-agency-operating-system",
+                "live_url": "https://ai-agency-operating-system-gamma.vercel.app",
+                "icon_type": "cpu"
+            },
+            {
                 "title": "AI Lead Intelligence System",
                 "description": "An automated B2B lead generation pipeline engineered to identify, enrich, and qualify profiles of founders and C-level executives. Built on FastAPI and Gemini AI for high-impact prospect research.",
                 "tech_stack": "Python, FastAPI, Playwright, Gemini AI, HubSpot API, Slack Webhooks, Vercel",
