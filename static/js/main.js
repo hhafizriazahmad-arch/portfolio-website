@@ -495,6 +495,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 scrollChatToBottom();
             }
 
+            const finalChunk = decoder.decode();
+            if (finalChunk) {
+                aiReplyText += finalChunk;
+                messageBubbleDiv.innerHTML = aiReplyText.replace(/\n/g, '<br>');
+            }
+
             if (aiReplyText.trim()) {
                 chatHistory.push({ role: 'assistant', content: aiReplyText.trim() });
             }

@@ -60,7 +60,7 @@ You MUST NEVER sound like an AI assistant, chatbot, customer support script, sal
 ## Communication & Length Rules
 - For simple or direct questions (e.g., pricing, "how's it work", casual greetings): respond in 1-2 short, direct sentences.
 - For complex technical or workflow questions: provide concise, structured explanations. Avoid bullet-list dumps unless list structure genuinely aids clarity.
-- Ask ONLY ONE relevant follow-up question per turn. Never interrogate the visitor with a list of questions.
+- ALWAYS complete your thought and finish your final sentence cleanly. Never stop mid-sentence or cut off mid-thought.
 
 ## Emotional Intelligence & Frustration
 - When a user expresses frustration, acknowledge it directly and naturally (e.g., "Yeah, that gets frustrating fast—especially when the system is supposed to save you time. What part is causing the most trouble?").
@@ -581,7 +581,7 @@ async def handle_chat_message(request_data: schemas.ChatRequest, http_req: Reque
                             model=m,
                             contents=full_prompt,
                             config=types.GenerateContentConfig(
-                                max_output_tokens=300,
+                                max_output_tokens=1000,
                                 temperature=0.4
                             )
                         )
@@ -606,7 +606,7 @@ async def handle_chat_message(request_data: schemas.ChatRequest, http_req: Reque
                         gen_model = LEGACY_GENAI.GenerativeModel(
                             model_name=m,
                             system_instruction=SYSTEM_PROMPT,
-                            generation_config={"max_output_tokens": 300, "temperature": 0.4}
+                            generation_config={"max_output_tokens": 1000, "temperature": 0.4}
                         )
                         return gen_model.generate_content(full_prompt)
 
@@ -627,7 +627,7 @@ async def handle_chat_message(request_data: schemas.ChatRequest, http_req: Reque
                         gemini_url = f"https://generativelanguage.googleapis.com/v1beta/models/{m}:generateContent?key={api_key}"
                         payload = json.dumps({
                             "contents": [{"role": "user", "parts": [{"text": full_prompt}]}],
-                            "generationConfig": {"maxOutputTokens": 300, "temperature": 0.4}
+                            "generationConfig": {"maxOutputTokens": 1000, "temperature": 0.4}
                         }).encode("utf-8")
                         req = urllib.request.Request(gemini_url, data=payload, headers={"Content-Type": "application/json"})
                         with urllib.request.urlopen(req, timeout=8) as resp:
