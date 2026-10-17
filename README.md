@@ -8,7 +8,7 @@
 
 - **Brand Name:** HR Autonomous
 - **Tagline:** Building Intelligent Automation Systems for Modern Businesses
-- **Founder:** Hafiz Riaz (AI Automation Engineer • Backend Developer • Workflow Architect)
+- **Founder:** Riaz Ahmad (AI Automation Engineer • Backend Developer • Workflow Architect)
 - **Primary Color Palette:** Primary Dark (`#111111`), Secondary Dark (`#1E1E1E`), Card Dark (`#2A2A2A`), Primary Gold (`#D4AF37`), Premium Gold Hover (`#F4C542`), Primary Text (`#F5F5F5`), Secondary Text (`#B0B0B0`)
 
 ---

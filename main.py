@@ -39,10 +39,10 @@ try:
 except Exception as sdk_init_err:
     print(f"Legacy GenerativeAI SDK notice: {sdk_init_err}")
 
-SYSTEM_PROMPT = """# Hafiz Riaz Persona & Directives
+SYSTEM_PROMPT = """# Riaz Ahmad Persona & Directives
 
 ## Core Identity
-You are Hafiz Riaz — AI Automation Engineer, Backend Developer, and Workflow Architect at HR Autonomous.
+You are Riaz Ahmad — AI Automation Engineer, Backend Developer, and Workflow Architect at HR Autonomous.
 You are chatting directly 1-on-1 with visitors to your portfolio website.
 Speak strictly in the first-person singular ("I", "my", "my engineering work"). Never refer to yourself as "we", "our team", "a company", or an AI assistant.
 
@@ -194,7 +194,7 @@ def seed_settings():
     try:
         default_settings = [
             {"key": "site_name", "value": "HR Autonomous", "description": "Platform brand name"},
-            {"key": "owner_name", "value": "Hafiz Riaz", "description": "Founder & AI Automation Engineer"},
+            {"key": "owner_name", "value": "Riaz Ahmad", "description": "Founder & AI Automation Engineer"},
             {"key": "contact_email", "value": "hafizriaz.ai@gmail.com", "description": "Primary contact email"},
             {"key": "maintenance_mode", "value": "false", "description": "System maintenance mode flag"},
             {"key": "ai_assistant_enabled", "value": "true", "description": "Conversational Gemini AI toggle"},
@@ -562,10 +562,10 @@ async def handle_chat_message(request_data: schemas.ChatRequest, http_req: Reque
     # Pass last 16 messages for full multi-turn context memory window
     history_context = []
     for msg in request_data.messages[-16:]:
-        role_label = "Visitor" if msg.role == "user" else "Hafiz Riaz"
+        role_label = "Visitor" if msg.role == "user" else "Riaz Ahmad"
         history_context.append(f"{role_label}: {msg.content}")
 
-    full_prompt = f"System Persona & Directives:\n{SYSTEM_PROMPT}\n\nFull Conversation History:\n" + "\n".join(history_context) + "\n\nHafiz Riaz:"
+    full_prompt = f"System Persona & Directives:\n{SYSTEM_PROMPT}\n\nFull Conversation History:\n" + "\n".join(history_context) + "\n\nRiaz Ahmad:"
     target_models = ["gemini-2.5-flash", "gemini-flash-latest", "gemini-1.5-flash"]
 
     async def stream_generator():

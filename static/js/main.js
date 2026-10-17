@@ -338,7 +338,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!chatMessages || chatMessages.children.length > 0) return;
 
         // Render initial human greeting
-        const welcomeText = "Hey! I'm Hafiz. Thanks for checking out my work. What kind of project or workflow are you looking to build?";
+        const welcomeText = "Hey! I'm Riaz Ahmad. Thanks for checking out my work. What kind of project or workflow are you looking to build?";
         appendMessageUI('assistant', welcomeText);
 
         // Render starter prompts
@@ -434,7 +434,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="w-2 h-2 rounded-full bg-[#D4AF37] animate-bounce"></div>
             <div class="w-2 h-2 rounded-full bg-[#F4C542] animate-bounce [animation-delay:0.2s]"></div>
             <div class="w-2 h-2 rounded-full bg-[#E6C200] animate-bounce [animation-delay:0.4s]"></div>
-            <span class="text-[#B0B0B0] font-sans text-[11px]">Hafiz is typing...</span>
+            <span class="text-[#B0B0B0] font-sans text-[11px]">Riaz Ahmad is typing...</span>
         `;
         chatMessages.appendChild(typingDiv);
         scrollChatToBottom();
