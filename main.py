@@ -164,11 +164,17 @@ app.add_middleware(
 )
 
 @app.middleware("http")
-async def add_no_cache_headers(request: Request, call_next):
+async def handle_cache_headers(request: Request, call_next):
     response = await call_next(request)
-    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate, max-age=0"
-    response.headers["Pragma"] = "no-cache"
-    response.headers["Expires"] = "0"
+    path = request.url.path
+    if path.startswith("/static/"):
+        response.headers["Cache-Control"] = "public, max-age=86400, stale-while-revalidate=604800"
+    elif path in ["/", "/robots.txt", "/sitemap.xml"]:
+        response.headers["Cache-Control"] = "public, max-age=3600, stale-while-revalidate=86400"
+    else:
+        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate, max-age=0"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "0"
     return response
 
 def create_audit_log_internal(db: Session, action: str, details: Optional[str] = None, ip_address: Optional[str] = None):
@@ -292,9 +298,12 @@ def startup_event():
 # -----------------------------------------------------------------------------
 @app.get("/api/projects", response_model=List[schemas.ProjectResponse])
 def get_projects(db: Session = Depends(get_db)):
-    """Fetch all projects from the database."""
+    """Fetch all projects from the database, auto-seeding if empty."""
     try:
         projects = db.query(models.Project).all()
+        if not projects:
+            seed_projects()
+            projects = db.query(models.Project).all()
         return projects
     except Exception as e:
         print(f"Error fetching projects: {e}")
@@ -757,6 +766,20 @@ if os.path.exists(static_dir):
     @app.get("/")
     def read_root():
         return FileResponse(os.path.join(static_dir, "index.html"))
+
+    @app.get("/robots.txt")
+    def read_robots():
+        robots_file = os.path.join(static_dir, "robots.txt")
+        if os.path.exists(robots_file):
+            return FileResponse(robots_file, media_type="text/plain")
+        raise HTTPException(status_code=404, detail="robots.txt not found")
+
+    @app.get("/sitemap.xml")
+    def read_sitemap():
+        sitemap_file = os.path.join(static_dir, "sitemap.xml")
+        if os.path.exists(sitemap_file):
+            return FileResponse(sitemap_file, media_type="application/xml")
+        raise HTTPException(status_code=404, detail="sitemap.xml not found")
 
 if __name__ == "__main__":
     import uvicorn

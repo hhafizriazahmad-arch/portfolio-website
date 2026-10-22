@@ -1,9 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     // -------------------------------------------------------------------------
-    // 1. Interactive Canvas Background (HR Autonomous Gray & Gold Luxury Network Grid)
+    // 1. Interactive Canvas Background (Gray & Gold Luxury Network Grid)
     // -------------------------------------------------------------------------
     const canvas = document.getElementById('bg-canvas');
-    if (canvas) {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (canvas && !prefersReducedMotion) {
         const ctx = canvas.getContext('2d');
 
         let width = canvas.width = window.innerWidth;
@@ -15,15 +17,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         const particles = [];
-        const maxParticles = 65;
-        const maxDistance = 130;
+        const maxParticles = 55;
+        const maxDistance = 120;
 
         class Particle {
             constructor() {
                 this.x = Math.random() * width;
                 this.y = Math.random() * height;
-                this.vx = (Math.random() - 0.5) * 0.4;
-                this.vy = (Math.random() - 0.5) * 0.4;
+                this.vx = (Math.random() - 0.5) * 0.35;
+                this.vy = (Math.random() - 0.5) * 0.35;
                 this.radius = Math.random() * 1.5 + 1;
             }
 
@@ -38,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
             draw() {
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(212, 175, 55, 0.5)'; // Primary Gold Accent with opacity
+                ctx.fillStyle = 'rgba(212, 175, 55, 0.45)';
                 ctx.fill();
             }
         }
@@ -48,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
             particles.push(new Particle());
         }
 
+        let animationFrameId;
         function animate() {
             ctx.clearRect(0, 0, width, height);
 
@@ -67,30 +70,40 @@ document.addEventListener('DOMContentLoaded', () => {
                         ctx.beginPath();
                         ctx.moveTo(p1.x, p1.y);
                         ctx.lineTo(p2.x, p2.y);
-                        // Fade lines out as they get further apart
-                        const alpha = (1 - dist / maxDistance) * 0.20;
-                        ctx.strokeStyle = `rgba(212, 175, 55, ${alpha})`; // Primary Gold
+                        const alpha = (1 - dist / maxDistance) * 0.18;
+                        ctx.strokeStyle = `rgba(212, 175, 55, ${alpha})`;
                         ctx.lineWidth = 1;
                         ctx.stroke();
                     }
                 }
             }
-            requestAnimationFrame(animate);
+            animationFrameId = requestAnimationFrame(animate);
         }
         animate();
+
+        // Pause animation when tab is inactive to preserve performance
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                cancelAnimationFrame(animationFrameId);
+            } else {
+                animationFrameId = requestAnimationFrame(animate);
+            }
+        });
     }
 
     // -------------------------------------------------------------------------
-    // 2. Mobile Menu Toggle
+    // 2. Mobile Menu Toggle & Accessibility
     // -------------------------------------------------------------------------
     const menuBtn = document.getElementById('menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
 
     if (menuBtn && mobileMenu) {
         menuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
+            const isHidden = mobileMenu.classList.toggle('hidden');
+            const isExpanded = !isHidden;
+            menuBtn.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+            
             const spans = menuBtn.querySelectorAll('span');
-            // Toggle hamburger icon animation
             spans[0].classList.toggle('rotate-45');
             spans[0].classList.toggle('translate-y-1.5');
             spans[1].classList.toggle('opacity-0');
@@ -103,6 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
         mobileLinks.forEach(link => {
             link.addEventListener('click', () => {
                 mobileMenu.classList.add('hidden');
+                menuBtn.setAttribute('aria-expanded', 'false');
                 const spans = menuBtn.querySelectorAll('span');
                 spans[0].classList.remove('rotate-45', 'translate-y-1.5');
                 spans[1].classList.remove('opacity-0');
@@ -112,21 +126,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // -------------------------------------------------------------------------
-    // 3. Dynamic Projects Fetch & Render
+    // 3. Dynamic Projects Fetch & Progressive Enhancement
     // -------------------------------------------------------------------------
     const projectsGrid = document.getElementById('projects-grid');
 
     const svgIcons = {
-        'shopping-cart': `<svg class="w-6 h-6 text-[#D4AF37]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        'shopping-cart': `<svg class="w-6 h-6 text-[#D4AF37]" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
         </svg>`,
-        'cpu': `<svg class="w-6 h-6 text-[#D4AF37]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        'cpu': `<svg class="w-6 h-6 text-[#D4AF37]" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
         </svg>`,
-        'database': `<svg class="w-6 h-6 text-[#D4AF37]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        'database': `<svg class="w-6 h-6 text-[#D4AF37]" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2.21 3.58 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.58 4 8 4s8-1.79 8-4M4 7c0-2.21 3.58-4 8-4s8 1.79 8 4m0 5c0 2.21-3.58 4-8 4s-8-1.79-8-4" />
         </svg>`,
-        'default': `<svg class="w-6 h-6 text-[#D4AF37]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        'default': `<svg class="w-6 h-6 text-[#D4AF37]" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
         </svg>`
     };
@@ -143,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             title: "AI Lead Intelligence System",
             description: "An automated B2B lead generation pipeline engineered to identify, enrich, and qualify profiles of founders and C-level executives. Built on FastAPI and Gemini AI for high-impact prospect research.",
-            tech_stack: "Python, FastAPI, Gemini AI, Playwright, HubSpot API, Webhooks",
+            tech_stack: "Python, FastAPI, Playwright, Gemini AI, HubSpot API, Slack Webhooks, Vercel",
             github_url: "https://github.com/hhafizriazahmad-arch/ai-lead-intelligence-system",
             live_url: "https://ai-lead-intelligence-system.vercel.app",
             icon_type: "database"
@@ -169,34 +183,45 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderProjectsList(projects) {
         if (!projectsGrid) return;
         if (!projects || projects.length === 0) {
+            // Keep existing prerendered cards if available
+            if (projectsGrid.querySelectorAll('article').length > 0) {
+                return;
+            }
             projectsGrid.innerHTML = `
                 <div class="col-span-full text-center py-8 text-[#B0B0B0]">
-                    No HR Autonomous projects loaded yet. Please check back later.
+                    No case studies available at the moment. Please check back soon.
                 </div>`;
             return;
         }
 
-        projectsGrid.innerHTML = ''; // Clear loading spinner
+        projectsGrid.innerHTML = '';
         projects.forEach(project => {
             const iconSvg = svgIcons[project.icon_type] || svgIcons['default'];
             const techStackBadges = project.tech_stack.split(',').map(tech => 
                 `<span class="text-xs px-2.5 py-1 rounded bg-[#1E1E1E] border border-[rgba(212,175,55,0.25)] text-[#D4AF37] font-mono">${tech.trim()}</span>`
             ).join('');
 
+            const liveLink = project.live_url ? `
+                <a href="${project.live_url}" target="_blank" rel="noopener noreferrer" class="text-xs px-3 py-1.5 rounded-lg bg-[#D4AF37] text-[#111111] font-bold hover:bg-[#F4C542] transition flex items-center space-x-1">
+                    <span>Live</span>
+                    <svg class="w-3.5 h-3.5" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                </a>` : '';
+
             const githubLink = project.github_url ? `
                 <a href="${project.github_url}" target="_blank" rel="noopener noreferrer" class="text-[#B0B0B0] hover:text-[#F4C542] transition flex items-center space-x-1 text-sm font-medium">
                     <span>GitHub</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                    <svg class="w-4 h-4" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
                 </a>` : '';
 
-            const projectCard = document.createElement('div');
+            const projectCard = document.createElement('article');
             projectCard.className = 'p-8 rounded-3xl glass-panel flex flex-col space-y-6 transition-all duration-300 group';
             projectCard.innerHTML = `
                 <div class="flex items-center justify-between">
                     <div class="w-12 h-12 rounded-xl bg-[#D4AF37]/10 border border-[rgba(212,175,55,0.25)] flex items-center justify-center group-hover:bg-[#D4AF37]/20 transition-all duration-300">
                         ${iconSvg}
                     </div>
-                    <div class="flex items-center">
+                    <div class="flex items-center space-x-3">
+                        ${liveLink}
                         ${githubLink}
                     </div>
                 </div>
@@ -217,26 +242,37 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function loadProjects() {
-        fetch('/api/projects')
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 6000);
+
+        fetch('/api/projects', { signal: controller.signal })
             .then(response => {
+                clearTimeout(timeoutId);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
             })
             .then(projects => {
-                renderProjectsList(projects);
+                if (projects && projects.length > 0) {
+                    renderProjectsList(projects);
+                }
             })
             .catch(error => {
-                console.warn('Backend API fetch failed, rendering HR Autonomous fallback projects:', error);
-                renderProjectsList(fallbackProjects);
+                clearTimeout(timeoutId);
+                console.warn('Backend API fetch notice (preserving prerendered cards):', error);
+                // If the grid was completely empty, populate with fallback
+                if (projectsGrid && projectsGrid.querySelectorAll('article').length === 0) {
+                    renderProjectsList(fallbackProjects);
+                }
             });
     }
 
+    // Attempt progressive refresh without disturbing prerendered cards
     loadProjects();
 
     // -------------------------------------------------------------------------
-    // 4. Contact Form AJAX Submission
+    // 4. Contact Form AJAX Submission with Client Validation
     // -------------------------------------------------------------------------
     const contactForm = document.getElementById('contact-form');
     const submitBtn = document.getElementById('submit-btn');
@@ -248,19 +284,39 @@ document.addEventListener('DOMContentLoaded', () => {
         contactForm.addEventListener('submit', (e) => {
             e.preventDefault();
 
+            const nameInput = document.getElementById('name');
+            const emailInput = document.getElementById('email');
+            const subjectInput = document.getElementById('subject');
+            const messageInput = document.getElementById('message');
+
+            const name = nameInput.value.trim();
+            const email = emailInput.value.trim();
+            const subject = subjectInput.value.trim();
+            const message = messageInput.value.trim();
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!name || !email || !subject || !message) {
+                notification.className = 'block mb-6 p-4 rounded-xl border border-red-500/30 bg-red-500/10 text-red-400 font-medium';
+                notification.textContent = 'Please fill out all required fields before submitting.';
+                return;
+            }
+
+            if (!emailRegex.test(email)) {
+                notification.className = 'block mb-6 p-4 rounded-xl border border-red-500/30 bg-red-500/10 text-red-400 font-medium';
+                notification.textContent = 'Please provide a valid email address.';
+                emailInput.focus();
+                return;
+            }
+
             // Form payload
-            const payload = {
-                name: document.getElementById('name').value.trim(),
-                email: document.getElementById('email').value.trim(),
-                subject: document.getElementById('subject').value.trim(),
-                message: document.getElementById('message').value.trim()
-            };
+            const payload = { name, email, subject, message };
 
             // Loading state UI
             submitBtn.disabled = true;
             btnText.textContent = 'Sending Message...';
             btnSpinner.classList.remove('hidden');
-            notification.className = 'hidden'; // Hide prior notification
+            notification.className = 'hidden';
 
             fetch('/api/contact', {
                 method: 'POST',
@@ -292,24 +348,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 return response;
             })
             .then(() => {
-                // Success
                 notification.className = 'block mb-6 p-4 rounded-xl border border-[#D4AF37]/40 bg-[#D4AF37]/10 text-[#D4AF37] font-medium';
-                notification.textContent = 'Thank you! Your inquiry has been sent successfully to HR Autonomous.';
+                notification.textContent = 'Thank you! Your message has been sent directly to Riaz Ahmad. I will review your details and respond promptly.';
                 contactForm.reset();
             })
             .catch((err) => {
-                // Error
                 console.error('Contact Form error:', err);
                 const displayMsg = (err && typeof err.message === 'string' && err.message !== '[object Object]')
                     ? err.message
-                    : 'Something went wrong. Please check your connection and try again.';
+                    : 'Something went wrong. Please check your connection or email me directly at hafizriaz.ai@gmail.com.';
                 notification.className = 'block mb-6 p-4 rounded-xl border border-red-500/30 bg-red-500/10 text-red-400 font-medium';
                 notification.textContent = displayMsg;
             })
             .finally(() => {
-                // Reset submit button state
                 submitBtn.disabled = false;
-                btnText.textContent = 'Send Message';
+                btnText.textContent = 'Send Automation Inquiry';
                 btnSpinner.classList.add('hidden');
             });
         });
@@ -332,23 +385,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let chatHistory = [];
     let isChatOpen = false;
-    let starterPromptsRendered = false;
 
     function renderInitialChatState() {
         if (!chatMessages || chatMessages.children.length > 0) return;
 
-        // Render initial human greeting
-        const welcomeText = "Hey! I'm Riaz Ahmad. Thanks for checking out my work. What kind of project or workflow are you looking to build?";
+        const welcomeText = "Hey! I'm Riaz Ahmad. Thanks for visiting. What specific workflow, lead process, or backend system are you looking to automate?";
         appendMessageUI('assistant', welcomeText);
 
-        // Render starter prompts
         const startersContainer = document.createElement('div');
         startersContainer.id = 'chat-starter-prompts';
         startersContainer.className = 'flex flex-wrap gap-2 pt-2 pb-1';
 
         const starterOptions = [
             "What can you automate?",
-            "I need help with lead generation",
+            "I need lead generation pipelines",
             "Can you automate my CRM?",
             "I want to build an AI workflow"
         ];
@@ -372,6 +422,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function toggleChatModal() {
         isChatOpen = !isChatOpen;
+        if (chatTrigger) {
+            chatTrigger.setAttribute('aria-expanded', isChatOpen ? 'true' : 'false');
+        }
         if (isChatOpen) {
             chatModal.classList.remove('hidden');
             setTimeout(() => {
@@ -450,7 +503,6 @@ document.addEventListener('DOMContentLoaded', () => {
     async function sendChatMessage(userText) {
         if (!userText.trim()) return;
 
-        // Remove starter prompts container if present
         const starterDiv = document.getElementById('chat-starter-prompts');
         if (starterDiv) starterDiv.remove();
 
@@ -483,7 +535,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             hideTypingIndicator();
 
-            // Create streaming response bubble
             const msgContainer = document.createElement('div');
             msgContainer.className = 'flex items-start';
             messageBubbleDiv = document.createElement('div');
@@ -515,10 +566,11 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) {
             console.error('Chat error:', err);
             hideTypingIndicator();
+            const fallbackMsg = "Something went wrong on my end. Feel free to reach me directly at hafizriaz.ai@gmail.com or try again.";
             if (messageBubbleDiv) {
-                messageBubbleDiv.innerHTML = "Something went wrong on my end. Give that another try.";
+                messageBubbleDiv.innerHTML = fallbackMsg;
             } else {
-                appendMessageUI('assistant', "Something went wrong on my end. Give that another try.");
+                appendMessageUI('assistant', fallbackMsg);
             }
         } finally {
             chatSubmitBtn.disabled = false;
@@ -574,4 +626,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
     loadCRMStatus();
 });
-

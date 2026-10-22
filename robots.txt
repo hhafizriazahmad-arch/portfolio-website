@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Allow: /static/
+Disallow: /api/
+
+Sitemap: https://portfolio-website-ten-lyart-11.vercel.app/sitemap.xml

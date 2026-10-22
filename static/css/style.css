@@ -4,6 +4,32 @@ body {
     color: #F5F5F5;
 }
 
+/* Accessibility: Visible Focus Indicators */
+:focus-visible {
+    outline: 2px solid #D4AF37;
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+/* Skip to Content accessible link */
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: 1rem;
+    background: #D4AF37;
+    color: #111111;
+    padding: 0.75rem 1.25rem;
+    font-weight: 700;
+    font-size: 0.875rem;
+    z-index: 9999;
+    border-radius: 0.5rem;
+    transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+    top: 1rem;
+}
+
 /* Custom glow utilities */
 .hover\:glow-sm:hover {
     text-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
@@ -68,4 +94,20 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
     background: #D4AF37;
+}
+
+/* Respect user preferences for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    
+    #bg-canvas {
+        display: none !important;
+    }
 }
