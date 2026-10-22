@@ -6,7 +6,7 @@ import asyncio
 from datetime import datetime
 from typing import List, Optional
 from fastapi import FastAPI, Depends, HTTPException, status, Request
-from fastapi.responses import FileResponse, StreamingResponse
+from fastapi.responses import FileResponse, StreamingResponse, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
@@ -170,7 +170,7 @@ async def handle_cache_headers(request: Request, call_next):
     if path.startswith("/static/"):
         response.headers["Cache-Control"] = "public, max-age=86400, stale-while-revalidate=604800"
     elif path in ["/", "/robots.txt", "/sitemap.xml"]:
-        response.headers["Cache-Control"] = "public, max-age=3600, stale-while-revalidate=86400"
+        response.headers["Cache-Control"] = "public, max-age=0, must-revalidate"
     else:
         response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate, max-age=0"
         response.headers["Pragma"] = "no-cache"
@@ -764,30 +764,73 @@ def create_audit_log_endpoint(log_data: schemas.AuditLogCreate, request: Request
     return entry
 
 # -----------------------------------------------------------------------------
-# Serve Static Frontend
+# Static Content Fallbacks & Declarations
+# -----------------------------------------------------------------------------
+ROBOTS_TXT_CONTENT = """User-agent: *
+Allow: /
+Allow: /static/
+Disallow: /api/
+
+Sitemap: https://portfolio-website-ten-lyart-11.vercel.app/sitemap.xml
+"""
+
+SITEMAP_XML_CONTENT = """<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://portfolio-website-ten-lyart-11.vercel.app/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>
+"""
+
+# -----------------------------------------------------------------------------
+# Serve Static Frontend & SEO Endpoints
 # -----------------------------------------------------------------------------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 static_dir = os.path.join(BASE_DIR, "static")
+
 if os.path.exists(static_dir):
     app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
-    @app.get("/")
-    def read_root():
-        return FileResponse(os.path.join(static_dir, "index.html"))
+@app.get("/")
+def read_root():
+    for candidate in [
+        os.path.join(static_dir, "index.html"),
+        os.path.join(BASE_DIR, "static", "index.html"),
+        os.path.join(BASE_DIR, "index.html"),
+        os.path.join(os.getcwd(), "static", "index.html"),
+        os.path.join(os.getcwd(), "index.html"),
+    ]:
+        if os.path.exists(candidate):
+            return FileResponse(candidate, media_type="text/html; charset=utf-8")
+    raise HTTPException(status_code=500, detail="index.html not found")
 
-    @app.get("/robots.txt")
-    def read_robots():
-        robots_file = os.path.join(static_dir, "robots.txt")
-        if os.path.exists(robots_file):
-            return FileResponse(robots_file, media_type="text/plain")
-        raise HTTPException(status_code=404, detail="robots.txt not found")
+@app.get("/robots.txt")
+def read_robots():
+    for candidate in [
+        os.path.join(static_dir, "robots.txt"),
+        os.path.join(BASE_DIR, "robots.txt"),
+        os.path.join(BASE_DIR, "static", "robots.txt"),
+        os.path.join(os.getcwd(), "static", "robots.txt"),
+        os.path.join(os.getcwd(), "robots.txt"),
+    ]:
+        if os.path.exists(candidate):
+            return FileResponse(candidate, media_type="text/plain; charset=utf-8")
+    return Response(content=ROBOTS_TXT_CONTENT, media_type="text/plain; charset=utf-8")
 
-    @app.get("/sitemap.xml")
-    def read_sitemap():
-        sitemap_file = os.path.join(static_dir, "sitemap.xml")
-        if os.path.exists(sitemap_file):
-            return FileResponse(sitemap_file, media_type="application/xml")
-        raise HTTPException(status_code=404, detail="sitemap.xml not found")
+@app.get("/sitemap.xml")
+def read_sitemap():
+    for candidate in [
+        os.path.join(static_dir, "sitemap.xml"),
+        os.path.join(BASE_DIR, "sitemap.xml"),
+        os.path.join(BASE_DIR, "static", "sitemap.xml"),
+        os.path.join(os.getcwd(), "static", "sitemap.xml"),
+        os.path.join(os.getcwd(), "sitemap.xml"),
+    ]:
+        if os.path.exists(candidate):
+            return FileResponse(candidate, media_type="application/xml")
+    return Response(content=SITEMAP_XML_CONTENT, media_type="application/xml")
 
 if __name__ == "__main__":
     import uvicorn
