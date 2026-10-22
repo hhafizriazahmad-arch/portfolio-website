@@ -140,6 +140,9 @@ document.addEventListener('DOMContentLoaded', () => {
         'database': `<svg class="w-6 h-6 text-[#D4AF37]" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2.21 3.58 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.58 4 8 4s8-1.79 8-4M4 7c0-2.21 3.58-4 8-4s8 1.79 8 4m0 5c0 2.21-3.58 4-8 4s-8-1.79-8-4" />
         </svg>`,
+        'chat': `<svg class="w-6 h-6 text-[#D4AF37]" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        </svg>`,
         'default': `<svg class="w-6 h-6 text-[#D4AF37]" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
         </svg>`
@@ -161,6 +164,14 @@ document.addEventListener('DOMContentLoaded', () => {
             github_url: "https://github.com/hhafizriazahmad-arch/ai-lead-intelligence-system",
             live_url: "https://ai-lead-intelligence-system.vercel.app",
             icon_type: "database"
+        },
+        {
+            title: "Autonomous AI Conversational Agent",
+            description: "A responsive AI chatbot platform engineered with Google Gemini AI integration, contextual knowledge-base retrieval, automated multi-turn query handling, and conversational response validation. Features automated fallback handlers, conversation history tracking, and serverless edge deployment.",
+            tech_stack: "JavaScript, Node.js, Express, Gemini AI, Knowledge Retrieval, Vercel",
+            github_url: "https://github.com/hhafizriazahmad-arch/chat-bot",
+            live_url: "https://chat-bot-chi-wine.vercel.app",
+            icon_type: "chat"
         },
         {
             title: "Digital Marketing Automation Suite",

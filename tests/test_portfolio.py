@@ -102,16 +102,17 @@ class PortfolioSEOTestCase(unittest.TestCase):
         self.assertIn("Discuss Your Automation Project", html)
 
     def test_prerendered_case_studies(self):
-        """Verify all 4 case studies are statically rendered and visible without dynamic JS delay."""
+        """Verify all 5 case studies are statically rendered and visible without dynamic JS delay."""
         response = self.client.get("/")
         html = response.text
 
         # The spinner text MUST NOT be present in the initial static HTML
         self.assertNotIn("Loading HR Autonomous case studies...", html)
 
-        # All 4 project titles must be prerendered inside article tags
+        # All 5 project titles must be prerendered inside article tags
         self.assertIn("AI Agency Operating System", html)
         self.assertIn("AI Lead Intelligence System", html)
+        self.assertIn("Autonomous AI Conversational Agent", html)
         self.assertIn("Digital Marketing Automation Suite", html)
         self.assertIn("Onboarding Automation Workflow", html)
 
@@ -140,16 +141,17 @@ class PortfolioSEOTestCase(unittest.TestCase):
         self.assertIn("https://portfolio-website-ten-lyart-11.vercel.app/", locs)
 
     def test_projects_api_endpoint(self):
-        """Test /api/projects returns the 4 seeded projects with correct schemas."""
+        """Test /api/projects returns the 5 seeded projects with correct schemas."""
         response = self.client.get("/api/projects")
         self.assertEqual(response.status_code, 200)
         projects = response.json()
         self.assertIsInstance(projects, list)
-        self.assertGreaterEqual(len(projects), 4)
+        self.assertGreaterEqual(len(projects), 5)
 
         titles = [p.get("title") for p in projects]
         self.assertIn("AI Agency Operating System", titles)
         self.assertIn("AI Lead Intelligence System", titles)
+        self.assertIn("Autonomous AI Conversational Agent", titles)
         self.assertIn("Digital Marketing Automation Suite", titles)
         self.assertIn("Onboarding Automation Workflow", titles)
 

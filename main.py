@@ -245,6 +245,14 @@ def seed_projects():
                 "icon_type": "database"
             },
             {
+                "title": "Autonomous AI Conversational Agent",
+                "description": "A responsive AI chatbot platform engineered with Google Gemini AI integration, contextual knowledge-base retrieval, automated multi-turn query handling, and conversational response validation. Features automated fallback handlers, conversation history tracking, and serverless edge deployment.",
+                "tech_stack": "JavaScript, Node.js, Express, Gemini AI, Knowledge Retrieval, Vercel",
+                "github_url": "https://github.com/hhafizriazahmad-arch/chat-bot",
+                "live_url": "https://chat-bot-chi-wine.vercel.app",
+                "icon_type": "chat"
+            },
+            {
                 "title": "Digital Marketing Automation Suite",
                 "description": "Full-stack digital marketing platform featuring an interactive dynamic UI, serverless backend integrations, and automated lead intelligence data pipelines.",
                 "tech_stack": "Full-Stack Web Dev, JavaScript, Python, REST API, HTML5/CSS3, Vercel",
@@ -298,10 +306,10 @@ def startup_event():
 # -----------------------------------------------------------------------------
 @app.get("/api/projects", response_model=List[schemas.ProjectResponse])
 def get_projects(db: Session = Depends(get_db)):
-    """Fetch all projects from the database, auto-seeding if empty."""
+    """Fetch all projects from the database, auto-seeding if empty or missing updated projects."""
     try:
         projects = db.query(models.Project).all()
-        if not projects:
+        if not projects or len(projects) < 5:
             seed_projects()
             projects = db.query(models.Project).all()
         return projects
