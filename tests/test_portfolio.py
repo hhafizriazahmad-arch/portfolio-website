@@ -188,5 +188,38 @@ class PortfolioSEOTestCase(unittest.TestCase):
         self.assertEqual(static_resp.status_code, 200)
         self.assertIn("public", static_resp.headers.get("Cache-Control", ""))
 
+    def test_profile_image_endpoint_and_file_existence(self):
+        """Verify profile image exists in public/images and serves 200 OK via /images/."""
+        # Check physical file existence
+        public_img_path = os.path.join(os.path.dirname(__file__), "..", "public", "images", "riaz-ahmad-profile.jpeg")
+        self.assertTrue(os.path.exists(public_img_path), f"File not found at {public_img_path}")
+        self.assertGreater(os.path.getsize(public_img_path), 50000)
+
+        # Test GET /images/riaz-ahmad-profile.jpeg endpoint
+        response = self.client.get("/images/riaz-ahmad-profile.jpeg")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("image/jpeg", response.headers.get("content-type", ""))
+        self.assertIn("public", response.headers.get("Cache-Control", ""))
+        self.assertEqual(len(response.content), os.path.getsize(public_img_path))
+
+    def test_homepage_hero_profile_integration(self):
+        """Verify the homepage contains profile image and required copy/CTAs."""
+        response = self.client.get("/")
+        html = response.text
+
+        # Verify profile image tag
+        self.assertIn('src="/images/riaz-ahmad-profile.jpeg"', html)
+        self.assertIn('alt="Riaz Ahmad, AI Automation Specialist"', html)
+
+        # Verify title & introduction quote
+        self.assertIn("AI Automation Specialist", html)
+        self.assertIn("I help businesses streamline operations, automate repetitive workflows, and implement intelligent AI-powered solutions that improve efficiency and support growth.", html)
+
+        # Verify calls to action
+        self.assertIn("Let's Discuss Your Automation Needs", html)
+        self.assertIn('href="#contact"', html)
+        self.assertIn("View My Projects", html)
+        self.assertIn('href="#projects"', html)
+
 if __name__ == "__main__":
     unittest.main()

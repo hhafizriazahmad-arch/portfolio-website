@@ -167,7 +167,7 @@ app.add_middleware(
 async def handle_cache_headers(request: Request, call_next):
     response = await call_next(request)
     path = request.url.path
-    if path.startswith("/static/"):
+    if path.startswith("/static/") or path.startswith("/images/") or path.startswith("/public/"):
         response.headers["Cache-Control"] = "public, max-age=86400, stale-while-revalidate=604800"
     elif path in ["/", "/robots.txt", "/sitemap.xml"]:
         response.headers["Cache-Control"] = "public, max-age=0, must-revalidate"
@@ -789,9 +789,17 @@ SITEMAP_XML_CONTENT = """<?xml version="1.0" encoding="UTF-8"?>
 # -----------------------------------------------------------------------------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 static_dir = os.path.join(BASE_DIR, "static")
+public_dir = os.path.join(BASE_DIR, "public")
 
 if os.path.exists(static_dir):
     app.mount("/static", StaticFiles(directory=static_dir), name="static")
+
+if os.path.exists(public_dir):
+    app.mount("/public", StaticFiles(directory=public_dir), name="public")
+
+images_dir = os.path.join(public_dir, "images") if os.path.exists(os.path.join(public_dir, "images")) else os.path.join(static_dir, "images")
+if os.path.exists(images_dir):
+    app.mount("/images", StaticFiles(directory=images_dir), name="images")
 
 @app.get("/")
 def read_root():
