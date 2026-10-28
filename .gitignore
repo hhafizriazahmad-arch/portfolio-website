@@ -19,3 +19,9 @@ portfolio.db
 # Logs & Vercel
 *.log
 .vercel/
+
+# Distribution & Build
+dist/
+build/
+*.egg-info/
+.pytest_cache/

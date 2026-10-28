@@ -18,3 +18,12 @@ dependencies = [
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = ["main", "database", "models", "schemas"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = []
+exclude = ["public*", "static*", "tests*", ".venv*", "dist*", "build*"]
+
